@@ -8,7 +8,7 @@
 
 
 
-/*Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function() {
 
 
 
@@ -26,8 +26,6 @@
 
 });
 
-
-*/
 
 /*
 

@@ -10,13 +10,13 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    {{-- <title>@yield('title')</title> --}}
+    
     <title>QDegree - People Progress Productivity</title>
-    {{-- <meta name="description" content="Ela Admin - HTML5 Admin Template"> --}}
+    
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="apple-touch-icon" href="{{URL::asset('/public/favicon.ico')}}">
-    <link rel="shortcut icon" href="{{URL::asset('/public/favicon.ico')}}">
+    <link rel="apple-touch-icon" href="<?php echo e(URL::asset('/public/favicon.ico')); ?>">
+    <link rel="shortcut icon" href="<?php echo e(URL::asset('/public/favicon.ico')); ?>">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
@@ -25,10 +25,10 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
-    <link rel="stylesheet" href="{{URL::asset('/public/assets/css/cs-skin-elastic.css')}}">
-    <link rel="stylesheet" href="{{URL::asset('/assets/css/style.css')}}">
-    {{-- <link rel="stylesheet" href="{{URL::asset('/public/assets/css/style.css')}}"> --}}
-    <link rel="stylesheet" href="{{URL::asset('/public/assets/css/lib/chosen/chosen.min.css')}}">
+    <link rel="stylesheet" href="<?php echo e(URL::asset('/public/assets/css/cs-skin-elastic.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(URL::asset('/assets/css/style.css')); ?>">
+    
+    <link rel="stylesheet" href="<?php echo e(URL::asset('/public/assets/css/lib/chosen/chosen.min.css')); ?>">
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
     <link href="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/jqvmap@1.5.1/dist/jqvmap.min.css" rel="stylesheet">
@@ -36,7 +36,7 @@
     <link href="https://cdn.jsdelivr.net/npm/weathericons@2.1.0/css/weather-icons.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.css" rel="stylesheet"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
-@yield('css')
+<?php echo $__env->yieldContent('css'); ?>
     <style>
         #weatherWidget .currentDesc {
             color: #ffffff !important;
@@ -132,14 +132,14 @@
 
 <body>
 
-@include('layouts.sidebar')
+<?php echo $__env->make('layouts.sidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <div id="right-panel" class="right-panel">
     <!-- Header-->
     <header id="header" class="header">
         <div class="top-left">
             <div class="navbar-header">
-                <a class="navbar-brand" href="./"><img src="{{url('public/images/logo.png.jpg')}}" alt="Logo"></a>
-                <a class="navbar-brand hidden" href="./"><img src="{{url('public/images/logo2.png')}}" alt="Logo"></a>
+                <a class="navbar-brand" href="./"><img src="<?php echo e(url('public/images/logo.png.jpg')); ?>" alt="Logo"></a>
+                <a class="navbar-brand hidden" href="./"><img src="<?php echo e(url('public/images/logo2.png')); ?>" alt="Logo"></a>
                 <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
             </div>
         </div>
@@ -160,28 +160,29 @@
                 <div class="user-area dropdown float-right">
                     <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false">
-                        <img class="user-avatar rounded-circle" src="{{url('public/images/admin.jpg')}}" alt="User Avatar">
+                        <img class="user-avatar rounded-circle" src="<?php echo e(url('public/images/admin.jpg')); ?>" alt="User Avatar">
                     </a>
 
                     <div class="user-menu dropdown-menu">
-                        <a class="nav-link" href="{{ route('profile') }}"><i class="fa fa- user"></i>My Profile</a>
+                        <a class="nav-link" href="<?php echo e(route('profile')); ?>"><i class="fa fa- user"></i>My Profile</a>
 
                         <!-- <a class="nav-link" href="#"><i class="fa fa- user"></i>Notifications <span
                                     class="count">13</span></a> -->
 
                         <!-- <a class="nav-link" href="#"><i class="fa fa -cog"></i>Settings</a> -->
-                       {{-- <div class="dropdown-menu dropdown-menu-right " aria-labelledby="navbarDropdown">--}}
-                            <a class="dropdown-item nav-link" href="{{ route('logout') }}"
+                       
+                            <a class="dropdown-item nav-link" href="<?php echo e(route('logout')); ?>"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"><i class="fa fa-power -off"></i>
-                                {{ __('Logout') }}
+                                <?php echo e(__('Logout')); ?>
+
                             </a>
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
+                            <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" style="display: none;">
+                                <?php echo csrf_field(); ?>
                             </form>
-                        {{--</div>--}}
-                        {{--<a class="nav-link" href="#"><i class="fa fa-power -off"></i>Logout</a>--}}
+                        
+                        
                     </div>
                 </div>
 
@@ -190,7 +191,7 @@
     </header>
     <!-- /#header -->
     <div class="content" style="min-height:500px;bottom:0">
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </div>
 </div>
 
@@ -199,12 +200,7 @@
     <footer class="site-footer"  style="bottom:0">
         <div class="footer-inner bg-white">
             <div class="row">
-                {{-- <div class="col-sm-6">
-                    Copyright &copy; 2019 Araways
-                </div>
-                <div class="col-sm-6 text-right">
-                    Designed by <a href="#">Araways</a>
-                </div> --}}
+                
             </div>
         </div>
     </footer>
@@ -219,7 +215,7 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
-<script src="{{URL::asset('/public/assets/js/main.js')}}"></script>
+<script src="<?php echo e(URL::asset('/public/assets/js/main.js')); ?>"></script>
 <script src="https:////cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <link href="https:////cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
 <!--  Chart js -->
@@ -229,18 +225,18 @@
 <script src="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartist-plugin-legend@0.6.2/chartist-plugin-legend.min.js"></script>
 
-{{--<script src="https://cdn.jsdelivr.net/npm/jquery.flot@0.8.3/jquery.flot.min.js"></script>--}}
-{{--<script src="https://cdn.jsdelivr.net/npm/flot-pie@1.0.0/src/jquery.flot.pie.min.js"></script>--}}
-{{--<script src="https://cdn.jsdelivr.net/npm/flot-spline@0.0.1/js/jquery.flot.spline.min.js"></script>--}}
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/simpleweather@3.1.0/jquery.simpleWeather.min.js"></script>
-<script src="{{URL::asset('/public/assets/js/init/weather-init.js')}}"></script>
-<script src="{{URL::asset('/public/assets/js/lib/chosen/chosen.jquery.min.js')}}"></script>
+<script src="<?php echo e(URL::asset('/public/assets/js/init/weather-init.js')); ?>"></script>
+<script src="<?php echo e(URL::asset('/public/assets/js/lib/chosen/chosen.jquery.min.js')); ?>"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
-<script src="{{URL::asset('/public/assets/js/init/fullcalendar-init.js')}}"></script>
+<script src="<?php echo e(URL::asset('/public/assets/js/init/fullcalendar-init.js')); ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/flot-charts@0.8.3/jquery.flot.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery.flot@0.8.3/jquery.flot.pie.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery.flot@0.8.3/jquery.flot.time.min.js"></script>
@@ -253,7 +249,7 @@
 <!--Local Stuff-->
 
 <script>
-    var url = "{!! url('') !!}";
+    var url = "<?php echo url(''); ?>";
     jQuery(document).ready(function () {
 
         toastr.options = {
@@ -276,29 +272,29 @@
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         };
-        @if(session()->has('success'))
-        @if(is_array(session()->get('success')))
-            @foreach(session()->get('success') as $succ)
-            toastr.success("{{$succ}}");
-        @endforeach
-        @else
-        toastr.success("{{session()->get('success')}}");
-        @endif
+        <?php if(session()->has('success')): ?>
+        <?php if(is_array(session()->get('success'))): ?>
+            <?php $__currentLoopData = session()->get('success'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $succ): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            toastr.success("<?php echo e($succ); ?>");
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <?php else: ?>
+        toastr.success("<?php echo e(session()->get('success')); ?>");
+        <?php endif; ?>
 
-        @endif
+        <?php endif; ?>
 
-        @if(session()->has('error'))
-        @if(is_array(session()->get('error')))
-            @foreach(session()->get('error') as $error)
-        @if(is_array($error))
-            @foreach($error as $err)
-toastr.error("{{$err}}");
-        @endforeach
-        @endif
+        <?php if(session()->has('error')): ?>
+        <?php if(is_array(session()->get('error'))): ?>
+            <?php $__currentLoopData = session()->get('error'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <?php if(is_array($error)): ?>
+            <?php $__currentLoopData = $error; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $err): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+toastr.error("<?php echo e($err); ?>");
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <?php endif; ?>
 
-        @endforeach
-        @endif
-        @endif
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <?php endif; ?>
+        <?php endif; ?>
     });
 
     /*  jQuery(document).ready(function($) {
@@ -491,6 +487,7 @@ toastr.error("{{$err}}");
      // Bar Chart #flotBarChart End
      });*/
 </script>
-@yield('js')
+<?php echo $__env->yieldContent('js'); ?>
 </body>
 </html>
+<?php /**PATH C:\wamp64\www\idfc_qdegrees\resources\views/layouts/master.blade.php ENDPATH**/ ?>
