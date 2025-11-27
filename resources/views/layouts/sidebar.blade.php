@@ -311,6 +311,11 @@
                         </ul>
                     </li>
                     @endrole
+                    li class="{{ $segment1 === 'download' ? 'active' : '' }}">
+    <a href="{{ route('download') }}">
+        <i class="menu-icon fa fa-tasks"></i> Download Artifacts
+    </a>
+</li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </nav>

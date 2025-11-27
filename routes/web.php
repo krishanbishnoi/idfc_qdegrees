@@ -366,3 +366,19 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::get('/allocation-upload', 'AllocationDumpController@uploadForm')->name('allocation.upload.form');
 Route::post('/allocation-upload', 'AllocationDumpController@uploadFile')->name('allocation.upload.file');
+
+use App\Http\Controllers\AdditionalArtifactsController;
+
+Route::get('/artifacts/create/{type}/{audit_id}', [AdditionalArtifactsController::class, 'create'])->name('artifacts.create');
+Route::post('/artifacts/store', [AdditionalArtifactsController::class, 'store'])->name('artifacts.store');
+Route::get('artifacts/download/{audit_id}', [AdditionalArtifactsController::class, 'downloadArtifacts'])->name('artifacts.download');
+// Route::post('/artifacts/delete/{id}', [AdditionalArtifactsController::class, 'delete'])->name('artifacts.delete');
+// Route::delete('/artifacts/delete/{id}', [AdditionalArtifactsController::class, 'delete'])->name('artifacts.delete');
+// Route::delete('artifacts/delete/{id}', [AdditionalArtifactsController::class, 'delete'])->name('artifacts.delete');
+Route::post('/artifacts/{id}', [AdditionalArtifactsController::class, 'destroy'])->name('artifacts.delete');
+
+Route::get('/download', [AdditionalArtifactsController::class, 'download'])->name('download');
+Route::post('/get-items', [AdditionalArtifactsController::class, 'getItems'])->name('getItems');
+Route::post('/get-artifacts', [AdditionalArtifactsController::class, 'getArtifacts'])->name('getArtifacts');
+
+Route::post('/download-artifact', [AdditionalArtifactsController::class, 'download_artifcats'])->name('downloadArtifact');
