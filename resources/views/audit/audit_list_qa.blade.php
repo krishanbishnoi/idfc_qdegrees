@@ -327,6 +327,9 @@ Call
 						<a href="{{ url('duplicate_sheet/'.Crypt::encrypt($row->id)) }}" onclick="return confirm('Duplicate this audit sheet?')" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Duplicate"><i class="fa fa-copy"></i></a>
 
 					@endif
+					<a href="{{ url('/artifacts/create/' . $row->qmsheet->type . '/' . $row->id) }}" class="btn btn-primary">
+                                                <i class="fa fa-edit"></i>Upload Artifacts
+                                            </a>
 
                         
 
