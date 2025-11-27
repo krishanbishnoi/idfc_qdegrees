@@ -363,3 +363,6 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 });
+
+Route::get('/allocation-upload', 'AllocationDumpController@uploadForm')->name('allocation.upload.form');
+Route::post('/allocation-upload', 'AllocationDumpController@uploadFile')->name('allocation.upload.file');
