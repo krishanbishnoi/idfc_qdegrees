@@ -17,20 +17,28 @@
         <input type="text" name="agency_address" class="form-control" value="{{$yard->addresss ?? ''}}" disabled>
     </div>
 @endif
-@if($type=='agency' || $type=='yard')
+@if($type=='agency')
     <div class="col-md-3 form-group">
         <label>Agency name</label>
         <input type="text" name="agency_name" class="form-control" value="{{$agency->name ?? ''}}" disabled>
     </div>
-    <div class="col-md-3 form-group">
+    {{-- <div class="col-md-3 form-group">
         <label>Agency Manager</label>
         <input  type="text" name="agency_manager" class="form-control" value="{{$agency->user->name ?? ''}}" data-id="{{$agency->user->id ?? ''}}" disabled>
         <input type="hidden" name="agency_manager_email" value="">
-        {{-- <span id="agency_error" style="display:none"></span> --}}
-    </div>
-    <div class="col-md-3 form-group agency_error" style="display:none">
+        <span id="agency_error" style="display:none"></span>
+    </div> --}}
+    {{-- <div class="col-md-3 form-group agency_error" style="display:none">
         <label>Other</label>
         <span id="agency_error" class="" style="display:none"></span>
+    </div> --}}
+    <div class="col-md-3 form-group">
+        <label>Agency Manager</label>
+        <input type="text" name="agency_manager" class="form-control" value="{{$agency->agency_manager ?? ''}}">
+    </div>
+    <div class="col-md-3 form-group">
+        <label>Agency Phone</label>
+        <input type="text" name="agency_phone" class="form-control" value="{{$agency->agency_phone ?? ''}}">
     </div>
     <div class="col-md-3 form-group">
         <label>Agency Address</label>
@@ -84,21 +92,60 @@
         }  
     }
     $myType=array_keys($myData);
+function getSortOrder($c) {
+    $sortOrder = ['Collection_Manager','Area_Collection_Manager','Regional_Collection_Manager','Zonal_Collection_Manager','National_Collection_Manager','Group_Product_Head'];
+    $pos = array_search($c, $sortOrder);
+    return $pos !== false ? $pos : 99999;
+}
+
+function mysort($a, $b) {
+    if( getSortOrder($a) < getSortOrder($b) ) {
+        return -1;
+    }elseif( getSortOrder($a) == getSortOrder($b) ) {
+        return 0;
+    }else {
+        return 1;
+    }
+}
+usort($myType, "mysort");
 @endphp
 
 @foreach($myType as $item)
     @if($item=='Collection_Manager')
     <div class="col-md-3 form-group">
         <label>{{str_replace('_',' ',$item)}}</label>
+
         <select class="form-control" name="{{$item}}" id="collection_manager-select" disabled>
             @foreach($myData[$item] as $value)
-                <option data-code="{{$value->user->employee_id}}" data-bucket="{{$value->buckrt ?? ''}}" value="{{$value->user->id }}">{{$value->user->name ?? ''}}</option>
+                @isset($value->user->employee_id)
+                    
+                
+             <?php
+                 if(!empty($userData)) {
+                    
+                    if($userData['id'] == $value->user->id){?>
+                        <option data-code="{{$value->user->employee_id}}" data-bucket="{{$value->buckrt ?? ''}}" value="{{$value->user->id }}" selected>{{$value->user->name ?? ''}}</option>
+                   <?php }
+                   else{
+                    ?>
+                         <option data-code="{{$value->user->employee_id}}" data-bucket="{{$value->buckrt ?? ''}}" value="{{$value->user->id }}" >{{$value->user->name ?? ''}}</option>
+                    <?php 
+                   }
+                 }else{?>
+                       <option data-code="{{$value->user->employee_id}}" data-bucket="{{$value->buckrt ?? ''}}" value="{{$value->user->id }}">{{$value->user->name ?? ''}}</option>
+                    <?php
+                 }?>
+
+                
+               
                 @php
                     if(count($myData[$item])==1){
                         $code=$value->user->employee_id ?? '';
-                        $bucket=$value->buckrt ?? '';
+                        $bucket=$value->bucket ?? '';
                     }
                 @endphp
+
+                @endisset
             @endforeach
         </select>
     </div>

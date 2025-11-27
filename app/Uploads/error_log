@@ -1,0 +1,6 @@
+[14-Nov-2025 05:16:54 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/AdverseBulk.php on line 7
+[14-Nov-2025 05:16:55 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/Dacs.php on line 7
+[14-Nov-2025 05:16:55 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/TrailIntensity.php on line 7
+[14-Nov-2025 05:16:55 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/Setlement.php on line 7
+[14-Nov-2025 05:16:55 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/Allocation.php on line 7
+[23-Nov-2025 15:35:07 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/Allocation.php on line 7

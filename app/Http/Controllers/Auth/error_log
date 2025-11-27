@@ -1,0 +1,1 @@
+[23-Nov-2025 15:34:59 UTC] PHP Fatal error:  Class 'App\Http\Controllers\Controller' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Http/Controllers/Auth/RegisterController.php on line 11

@@ -1,0 +1,5 @@
+[14-Nov-2025 05:16:52 UTC] PHP Fatal error:  Class 'Illuminate\Support\ServiceProvider' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Providers/AppServiceProvider.php on line 7
+[14-Nov-2025 05:16:52 UTC] PHP Fatal error:  Class 'Illuminate\Foundation\Support\Providers\AuthServiceProvider' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Providers/AuthServiceProvider.php on line 8
+[14-Nov-2025 05:16:53 UTC] PHP Fatal error:  Class 'Illuminate\Foundation\Support\Providers\RouteServiceProvider' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Providers/RouteServiceProvider.php on line 8
+[14-Nov-2025 05:16:53 UTC] PHP Fatal error:  Class 'Illuminate\Support\ServiceProvider' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Providers/BroadcastServiceProvider.php on line 8
+[14-Nov-2025 05:16:54 UTC] PHP Fatal error:  Class 'Illuminate\Foundation\Support\Providers\EventServiceProvider' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Providers/EventServiceProvider.php on line 10

@@ -17,6 +17,7 @@
                 <div class="card">
                     <div class="card-header">
                         <strong class="card-title">Agency Repo List</strong>
+                        <a class="btn btn-primary btn-sm float-right" style="margin-right: 5px" href="{{route('excelDownloadAgencyRepo')}}" target="_blank">Export Agency Repo</a>
                     </div>
                     <div class="card-body">
                         <table class="table table-striped- table-bordered table-hover table-checkable" id="kt_table_1">

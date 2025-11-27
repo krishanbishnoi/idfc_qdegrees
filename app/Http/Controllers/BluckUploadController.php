@@ -41,9 +41,13 @@ class BluckUploadController extends Controller
         if($request->hasFile('file')){
             $path1 = $request->file('file')->store('temp'); 
             $dacpath=storage_path('app').'/'.$path1;
+            
             $branchImport = new BranchImport();
+
+            Excel::import($branchImport, $dacpath);
+
             try{
-                Excel::import($branchImport, $dacpath);
+                
             }catch ( \Maatwebsite\Excel\Validators\ValidationException $e){
                 $failures = $e->failures();
                 // dd($failures,$e->getMessage());

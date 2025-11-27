@@ -1,0 +1,4 @@
+[06-Aug-2025 23:25:35 UTC] PHP Fatal error:  Uncaught Error: Class 'Route' not found in /home/qdegrees/public_html/idfc.qdegrees.com/routes/api.php:32
+Stack trace:
+#0 {main}
+  thrown in /home/qdegrees/public_html/idfc.qdegrees.com/routes/api.php on line 32

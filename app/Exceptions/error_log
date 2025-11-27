@@ -1,0 +1,1 @@
+[14-Nov-2025 05:16:45 UTC] PHP Fatal error:  Class 'Illuminate\Foundation\Exceptions\Handler' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Exceptions/Handler.php on line 8

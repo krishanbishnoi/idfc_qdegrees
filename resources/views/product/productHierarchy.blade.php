@@ -24,6 +24,17 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class=" form-group">
+                        <label for="text-input" class=" form-control-label">Branch</label>
+                        <select name="branch" id="branch" data-placeholder="Choose a Branch..." class="standardSelect form-control" tabindex="3">
+                            <option>Choose a branch...</option>
+                            @foreach($branch as $k=>$value)
+                                <option value="{{$value->id}}">{{$value->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class=" form-group">
                         <label for="text-input" class=" form-control-label">Product Type</label>
                         <select name="type" id="type" data-placeholder="Choose a Product Type..." class="standardSelect form-control" tabindex="3">
                             <option>Choose a Products...</option>
@@ -51,7 +62,7 @@
                     <div class=" form-group">
                         <label for="text-input" class=" form-control-label">{{$item}}</label>
                         <select name="{{str_replace(' ','_',$item)}}" id="type" data-placeholder="Choose a {{$item}}..." class="standardSelect form-control" tabindex="3">
-                            <option>Choose a {{$item}}...</option>
+                            <option value="">Choose a {{$item}}...</option>
                             @isset($finalUser[$item])
                                 @foreach($finalUser[$item] as $k=>$value)
                                     <option value="{{$value->id}}">{{$value->name}}</option>

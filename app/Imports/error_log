@@ -1,0 +1,8 @@
+[14-Nov-2025 05:16:50 UTC] PHP Fatal error:  Trait 'Maatwebsite\Excel\Concerns\Importable' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Imports/BranchImport.php on line 33
+[14-Nov-2025 05:16:50 UTC] PHP Fatal error:  Interface 'Maatwebsite\Excel\Concerns\ToModel' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Imports/SetlementImport.php on line 13
+[14-Nov-2025 05:16:50 UTC] PHP Fatal error:  Interface 'Maatwebsite\Excel\Concerns\ToModel' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Imports/AdverseImport.php on line 16
+[14-Nov-2025 05:16:50 UTC] PHP Fatal error:  Trait 'Maatwebsite\Excel\Concerns\Importable' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Imports/HolidayImport.php on line 24
+[14-Nov-2025 05:16:50 UTC] PHP Fatal error:  Interface 'Maatwebsite\Excel\Concerns\ToModel' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Imports/DacImport.php on line 12
+[14-Nov-2025 05:16:50 UTC] PHP Fatal error:  Interface 'Maatwebsite\Excel\Concerns\ToModel' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Imports/AllocationImport.php on line 13
+[14-Nov-2025 05:16:51 UTC] PHP Fatal error:  Interface 'Maatwebsite\Excel\Concerns\ToModel' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Imports/TrailIntensityImport.php on line 13
+[14-Nov-2025 05:16:51 UTC] PHP Fatal error:  Trait 'Maatwebsite\Excel\Concerns\Importable' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Imports/UsersImport.php on line 25

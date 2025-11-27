@@ -36,6 +36,7 @@
                             <option value="commercial_vehicle">Commercial Vehicle</option>
                             <option value="rural">Rural</option>
                             <option value="alliance">Alliance</option>
+                            <option value="credit_card">Credit Card</option>
                           </select>
                     </div>
                 </div>

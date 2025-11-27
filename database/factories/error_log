@@ -1,0 +1,4 @@
+[14-Nov-2025 05:16:57 UTC] PHP Fatal error:  Uncaught Error: Call to a member function define() on null in /home/qdegrees/public_html/idfc.qdegrees.com/database/factories/UserFactory.php:19
+Stack trace:
+#0 {main}
+  thrown in /home/qdegrees/public_html/idfc.qdegrees.com/database/factories/UserFactory.php on line 19

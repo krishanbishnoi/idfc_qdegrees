@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('css')
 {{-- <link rel="stylesheet" href="{{URL::asset('public/base/style.bundle.css')}}"> --}}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css"; rel="stylesheet" />
 <style>
 .sp-row .row {
     margin-bottom: 15px;
@@ -83,54 +84,71 @@ Messages
 						@if($data->type=='branch')
 							<div class="col-md-3 form-group">
 								<label>Branch*</label>
-								<select name="branch" class="form-control branch">
+								<select name="branch" class="form-control branch js-example-basic-single" id="audit_for">
 								<option value="">Choose Branch</option>
 								@foreach ($branch as $item)  
-									<option value="{{$item->id}}">{{$item->name}}</option>
+									<option value="{{$item->id}}">{{$item->uuid}} {{$item->name}}</option>
 								@endforeach
 								</select>
 							</div>
 						@elseif($data->type=='agency')
+						
 							<div class="col-md-3 form-group">
 								<label>Agency*</label>
-								<select name="agency" class="form-control agency">
+								<select name="agency" class="form-control agency js-example-basic-single" id="audit_for">
 								<option value="">Choose Agency</option>
 								@foreach ($agency as $item)  
-									<option value="{{$item->id}}">{{$item->name}}</option>
+									<option value="{{$item->id}}">{{$item->agency_id}} {{$item->name}}</option>
 								@endforeach
 								</select>
 							</div>
 						@elseif($data->type=='repo_yard')
 							<div class="col-md-3 form-group">
 								<label>Yard*</label>
-								<select name="yard" class="form-control yard">
+								<select name="yard" class="form-control yard js-example-basic-single" id="audit_for">
 								<option value="">Choose Yard</option>
 								@foreach ($yard as $item)  
-									<option value="{{$item->id}}">{{$item->name}}</option>
+									<option value="{{$item->id}}">{{$item->yard_id}} {{$item->name}}</option>
 								@endforeach
 								</select>
 							</div>
 							@elseif($data->type=='branch_repo')
 							<div class="col-md-3 form-group">
 								<label>Branch Repo*</label>
-								<select name="branch_repo" class="form-control branch_repo">
+								<select name="branch_repo" class="form-control branch_repo js-example-basic-single" id="audit_for">
 								<option value="">Choose Branch Repo</option>
 								@foreach ($branchRepo as $item)  
-									<option value="{{$item->id}}">{{$item->name}}</option>
+									<option value="{{$item->id}}">{{$item->branch_repo_id}} {{$item->name}}</option>
 								@endforeach
 								</select>
 							</div>
 							@elseif($data->type=='agency_repo')
+							
 							<div class="col-md-3 form-group">
 								<label>Agency Repo*</label>
-								<select name="agency_repo" class="form-control agency_repo">
+								<select name="agency_repo" class="form-control agency_repo js-example-basic-single" id="audit_for">
 								<option value="">Choose Yard</option>
 								@foreach ($agencyRepo as $item)  
-									<option value="{{$item->id}}">{{$item->name}}</option>
+									<option value="{{$item->id}}">{{$item->agency_repo_id}} {{$item->name}}</option>
 								@endforeach
 								</select>
 							</div>
 						@endif
+						
+						<div class="col-md-3 form-group">
+								<label>Audit Cycle*</label>
+								<select name="audit_cycle" class="form-control audit_cycle js-example-basic-single" id="audit_cycle" required="true">
+								@foreach ($cycle as $item)  
+									<option value="{{$item->id}}">{{$item->name}}</option>
+								@endforeach
+								</select>
+						</div>
+						
+						<div class="col-md-3 form-group">
+								<label>Audit Date*</label>
+								<input type="date" name="audit_date" class="form-control audit_date js-example-basic-single" id="audit_date" required="true">
+						</div>
+						
 						<div class="col-md-3 form-group" id="product" style="display:none;">
 							<label>Product*</label>
 							<select name="product" class="form-control product" id="productSelect">
@@ -166,68 +184,84 @@ Messages
 					@php
 						$total=0;
 					@endphp
+					<div id="accordion">
 					@foreach ($data->parameter as $item)
-					<div class="row flex-container" style="border-bottom: 1px solid rgb(204, 204, 204); padding: 20px 0px; height: 100%;">
-						<div class="col-md-2 kt-font-bolder kt-font-primary flex-item centerparameter">
-							{{$item->parameter}}
-						</div>
-						<div class="col-md-10 sp-row">
-							@foreach ($item->qm_sheet_sub_parameter as $value)
-							<div class="row flex-container mb-2">
-								<div class="col-md-3 kt-font-bold">
-									{{$value->sub_parameter}} <i title="sdfdf" class="la la-info-circle kt-font-warning sp-details-top"></i>
+					<div class="card">
+							<div class="card-header" id="<?php echo 'heading'.$item->id ?>" data-toggle="collapse" data-target="<?php echo '#collapse'.$item->id ?>"  aria-controls="<?php echo '#collapse'.$item->id ?>" aria-expanded="false">
+						      <h5 class="mb-0">
+						        <button class="btn btn-link" data-toggle="collapse" data-target="<?php echo '#collapse'.$item->id ?>"  aria-controls="<?php echo '#collapse'.$item->id ?>" aria-expanded="false">
+						          {{$item->parameter}}
+						        </button>
+						      </h5>
+					    	</div>
+
+							<div class="row flex-container collapse" style="border-bottom: 1px solid rgb(204, 204, 204); padding: 20px 0px; height: 100%;" id="<?php echo 'collapse'.$item->id ?>"  aria-labelledby="<?php echo 'heading'.$item->id ?>" data-parent="#accordion">
+								<div class="col-md-2 kt-font-bolder kt-font-primary flex-item centerparameter">
+									{{$item->parameter}}
 								</div>
-								<div class="col-md-3">
-									<select class="form-control 0bervation" id="obs{{$value->id}}" data-id="{{$value->id}}" data-parameterId="{{$item->id}}" data-point="{{$value->weight}}">
-										<option value="0">Choose type</option>
-										@if($value->pass==1)<option value="{{$value->weight}}">Pass</option>@endif
-										@if($value->fail==1)<option value="0">Fail</option>@endif
-										@if($value->critical==1)<option value="Critical">Critical</option>@endif
-										@if($value->na==1)<option value="N/A">N/A</option>@endif
-										@if($value->pwd==1)<option value="{{round(($value->weight)/2,2)}}">PWD</option>@endif
-										@if($value->per==1)<option value="{{round(($value->weight))}}" data-type="rating">Percentage</option>@endif
-									</select>
-									<span style="display:none" id="org{{$value->id}}">{{$value->weight}}</span>
-								</div>
-								<div class="col-md-3">
-									<select class="form-control ratingSelect" name="ratingSelect" id="ratingSelect{{$value->id}}"  style="display:none">
-										<option>select percentage</option>
-										@for($counting=0;$counting<=100;$counting=$counting+10)
-											<option value="{{$counting}}">{{$counting}}%</option>
-										@endfor
-									</select>
-									<input type="text" id="{{$value->id}}" readonly="readonly" class="form-control">
-								</div>
-								<!-- <div class="col-md-3">
-									<textarea class="form-control" id="remark{{$value->id}}"></textarea>
-								</div> -->
-								<div class="col-md-3">
-									<button class="btn btn-danger btn-sm alertModal" data-parameterid="{{$item->id}}" data-id="{{$value->id}}">Alert</button>
-									<button class="btn btn-info btn-sm artifactModal mr-1" data-parameterid="{{$item->id}}" data-id="{{$value->id}}">Artifact</button>
+								<div class="col-md-10 sp-row">
+									@foreach ($item->qm_sheet_sub_parameter as $value)
+									<div class="row flex-container mb-2">
+									    <div class="col-md-3 kt-font-bold">
+										
+											{{$value->sub_parameter}} <i title="sdfdf" class="la la-info-circle kt-font-warning sp-details-top"></i>
+										</div>
+										<div class="col-md-3">
+											<select class="form-control 0bervation" id="obs{{$value->id}}" data-id="{{$value->id}}" data-parameterId="{{$item->id}}" data-point="{{$value->weight}}" required>
+												<option value="0">Choose type</option>
+												@if($value->pass==1)<option value="{{$value->weight}}">Pass</option>@endif
+												@if($value->fail==1)<option value="0">Fail</option>@endif
+												@if($value->critical==1)<option value="Critical">Critical</option>@endif
+												@if($value->na==1)<option value="N/A">N/A</option>@endif
+												@if($value->pwd==1)<option value="{{round(($value->weight)/2,2)}}">PWD</option>@endif
+												@if($value->per==1)<option value="{{round(($value->weight))}}" data-type="rating">Percentage</option>@endif
+											</select>
+											<span style="display:none" id="org{{$value->id}}">{{$value->weight}}</span>
+										</div>
+										<div class="col-md-3">
+											<select class="form-control ratingSelect" name="ratingSelect" id="ratingSelect{{$value->id}}"  style="display:none" required>
+												@for($counting=0;$counting<=100;$counting=$counting+5)
+													 @if($counting == 0)
+													<option value="{{$counting}}" selected>{{$counting}}%</option>
+												@else
+													<option value="{{$counting}}">{{$counting}}%</option>
+													@endif
+												@endfor
+											</select>
+											<input type="text" id="{{$value->id}}" readonly="readonly" class="form-control">
+										</div>
+										<!-- <div class="col-md-3">
+											<textarea class="form-control" id="remark{{$value->id}}"></textarea>
+										</div> -->
+										<div class="col-md-3">
+											<button class="btn btn-danger btn-sm alertModal" data-parameterid="{{$item->id}}" data-id="{{$value->id}}" >Alert</button>
+											<button class="btn btn-info btn-sm artifactModal mr-1" data-parameterid="{{$item->id}}" data-id="{{$value->id}}"  >Artifact</button>
+											<input type="checkbox" id="ackalert{{$value->id}}" data-id="{{$value->id}}" data-parameterId="{{$item->id}}" />
+										</div>
+									</div>
+									<div class="col-md-12 row">
+										<!-- <div class="col-md-2">
+											Remark
+										</div> -->
+										<div class="col-md-10">
+											<textarea class="form-control" id="remark{{$value->id}}" placeholder="Enter Remark Here" required></textarea>
+										</div>
+									</div>
+									<div class="col-md-12 row">
+										<div class="col-md-10 preview{{$value->id}}">
+										</div>
+									</div>
+									<div id="seprator" class="kt-separator kt-separator--border-dashed "></div>
+									@php
+										$total=$total+$value->weight;
+									@endphp
+									@endforeach
+									<span style="display:none" id="total{{$item->id}}">{{$total}}</span>	
 								</div>
 							</div>
-							<div class="col-md-12 row">
-								<!-- <div class="col-md-2">
-									Remark
-								</div> -->
-								<div class="col-md-10">
-									<textarea class="form-control" id="remark{{$value->id}}" placeholder="Enter Remark Here"></textarea>
-								</div>
-							</div>
-							<div class="col-md-12 row">
-								<div class="col-md-10 preview{{$value->id}}">
-								</div>
-							</div>
-							<div id="seprator" class="kt-separator kt-separator--border-dashed "></div>
-							@php
-								$total=$total+$value->weight;
-							@endphp
-							@endforeach
-							<span style="display:none" id="total{{$item->id}}">{{$total}}</span>	
-						</div>
 					</div>
-					
 					@endforeach
+					</div>
 					{{-- // result --}}
 					<div>
 						
@@ -301,6 +335,9 @@ Messages
 	</div>
 
 	</div>
+	<button type="submit" class="btn btn-primary btn-sm savebutton">
+		<i class="fa fa-dot-circle-o"></i> Save
+	</button>
 	<button type="submit" class="btn btn-primary btn-sm submit">
 		<i class="fa fa-dot-circle-o"></i> Submit
 	</button>
@@ -400,9 +437,17 @@ Messages
 @include('shared.table_css');
 @endsection
 @section('js')
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js";></script>
 <script>
+
+
+jQuery(document).ready(function() {
+    jQuery('.js-example-basic-single').select2();
+});
+
 jQuery('#collection_manager-select').on('change',function(e){
-	var code =jQuery(this).data('code');
+    var code =jQuery(this).data('code');
 	var bucket =jQuery(this).data('bucket');
 	jQuery('input[name=Collection_Manager_bucket]').val(bucket)
 	jQuery('input[name=Collection_Managercode]').val(code)
@@ -414,6 +459,7 @@ jQuery('#collection_manager-select').on('change',function(e){
 	}
 })
 var redalertData={};
+var artifactData={};
 	function sum( obj ) {
 		var sum = 0;
 		for( var el in obj ) {
@@ -539,12 +585,121 @@ var redalertData={};
 		}
 	})
 	jQuery(".submit").on("click",function(e){
-		if(remarkIsFilled(result)){
-			submitDataFun();
+	    
+	    //added by nisha
+	    var className = jQuery('#audit_for').attr('name');
+		if(jQuery('#audit_for').val() == ''){
+			alert('Please select '+ className);
+			return false;
 		}
+
+		if(jQuery('#productSelect').val() == ''){
+			alert('Please select product');
+			return false;
+		}
+
+		if(jQuery('#collection_manager-select').val() == '' || jQuery('#collection_manager-select').val() == undefined){
+			alert('Please select collection manager');
+			return false;
+		}
+        var observation_rs=true;
+          jQuery('.0bervation').each(function(){ 
+          	var id=jQuery(this).val();
+          	var txt1=jQuery(this).children("option").filter(":selected").text();
+          	console.log(id);
+          	if(id == null || typeof(id) == 'undefined' || txt1.trim() == 'Choose type')
+          	{
+			observation_rs= false;	
+          	}
+          	});
+          	if(observation_rs == true){
+          	if(remarkIsFilled(result)){
+			  if(confirm("Are you sure to submit audit. after submit you dont be able to edit audit")){
+				jQuery(".submit").prop('disabled', true);
+				jQuery(".savebutton").prop('disabled', true);
+				submitDataFun('submit');
+			 }
+			}
+			else{
+				alert('please filled remarks');
+				return false;
+			}
+		}else
+		{
+			alert('please choose Observation');
+			return false;
+		}
+
+		// if(remarkIsFilled(result)){
+		// 	if(confirm("Are you sure to submit audit. after submit you dont be able to edit audit")){
+		// 		jQuery(".submit").prop('disabled', true);
+		// 		jQuery(".savebutton").prop('disabled', true);
+		// 		submitDataFun('submit');
+		// 	}
+		// }
+		// else{
+		// 	alert('please filled remarks');
+		// 	return false;
+		// }
+	})
+	jQuery(".savebutton").on("click",function(e){
+	    //added by nisha 
+	    var className = jQuery('#audit_for').attr('name');
+		if(jQuery('#audit_for').val() == ''){
+			alert('Please select '+ className);
+			return false;
+		}
+
+		if(jQuery('#productSelect').val() == '')
+		{
+			alert('Please select product');
+			return false;
+		}
+
+		if(jQuery('#collection_manager-select').val() == '' || jQuery('#collection_manager-select').val() == undefined){
+			alert('Please select collection manager');
+			return false;
+		}
+
+		 var observation_rs=true;
+          jQuery('.0bervation').each(function(){ 
+          	var id=jQuery(this).val();
+          	var txt1=jQuery(this).children("option").filter(":selected").text();
+          	console.log(id);
+          	if(id == null || typeof(id) == 'undefined' || txt1.trim() == 'Choose type')
+          	{
+			observation_rs= false;	
+          	}
+          	});
+          	if(observation_rs == true){
+          	if(remarkIsFilled(result)){
+			  if(confirm("Are you sure to saved audit.")){
+				jQuery(".submit").prop('disabled', true);
+				jQuery(".savebutton").prop('disabled', true);
+				submitDataFun('save');
+			 }
+			}
+			else{
+				alert('please filled remarks');
+				return false;
+			}
+		}else
+		{
+			alert('please choose Observation');
+			return false;
+		}
+
+		//end
+		//console.log("hiii");
+		//if(remarkIsFilled(result)){
+			//jQuery(".submit").prop('disabled', true);
+			//jQuery(".savebutton").prop('disabled', true);
+			//submitDataFun('save');
+		/*}
 		else{
 			alert('please filled remarks')
-		}
+		}*/
+		
 	})
 	jQuery('.branch').on('change',function(e){
 		gerProduct(e.target.value,'branch')
@@ -559,14 +714,18 @@ var redalertData={};
 		gerProduct(e.target.value,'branch_repo')
 	})
 	jQuery('.agency_repo').on('change',function(e){
+		
 		gerProduct(e.target.value,'agency_repo')
 	})
 	jQuery('.product').on('change',function(e){
 		var type=jQuery('#productSelect').attr("data-type")
 		var id=jQuery('#productSelect').attr("data-id")
 		editBranch(id,e.target.value,type)
+		
 	})
 	function gerProduct(id,type){
+		console.log(id);
+		
 		var saveData = jQuery.ajax({
 			type: 'get',
 			url: "{{url('get_product')}}/"+id+'/'+type,
@@ -584,8 +743,10 @@ var redalertData={};
 				// window.location='{{ url("audited_list")}}'
 			}
 		});
-		saveData.error(function() { alert("Something went wrong"); });
+		// saveData.error(function() { alert("Something went wrong"); });
 	}
+	
+	
 	function editBranch(id,product_id,type){
 		var saveData = jQuery.ajax({
 			type: 'get',
@@ -595,9 +756,10 @@ var redalertData={};
 				// console.log(resultData)
 				jQuery('#data').html(resultData)
 				// window.location='{{ url("audited_list")}}'
+				getLocation()
 			}
 		});
-		saveData.error(function() { alert("Something went wrong"); });
+	    //	saveData.error(function() { alert("Something went wrong"); });
 	}
 	jQuery('.alertModal').on('click',function(e){
 		var subparameterId =jQuery(this).data('id')
@@ -623,9 +785,13 @@ var redalertData={};
 		jQuery('#alertlob').val(typelob)
 		console.log(parameterId)
 		jQuery('#exampleModal').modal('show');
+		
 	})
+	
+	
+	
 	jQuery('.artifactModal').on('click',function(e){
-		var subparameterId =jQuery(this).data('id')
+	    var subparameterId =jQuery(this).data('id')
 		var parameterId =jQuery(this).data('parameterid')
 		jQuery('#artifactParameterId').val(parameterId)
 		jQuery('#artifactSubParameterId').val(subparameterId)
@@ -727,6 +893,9 @@ var redalertData={};
 			}, false)
 			return xhr;
 			},
+			headers: {
+				'X-CSRF-TOKEN': "{{ csrf_token() }}"
+			},
 			type: 'post',
 			url: "{{url('artifact')}}",
 			data: data,
@@ -741,7 +910,7 @@ var redalertData={};
 				jQuery('#artifactModal').modal('hide');
 			}
 		});
-		saveData.error(function() { alert("Something went wrong"); });
+		//saveData.error(function() { alert("Something went wrong"); });
 	})
 	jQuery(document).on('click', '.close', function() {
 		var id = jQuery(this).closest('.img-wrap').find('img').data('id');
@@ -755,13 +924,14 @@ var redalertData={};
 					jQuery('.preview'+id).remove();
 				}
 			});
-		saveData.error(function() { alert("Something went wrong"); });
+		//saveData.error(function() { alert("Something went wrong"); });
 	});
 	function ImgPreview(input, placeToInsertImagePreview) {
 		// if (input) {
 			var filesAmount = input.length;
 			var image=''
 			input.map(function(item){
+				artifactData[item.id]=item.id;
 			image=image+`<div class="img-wrap preview${item.id}" style="position: relative;display: inline-block;font-size: 0;">
 					<span class="close">&times;</span>
 					<img src="${item.file}" style="width:100px;height:100px;" data-id="${item.id}">
@@ -791,7 +961,7 @@ var redalertData={};
 					}
 				}
 			});
-			saveData.error(function() { alert("Something went wrong"); });
+			//saveData.error(function() { alert("Something went wrong"); });
 		}
 	}
 	function selectUser(val){
@@ -829,7 +999,7 @@ var redalertData={};
 					}
 				}
 			});
-			saveData.error(function() { alert("Something went wrong"); });
+		//	saveData.error(function() { alert("Something went wrong"); });
 		}
 	}
 	function selectAgencyManager(val){
@@ -866,7 +1036,7 @@ var redalertData={};
 					}
 				}
 			});
-			saveData.error(function() { alert("Something went wrong"); });
+		//	saveData.error(function() { alert("Something went wrong"); });
 		}
 	}
 	function selectYardManager(val){
@@ -882,7 +1052,8 @@ var redalertData={};
 		});
 	// console.log(xyz)
 	}
-	function submitDataFun(){
+	function submitDataFun(typesubmit){
+
 	var submitData=[];
 		var parameters={}
 		var sub={}
@@ -892,6 +1063,10 @@ var redalertData={};
 			if( result.hasOwnProperty( el ) ) {
 				for( var row in result[el] ) {
 					if( result[el].hasOwnProperty( row ) ) {
+					    var ck=0;
+                        if(jQuery('#ackalert'+row).prop('checked') == true){
+                             ck=1;
+                        }
 						sub[row]={
 							'remark':jQuery('#remark'+row).val(),
 							'orignal_weight':jQuery('#org'+row).text(),
@@ -899,6 +1074,8 @@ var redalertData={};
 							'score':jQuery('#'+row).val(),
 							'is_percentage':(jQuery('#'+row).val()=='rating')?1:0,
 							'selected_per':jQuery('#ratingSelect'+row).val(),
+							'ackalert':ck,
+							'option':jQuery('#obs'+row+' option:selected').text(),
 						}
 					}
 				}
@@ -914,12 +1091,21 @@ var redalertData={};
 			sub={}
 			}
 		}
+
+		if(jQuery('#demogeo').val() == ''){
+			alert("Please Allow Geo Tagging");
+			return false;
+		}
 		submitData.push({
 			'qm_sheet_id':{{$data->id}},
+			'geotag':jQuery('#demogeo').val(),
+			
 			// 'overall_score':jQuery('#scroable').text(),
 			'overall_score':jQuery('#wfatal').text(),
 			'with_fatal_score_per':jQuery('#wfatalper').text(),
 			'branch_id':jQuery('.branch').val(),
+			'audit_cycle':jQuery('.audit_cycle').val(),
+			'audit_date':jQuery('.audit_date').val(),
 			'agency_id':jQuery('.agency').val(),
 			'yard_id':jQuery('.yard').val(),
 			'branch_repo_id':jQuery('.branch_repo').val(),
@@ -928,14 +1114,22 @@ var redalertData={};
 			'collection_manager_email':jQuery('input[name=Collection_Manager_email]').val(),
 			'agency_manager_email':jQuery('input[name=agency_manager_email]').val(),
 			'yard_manager_email':jQuery('input[name=yard_manager_email]').val(),
-			'collection_manager_id':jQuery('#collection_manager-select').val()
+			'collection_manager_id':jQuery('#collection_manager-select').val(),
+			'agency_manager':jQuery('input[name=agency_manager]').val(),
+			'agency_phone':jQuery('input[name=agency_phone]').val(),
+			'status':typesubmit,
+			'artifactIds':JSON.stringify(artifactData)
 		})
 		var ids=[];
+		//console.log('success data---'+submitData,parameters);
 		var saveData = jQuery.ajax({
 			type: 'POST',
 			url: "{{url('allocation/store_audit')}}",
 			data: {'submission_data':submitData,'parameters':parameters,
 			"_token":"{{ csrf_token() }}"
+			},
+			headers: {
+				'X-CSRF-TOKEN': "{{ csrf_token() }}"
 			},
 			dataType: "text",
 			success: function(result) { 
@@ -964,19 +1158,26 @@ var redalertData={};
 					url: "{{url('red-alert')}}",
 					data: data,
 					dataType: "text",
+					headers: {
+						'X-CSRF-TOKEN': "{{ csrf_token() }}"
+					},
 					processData: false,
 					contentType: false,
 					success: function(resultData) { 
-						console.log(resultData)
-						window.location='{{ url("auditor_list")}}'
+						console.log(resultData);
+						window.location='{{ url("auditor_list/1")}}';
 					}
 				});
 				saveAlert.error(function() { alert("Something went wrong");console.log('red-alert-error'); });
 			}
-				window.location='{{ url("auditor_list")}}'
+				window.location='{{ url("auditor_list/1")}}'
+			},
+			complete: function(result) {
+				jQuery(".submit").prop('disabled', false);
+				jQuery(".savebutton").prop('disabled', false);
 			}
 		});
-		saveData.error(function() { alert("Something went wrong");console.log('audit save-error'); });
+		//saveData.error(function() { alert("Something went wrong");console.log('audit save-error'); });
 		console.log(parameters)
 }
 function remarkIsFilled(result){
@@ -999,5 +1200,40 @@ function remarkIsFilled(result){
 	}
 	return remark;
 }
+var x = document.getElementById("demogeo");
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition, showError);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+
+function showPosition(position) {
+  var value =  position.coords.latitude + 
+  " " + position.coords.longitude;
+  console.log(value)
+  jQuery('#demogeo').val(value)
+}
+
+function showError(error) {
+  var innerHTML=''
+	switch(error.code) {
+    case error.PERMISSION_DENIED:
+      innerHTML = "User denied the request for Geolocation."
+      break;
+    case error.POSITION_UNAVAILABLE:
+      innerHTML = "Location information is unavailable."
+      break;
+    case error.TIMEOUT:
+      innerHTML = "The request to get user location timed out."
+      break;
+    case error.UNKNOWN_ERROR:
+      innerHTML = "An unknown error occurred."
+      break;
+  }
+  jQuery('#demogeo').val(value)
+}
+
 </script>
 @endsection

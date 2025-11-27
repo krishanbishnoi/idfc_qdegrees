@@ -32,6 +32,7 @@ Call
 								<option value="commercial_vehicle">Commercial Vehicle</option>
 								<option value="rural">Rural</option>
 								<option value="alliance">Alliance</option>
+								<option value="credit_card">Credit Card</option>
 								</select>
 							</div>
 							<div class="col-md-3 form-group">
@@ -68,10 +69,10 @@ Call
 							Product Name
 						</th>
 						<th title="Field #7">
-							Score With FATAL
+							Score
 						</th>
 						<th title="Field #7">
-							Score Without FATAL
+							Percentage
 						</th>
 						<th>
 							Qc status
@@ -86,59 +87,74 @@ Call
 			</thead>
 			<tbody>
 				@foreach($data as $row)
-				@php
-					$name='';
-					switch ($row->audit->qmsheet->type) {
-						case 'agency':
-							$name=$row->audit->agency->name ?? '';
-							break;
-						case 'branch':
-							$name=$row->audit->branch->name ?? '';
-							break;
-						case 'repo_yard':
-							$name=$row->audit->yard->name ?? '';
-							break;
-						
-					}
-					$status='';
-					switch ($row->status) {
-						case '1':
-							$status='Pass With Edit';
-							break;
-						case '2':
-							$status='Pass';
-							break;
-						case '3':
-							$status='Faild';
-							break;
-						
-					}
-					
-				@endphp
-				<tr>
-					<td>{{$loop->iteration}}</td>
-					<td>{{$row->audit->created_at}}</td>
-					<td>{{$row->audit->qmsheet->lob ?? ''}}</td>
-					<td>{{$row->audit->qmsheet->type ?? ''}}</td>
-					<td>{{$name}}</td>
-					<td>{{$row->audit->product->name ?? ''}}</td>
-					{{-- <td>{{$row->audit->raw_data->agent_name}}</td> --}}
-					<td>{{($row->audit->is_critical==1)?0:$row->audit->overall_score.""}}</td>
-					<td>{{$row->audit->overall_score}} </td>
-					<td>{{$status}} </td>
-					<td>{{$row->user->name ?? ''}} </td>
-					<td nowrap>
-						@if($row->status<3)
-						<a href="{{url('action/'.Crypt::encrypt($row->audit_id).'/alert')}}" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Rise Action Alert">
-								<i class="fa fa-bell"></i>
-						</a>
-						@endif
+					@if($row->audit!=null)
+						@php
+						ini_set('memory_limit', '-1');
+							$name='';
+							switch ($row->audit->qmsheet->type ?? '') {
+								case 'agency':
+									$name=$row->audit->agency->name ?? '';
+									break;
+								case 'branch':
+									$name=$row->audit->branch->name ?? '';
+									break;
+								case 'repo_yard':
+									$name=$row->audit->yard->name ?? '';
+									break;
+								
+							}
+							$status='';
+							switch ($row->status) {
+								case '1':
+									$status='Pass With Edit';
+									break;
+								case '2':
+									$status='Pass';
+									break;
+								case '3':
+									$status='Faild';
+									break;
+								
+							}
+							$total=0;
+							$point=0;
+							$per=0;
+							foreach($row->audit->audit_results as $value){
+								$total=$total+(($value->score!='N/A')?(int)($value->sub_parameter_detail->weight ?? 0) : 0);
+								$point=$point+(($value->score!='N/A')?(int)$value->score : 0);
+								// dump($point,$total);
+							}
+							// dd($point,$total);
+							if($total!=0){
+								$per=($point/$total)*100;
+							}
+						@endphp
+						<tr>
+							<td>{{$loop->iteration}}</td>
+							<td>{{$row->audit->created_at}}</td>
+							<td>{{$row->audit->qmsheet->lob ?? ''}}</td>
+							<td>{{$row->audit->qmsheet->type ?? ''}}</td>
+							<td>{{$name}}</td>
+							<td>{{$row->audit->product->name ?? ''}}</td>
+							{{-- <td>{{$row->audit->raw_data->agent_name}}</td> --}}
+							<td>{{($row->audit->is_critical==1)?0:$row->audit->overall_score.""}}</td>
+							<td>{{round($per,2)}} %</td>
+							{{-- <td>{{$row->audit->overall_score}} </td> --}}
+							<td>{{$status}} </td>
+							<td>{{$row->user->name ?? ''}} </td>
+							<td nowrap>
+								@if($row->status<3)
+								<a href="{{url('action/'.Crypt::encrypt($row->audit_id).'/alert')}}" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Rise Action Alert">
+										<i class="fa fa-bell"></i>
+								</a>
+								@endif
 
-                    </div>
+							</div>
 
-                </td>
-			</tr>
-			@endforeach
+						</td>
+					</tr>
+					@endif
+				@endforeach
 			@if(count($data)==0)
 				<tr>
 					<td  colspan="9" class="text-center">No Record found</td>

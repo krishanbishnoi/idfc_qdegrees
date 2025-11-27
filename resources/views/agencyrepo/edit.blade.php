@@ -15,10 +15,10 @@
         <div class="card-body card-block">
 
             <!--begin::Form-->
-            {!! Form::model(agencyrepo,
+            {!! Form::model($agencyrepo,
                       array(
                       'method' => 'PATCH',
-                        'url' =>'agencyrepo/'.Crypt::encrypt(agencyrepo->id),
+                        'url' =>'agencyrepo/'.Crypt::encrypt($agencyrepo->id),
                         'class' => 'kt-form',
                         'data-toggle'=>"validator")
                       ) !!}
@@ -29,7 +29,7 @@
                         <div class="form-group">
                             <label for="text-input" class=" form-control-label">Agency Repo Name</label>
                             <input type="text" id="text-input" name="name" placeholder="Agency Repo Name"
-                                                                class="form-control" value="{{agencyrepo->name}}">
+                                                                class="form-control" value="{{$agencyrepo->name}}">
                         </div>
                     </div>
                     <div class="col col-md-4">
@@ -38,7 +38,7 @@
                             <select class="form-control" name="branch_name" id="branch_name">
                                 <option value="">Choose Branch</option>
                                 @foreach ($branch as $item)
-                                    <option value="{{$item->id}}" {{(agencyrepo->branch_id==$item->id)?'selected':''}}>{{$item->name}}</option>
+                                    <option value="{{$item->id}}" {{($agencyrepo->branch_id==$item->id)?'selected':''}}>{{$item->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -55,7 +55,7 @@
                         <div class="form-group">
                             <label for="text-input" class=" form-control-label">Location</label>
                             <input type="text" id="text-input" name="location" placeholder="location"
-                                                                class="form-control" value="{{agencyrepo->location}}">
+                                                                class="form-control" value="{{$agencyrepo->location}}">
                         </div>
                     </div>
 
@@ -82,7 +82,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     <script>
         jQuery(document).on('ready',function(e){
-            getProduct("{{agencyrepo->branch_id}}");
+            getProduct("{{$agencyrepo->branch_id}}");
         })
         jQuery('#branch_name').change(function () {
             var id = jQuery(this).val();
@@ -103,7 +103,7 @@
                             });  
                         }
                         jQuery('#product').html(data)
-                        jQuery('#product').val('{{agencyrepo->product_id}}')
+                        jQuery('#product').val('{{$agencyrepo->product_id}}')
                     }
 
                 });

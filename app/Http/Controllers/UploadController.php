@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Response;
 use App\Imports\DacImport;
+use App\Model\Branch;
 use App\Imports\AllocationImport;
 use App\Imports\TrailIntensityImport;
 use App\Imports\SetlementImport;
 use App\Imports\AdverseImport;
 use App\Imports\UsersImport;
+use App\Imports\BulkDeactivate;
+use App\Exports\InternalDump;
+use App\Exports\RawDump;
+use App\Exports\QcAndQaChangesExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Uploads\Allocation;
 use App\Uploads\Dacs;
@@ -19,6 +24,7 @@ use App\Uploads\AdverseBulk;
 use Carbon\Carbon;
 use Validator;
 use Spatie\Permission\Models\Role;
+error_reporting(E_ALL & ~E_NOTICE);
 class UploadController extends Controller
 {
     /**
@@ -36,6 +42,11 @@ class UploadController extends Controller
         return view('acl.users.upload',compact('roles'));
     }
 
+    public function bulkDeactivate()
+    {
+        return view('acl.users.deactivate');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -43,7 +54,7 @@ class UploadController extends Controller
      */
     public function create()
     {
-        //
+     
     }
 
     /**
@@ -173,6 +184,37 @@ class UploadController extends Controller
             }
             return redirect('user');     
        }
+
+    public function bulk_user_deactivate(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_excel' => 'required',
+         ]);
+         $validator->after(function ($validator) use ($request){
+            if($request->hasFile('user_excel') && $this->checkExcelFile($request->file('user_excel')->getClientOriginalExtension()) == false) {
+                //return validator with error by file input name
+                $validator->errors()->add('file', 'The file must be a file of type: xlsx, xls');
+            }
+        });
+        if ($validator->fails()) {
+
+            return redirect()->back()->with('error', [$validator->errors()->all()])->withInput();
+        }
+        if($request->hasFile('user_excel')){
+            $path1 = $request->file('user_excel')->store('temp'); 
+            $dacpath=storage_path('app').'/'.$path1;
+            // dd($request->all());
+            // Excel::import(new UsersImport($request->role), $dacpath);
+            $exampleImport = new BulkDeactivate(["2","3"]);
+            try{
+                //Excel::import(new BulkDeactivate, $dacpath);
+                Excel::import( $exampleImport, $dacpath);
+            }catch ( \Maatwebsite\Excel\Validators\ValidationException $e){
+                $failures = $e->failures();
+                return redirect()->back()->withErrors($failures)->withInput();
+            }
+        }
+        return redirect('user')->with('success', ['User De-activated successfully.']);;     
+   }
 
     /**
      * Display the specified resource.
@@ -448,4 +490,42 @@ class UploadController extends Controller
         }
         return ['data'=>$allocationGap,'total'=>$total];
     }
+    /* public function rawDumpAudit(){
+        
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 600);
+        return Excel::download(new RawDump, 'dump.xlsx');
+    }*/
+
+    public function rawDumpAudit(Request $request){
+
+        
+
+        ini_set('memory_limit', '-1');
+
+        ini_set('max_execution_time', 600);
+        $filter_data = $request->all();
+        return Excel::download(new RawDump($filter_data), 'dump.xlsx');
+
+    }
+    public function rawDumpTest(){
+        
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 600);
+        return Excel::download(new QcAndQaChangesExport, 'dump.xlsx');
+    }
+      //added by kratika jain
+     public function reportindex(){
+        $branch=Branch::get(['id', 'name']);
+        return view('bulkUpload.reports',compact('branch'));
+
+    }
+    public function internalRawDump(Request $request){
+    //dd($request->all());
+      ini_set('memory_limit', '-1');
+
+        ini_set('max_execution_time', 600);
+        $dumpdata = $request->all();
+        return Excel::download(new InternalDump($dumpdata), 'dumpData.xls');
+   }
 }

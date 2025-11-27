@@ -1,14 +1,273 @@
 @extends('layouts.master')
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
 @endsection
 @section('content')
  <!-- Content -->
  <input type="hidden" name="url" id="url" value={{url('/')}}>
  <input type="hidden" name="token" id="token" value={{@csrf_token()}}>
+ 
+ @role('Admin')
+ <div>
+  
+
+<button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#myModal">
+ Dump Download
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: max-content;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Dump Download</h4>
+      </div>
+            <form method="POST" action="{{route('dump-excel')}}" autocomplete="off">
+            <div class="modal-body">
+        
+        
+
+                        <div class="row">
+
+                            @csrf
+
+                            <div class="col-md-3 form-group">
+
+                                <label>Lob Name*</label>
+
+                                <select name="lob" class="form-control">
+
+                                  <option value="">Choose Lob Name</option>
+
+                                  <option value="collection">Collection</option>
+
+                                  <option value="commercial_vehicle">Commercial Vehicle</option>
+
+                                  <option value="rural">Rural</option>
+
+                                  <option value="alliance">Alliance</option>
+                                  <option value="credit_card">Credit Card</option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-3 form-group">
+
+                                <label>Select Branch</label>
+
+                                <select class="form-control" name="branch_name" id="branch_name"  value="{{old('branch_name')}}">
+
+                                    <option value="">All</option>
+                                    
+                                    @foreach ($branch as $item)
+
+                                        <option value="{{$item->id}}" {{($item->id == old('branch_name'))?'selected':''}} >{{$item->name}}</option>
+
+                                    @endforeach
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-3 form-group">
+
+                                <label>Start Date*</label>
+
+                                <input name="start_date" type="text" data-date-format="yyyy-mm-dd" class="form-control datepicker" required />
+
+                            </div>
+
+                            <div class="col-md-3 form-group">
+
+                                <label>End Date*</label>
+
+                                <input name="end_date" type="text" data-date-format="yyyy-mm-dd" class="form-control datepicker"/>
+
+                            </div>
+
+                            
+                        </div>
+
+                    
+
+            </div>
+                <div class="modal-footer">
+                 <button type="submit" class="btn btn-primary">Download</button>
+                </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+ <!-- end -->
+
+ <!-- <a class="btn btn-sm btn-primary float-right" href="{{route('dump-excel')}}">Dump Download</a> -->
+ </div>
+ @endrole
  <div class="content" style="font-size: 13px !important;">
             <!-- Animated -->
             <div class="animated fadeIn">
+{{-- ===================================================================== --}}
+            @role('Admin')
+                <div class="card">
+                        <div class="card-header">
+                                <div class="row">
+                                    <div class="col-md-7"><h4>Overall Details</h4></div>
+                                </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="stat-widget-five text-center">
+                                                <div class="text-center dib">
+                                                    <div class="stat-heading">Total Audits</div>
+                                                    <div class="stat-text"><span class="count2">{{ $qa['totalAudit'] ?? 0 }}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="stat-widget-five text-center">
+                                                <div class="text-center dib">
+                                                    <div class="stat-heading">Total Pending</div>
+                                                    <div class="stat-text"><span class="count2">{{ $qa['totalpending'] ?? 0}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="stat-widget-five text-center">
+                                                <div class="text-center dib">
+                                                    <div class="stat-heading">Audit Submited - QC Pass</div>
+                                                    <div class="stat-text"><span class="count2">{{ $qa['totalpass'] ?? 0 }}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="stat-widget-five text-center">
+                                                <div class="text-center dib">
+                                                    <div class="stat-heading">Audit Submited - QC Fail</div>
+                                                    <div class="stat-text"><span class="count2">{{$qa['totalfaild'] ?? 0}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="stat-widget-five text-center">
+                                                <div class="text-center dib">
+                                                    <div class="stat-heading">Total Pending To Approved</div>
+                                                    <div class="stat-text"><span class="count2">{{ $qc['totalpending'] ?? 0}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="stat-widget-five text-center">
+                                                <div class="text-center dib">
+                                                    <div class="stat-heading">Audit Approved</div>
+                                                    <div class="stat-text"><span class="count2">{{ $qc['totalApproved'] ?? 0 }}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="stat-widget-five text-center">
+                                                <div class="text-center dib">
+                                                    <div class="stat-heading">Audit Approved Without Changes</div>
+                                                    <div class="stat-text"><span class="count2">{{ $qc['totalpass'] ?? 0 }}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="stat-widget-five text-center">
+                                                <div class="text-center dib">
+                                                    <div class="stat-heading">Audit Approved With Changes</div>
+                                                    <div class="stat-text"><span class="count2">{{$qc['totalpassChange'] ?? 0}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- <div class="col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="stat-widget-five text-center">
+                                                <div class="text-center dib">
+                                                    <div class="stat-heading">Audit Saved</div>
+                                                    <div class="stat-text"><span class="count2">{{$qc['totalsaved'] ?? 0}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> --}}
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="stat-widget-five text-center">
+                                                <div class="text-center dib">
+                                                    <div class="stat-heading">Audit Failed</div>
+                                                    <div class="stat-text"><span class="count2">{{$qc['totalfaild'] ?? 0}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="stat-widget-five text-center">
+                                                <div class="text-center dib">
+                                                    <div class="stat-heading">Alert Raised</div>
+                                                    <div class="stat-text"><span class="count2">{{$totalalert ?? 0}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            @endrole
+{{-- ================================================================================ --}}
+
+{{-- ===================================================================== --}}
+            @role('Client')
+
                 <!-- Widgets  -->
                 <div class="card">
                     <div class="card-header">
@@ -84,6 +343,20 @@
                                     </div>
                                 </div>
                             </div>
+
+                             <div class="col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="stat-widget-five text-center">
+                                            <div class="text-center dib">
+                                                <div class="stat-heading">IDFC Credit Card</div>
+                                                <div class="stat-text"><span class="count">{{isset($lob['credit_card'])?(round(($lob['credit_card']['point']/$lob['credit_card']['total'])*100,2))  : 0}}%</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -102,6 +375,7 @@
                                     <option value="commercial_vehicle" {{(isset($old['productlob']) && $old['productlob']=='commercial_vehicle')?'selected':''}}>IDFC First Commercial Vehicle</option>
                                     <option value="rural" {{(isset($old['productlob']) && $old['productlob']=='all')?'rural':''}}>IDFC First Rural</option>
                                     <option value="alliance" {{(isset($old['productlob']) && $old['productlob']=='all')?'alliance':''}}>IDFC First Alliance</option>
+                                     <option value="credit_card" {{(isset($old['productlob']) && $old['productlob']=='all')?'credit_card':''}}>IDFC Credit Card</option>
                                 </select>
                                 <label for="audit_cycle">Audit Cycle</label>
                                 <select class="text-right" id="product_audit_cycle" name="product_audit_cycle">
@@ -168,6 +442,7 @@
                                             <option value="commercial_vehicle" {{(isset($old['lob']) && $old['lob']=='commercial_vehicle')?'selected':''}}>IDFC First Commercial Vehicle</option>
                                             <option value="rural" {{(isset($old['lob']) && $old['lob']=='all')?'rural':''}}>IDFC First Rural</option>
                                             <option value="alliance" {{(isset($old['lob']) && $old['lob']=='all')?'alliance':''}}>IDFC First Alliance</option>
+                                            <option value="credit_card" {{(isset($old['lob']) && $old['lob']=='all')?'credit_card':''}}>IDFC Credit Card</option>
                                         </Select>
                                     </div>
                                     <div class="col-md-6">Zone</div>
@@ -256,6 +531,7 @@
                                                 <option value="commercial_vehicle" {{(isset($old['filterlob']) && $old['filterlob']=='commercial_vehicle')?'selected':''}}>IDFC First Commercial Vehicle</option>
                                                 <option value="rural" {{(isset($old['filterlob']) && $old['filterlob']=='all')?'rural':''}}>IDFC First Rural</option>
                                                 <option value="alliance" {{(isset($old['filterlob']) && $old['filterlob']=='all')?'alliance':''}}>IDFC First Alliance</option>
+                                                 <option value="credit_card" {{(isset($old['filterlob']) && $old['filterlob']=='all')?'credit_card':''}}>IDFC Credit Card</option>
                                             </select>
                                         </div>
                                         <div class="col-md-2">
@@ -309,7 +585,7 @@
                         <h5>Collection Manager’s Scorecard</h5>
                     </div>
                     <div class="card-body">
-                        <table class="table table-striped  table-hover table-checkable">
+                        <table class="table table-striped  table-hover table-checkable" id="collection_manager_table">
                             <thead style="background-color: rgba(0,0,0,.03);">
                                 <tr>
                                     <th>Collection Manager Name</th>
@@ -407,7 +683,7 @@
                                         @foreach ($bottomProductParameter['bottom'] as $item)
                                         <tr>
                                             <td>{{$item['name']}}</td>
-                                            <td>{{$item['point']}}</td>
+                                            <td>{{$item['point']}}%</td>
                                             <td>0</td>
                                         </tr>
                                         @endforeach
@@ -434,7 +710,7 @@
                                         @foreach ($bottomProductParameter['top'] as $item)
                                         <tr>
                                             <td>{{$item['name']}}</td>
-                                            <td>{{$item['point']}}</td>
+                                            <td>{{$item['point']}}%</td>
                                             <td>0</td>
                                         </tr>
                                         @endforeach
@@ -627,14 +903,15 @@
                 </div>
             </div>
 
+            @endrole
+{{-- ================================================================================ --}}
+
             </div>
             <!-- .animated -->
         </div>
         <!-- /.content -->
         <div class="clearfix"></div>
 @endsection
-
-
 @section('js')
 <script src="{{URL::asset('public/js/highmaps.js')}}"></script>
 <script src="{{URL::asset('public/js/exporting.js')}}"></script>
@@ -642,11 +919,19 @@
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script src="{{URL::asset('public/js/dashboard.js')}}"></script>
 <script src="https://code.highcharts.com/modules/pareto.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script>
     jQuery(document).ready(function() {
+
+        jQuery('.datepicker').datepicker({
+            dateFormat: "yyyy-mm-dd"
+        });
+        
         indiaMap([]);
         // jQuery('#add-product').modal('show')
         // pareto();
+        jQuery('#collection_manager_table').DataTable()
+        jQuery('#nationalResult').trigger('click');
         })
 </script>
 

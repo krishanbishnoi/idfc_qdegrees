@@ -1,14 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
-
+ini_set('max_execution_time', '0');
 use Illuminate\Http\Request;
 use App\Model\Allocation;
 use App\QmSheet;
 use App\User;
+use App\Audit;
+use App\SavedAudit;
+use App\Qc;
 use Validator;
 use Crypt;
 use Auth;
+use App\Exports\AllocationExport;
+use Maatwebsite\Excel\Facades\Excel;
 class AllocationController extends Controller
 {
     /**
@@ -116,8 +121,47 @@ class AllocationController extends Controller
             return redirect('allocation')->with('error', 'QM Sheet Allocation deletation faild.');
         }
     }
-    public function getSheets(){
+    public function getSheets($status=null){
+        if($status == 1) {
+           return redirect('auditor_list')->with('success', 'Audit submitted successfully !!.'); 
+        }
         $data=Allocation::with('user','sheet')->where('user_id',Auth::user()->id)->get();
         return view('qa.list',compact('data'));
+    }
+    public function done_audited_list()
+    {   
+        $user=Auth::user();
+        $ids=[];
+        $savedIds=SavedAudit::all()->pluck('audit_id')->toArray();
+        if($user->hasRole('Admin')){
+            $auditIds=Audit::whereNotIn('id',$savedIds)->get()->pluck('id');
+        }
+        else{
+            $auditIds=Audit::where('audited_by_id',$user->id)->whereNotIn('id',$savedIds)->get()->pluck('id');
+        }
+        if(count($auditIds)>0){
+            $ids=Qc::with('user')->whereIn('audit_id',$auditIds)->get()->keyBy('audit_id');
+        }
+        $data = Audit::with(['qmsheet','product','branch.city.state','branch.branchable','yard.branch.city.state','agency.branch.city.state','qa_qtl_detail'])->whereIn('id',$auditIds)->orderby('id','desc')->limit(500)->get();
+        //echo '<pre>'; print_r($data); die;
+        return view('audit.audit_list_qa',compact('data','ids','savedIds'));
+    }
+    public function save_audited_list()
+    {   
+        $user=Auth::user();
+        $ids=[];
+        $auditIds=Audit::where('audited_by_id',$user->id)->get()->pluck('id');
+        if(count($auditIds)>0){
+            $ids=Qc::with('user')->whereIn('audit_id',$auditIds)->get()->keyBy('audit_id');
+        }
+        $savedIds=SavedAudit::all()->pluck('audit_id')->toArray();
+        $data = Audit::with(['qmsheet','product','branch.city.state','branch.branchable','yard.branch.city.state','agency.branch.city.state','qa_qtl_detail'])->whereIn('id',$savedIds)->whereIn('id',$auditIds)->get();
+        // dd($auditIds,$user);
+        return view('audit.audit_list_qa',compact('data','ids','savedIds'));
+    }
+    public function excelDownloadAllocation(){
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 3000);
+        return Excel::download(new AllocationExport, 'Allocation.xlsx');
     }
 }

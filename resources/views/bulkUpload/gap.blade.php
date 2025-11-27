@@ -39,6 +39,7 @@
                             <option value="commercial_vehicle" {{($lob=='commercial_vehicle')?'selected':''}}>Commercial Vehicle</option>
                             <option value="rural" {{($lob=='rural')?'selected':''}}>Rural</option>
                             <option value="alliance" {{($lob=='alliance')?'selected':''}}>Alliance</option>
+                            <option value="credit_card" {{($lob =='credit_card')?'selected':''}}>Credit Card</option>
                         </select>
                     </div>
                 </div>

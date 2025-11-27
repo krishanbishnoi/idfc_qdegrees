@@ -15,9 +15,20 @@ function getBranchUuid()
 {
     $incNumber = 001;
     $res = \App\Model\Branch::orderBy('id', 'DESC')->first();
-
+    // dd($res);
     if ($res) {
-        $incNumber = $res->uuid + 1;
+        $incNumber = (is_string($res->uuid)?0:$res->uuid) + 1;
     }
     return $incNumber;
+}
+
+function getUser($val)
+{
+    $g=User::find($val);
+    if($g) {
+        $n=$g->name;
+    } else {
+        $n='';
+    }
+    return $n;
 }

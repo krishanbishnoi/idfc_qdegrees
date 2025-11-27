@@ -111,6 +111,31 @@
 
                         </ul>
                     </li> --}}
+
+		<li class="menu-item-has-children dropdown">
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Location</a>
+
+                        <ul class="sub-menu children dropdown-menu">
+
+                            <li><i class="fa fa-plus"></i><a href="{{route('location.index')}}">Create State</a></li>
+
+                            <li><i class="fa fa-plus"></i><a href="{{route('location.create')}}">Create City</a></li>
+                            <li><i class="fa fa-plus"></i><a href="{{route('location.city_view')}}">View City</a></li>
+
+                           
+
+                        </ul>
+
+                    </li>
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Audit Cycle</a>
+                        <ul class="sub-menu children dropdown-menu">                         
+                            <li><i class="fa fa-plus"></i><a href="{{url('create-audit-cycle')}}">Create Cycle</a></li>
+                            <li><i class="fa fa-users"></i><a href="{{url('list-audit-cycle')}}">List</a></li>
+                            
+                        </ul>
+                    </li>
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Users</a>
                         <ul class="sub-menu children dropdown-menu">                         
@@ -237,8 +262,8 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user"></i>QC</a>
                         <ul class="sub-menu children dropdown-menu">                         
                             {{-- <li><i class="fa fa-plus"></i><a href="{{route('allocation.create')}}">Allocation sheet</a></li> --}}
-                            <li><i class="fa fa-users"></i><a href="{{route('audited_list')}}">QC List</a></li>  
-                            <li><i class="fa fa-users"></i><a href="{{route('done_audited_list')}}">ALL QC List</a></li>  
+                            <li><i class="fa fa-users"></i><a href="{{route('audited_search')}}">Submitted</a></li>  
+                            <li><i class="fa fa-users"></i><a href="{{route('done_audited_list')}}">Approved</a></li>  
                         </ul>
                     </li>
                     <li class="menu-item-has-children dropdown">
@@ -265,6 +290,15 @@
                             <li><i class="fa fa-users"></i><a href="{{route('artifact.index')}}">Artifact List</a></li>  
                         </ul>
                     </li>
+                    <!-- added by kratika -->
+                     <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Reports</a>
+                          <ul class="sub-menu children dropdown-menu">                         
+                           
+                            <li><i class="fa fa-file"></i><a href="{{route('reports')}}">QA-QC Report</a></li>  
+                            <li><i class="fa fa-file"></i><a href="{{route('reportAutomation')}}">Report Automation</a></li>
+                        </ul>
+                    </li>
                     @endrole
                     @hasanyrole('Quality Auditor')
                     <li class="menu-item-has-children dropdown">
@@ -272,6 +306,8 @@
                         <ul class="sub-menu children dropdown-menu">                         
                             {{-- <li><i class="fa fa-plus"></i><a href="{{route('allocation.create')}}">Allocation sheet</a></li> --}}
                             <li><i class="fa fa-users"></i><a href="{{route('auditor_list')}}">Audit Sheet List</a></li>  
+                            <li><i class="fa fa-users"></i><a href="{{route('submit_audited_list')}}">Submited Audited List</a></li> 
+                            <li><i class="fa fa-users"></i><a href="{{route('save_audited_list')}}">Saved Audited List</a></li> 
                         </ul>
                     </li>
                     @endrole

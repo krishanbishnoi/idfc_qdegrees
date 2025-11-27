@@ -20,4 +20,10 @@ class QmSheet extends Model
     {
         return $this->hasMany('App\QmSheetParameter');
     }
+     public function qm_sheet_sub_parameter()
+    {
+
+        return $this->hasMany('App\QmSheetSubParameter');
+
+    }
 }

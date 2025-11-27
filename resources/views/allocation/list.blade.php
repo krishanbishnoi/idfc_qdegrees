@@ -19,6 +19,7 @@ Messages
 			<div class="card">
 				<div class="card-header">
 					<strong class="card-title">Sheet List</strong>
+					<a class="btn btn-primary btn-sm float-right" style="margin-right: 5px" href="{{route('excelDownloadAllocation')}}" target="_blank">Export Allocation</a>
 				</div>
 				<div class="card-body">
 

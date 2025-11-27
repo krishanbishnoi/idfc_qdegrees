@@ -30,6 +30,7 @@
                           <option value="commercial_vehicle" {{($data->lob=='commercial_vehicle')?'selected':''}}>Commercial Vehicle</option>
                           <option value="rural" {{($data->lob=='rural')?'selected':''}}>Rural</option>
                           <option value="alliance" {{($data->lob=='alliance')?'selected':''}}>Alliance</option>
+                          <option value="credit_card" {{($data->lob=='credit_card')?'selected':''}}>Credit Card</option>
                         </select>
                     </div>
                 </div>          
@@ -117,7 +118,7 @@
                             <option value="">Choose {{str_replace('_',' ',$item)}}</option>
                             @foreach ($users as $user)
                                 @if($user->hasRole(str_replace('_',' ',$item)))
-                                <option value="{{$user->id}}" {{($value[$item]->manager_id == $user->id)?'selected':''}}>
+                                <option value="{{$user->id}}" {{(isset($value[$item]) && $value[$item]->manager_id == $user->id)?'selected':''}}>
                                     {{$user->name}}
                                 </option>
                                 @endif

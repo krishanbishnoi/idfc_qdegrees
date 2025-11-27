@@ -1,0 +1,1 @@
+[14-Nov-2025 05:16:49 UTC] PHP Fatal error:  Class 'Illuminate\Foundation\Http\Kernel' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Http/Kernel.php on line 7

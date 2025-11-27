@@ -24,8 +24,20 @@ Call
                     <form method="post" action="{{route('action.store')}}" enctype="multipart/form-data">
                         @csrf
                             <div class="row">
-                                  <div class="col-md-5 form-group">
-                                  <input type="hidden" name="sheet_id" value="{{$did}}"/>
+
+                                    <div class="col-md-3 form-group">
+                                        <label>Branch*</label>
+                                        <select name="branch_id" id="branchName" data-placeholder="Choose a Branch..." class="standardSelect form-control branchName" tabindex="2" required>
+                                          <option value="" label="Branch Name"></option>
+                                          @foreach($branch as $k=>$item)
+                                          <option value="{{$item->id}}">{{$item->name}}</option>
+                                          @endforeach
+                                        </select>
+                                    </div>
+
+
+                                    <div class="col-md-5 form-group">
+                                    <input type="hidden" name="sheet_id" value="{{$did}}"/>
                                         <label>Question*</label>
                                         <textarea name="question"  class="form-control"></textarea>
                                     </div>
@@ -70,15 +82,33 @@ Call
 <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
 {{-- @include('shared.form_js'); --}}
 
+<div class="col-md-3 form-group">
+                                        <label>Branch*</label>
+                                        <select name="branch_id'+i+'" id="branchName" data-placeholder="Choose a Branch..." class="standardSelect form-control branchName" tabindex="2" required>
+                                          <option value="" label="Branch Name"></option>
+                                          @foreach($branch as $k=>$item)
+                                          <option value="{{$item->id}}">{{$item->name}}</option>
+                                          @endforeach
+                                        </select>
+                                    </div>
 <script>
     var i=1;
-jQuery("#add").on('click',function(e){ 
+    jQuery("#add").on('click',function(e){ 
     var data=''
-    data='<div class="col-md-5 form-group">\
+    data='<div class="col-md-3 form-group">\
+            <label>Branch*</label>\
+            <select name="branch_id'+i+'" id="branchName" data-placeholder="Choose a Branch..." class="standardSelect form-control branchName" tabindex="2" required>\
+                                          <option value="" label="Branch Name"></option>\
+                                          @foreach($branch as $k=>$item)\
+                                          <option value="{{$item->id}}">{{$item->name}}</option>\
+                                          @endforeach\
+                                        </select>\
+        </div>\
+    <div class="col-md-3 form-group">\
             <label>Question*</label>\
             <textarea name="question'+i+'"  class="form-control"></textarea>\
         </div>\
-        <div class="col-md-5 form-group">\
+        <div class="col-md-3 form-group">\
             <label>Artifact*</label><br/>\
             <input type="file" name="artifact'+i+'"/>\
         </div>\
@@ -89,7 +119,7 @@ jQuery("#add").on('click',function(e){
         jQuery('#kt_repeater_6').append('<div class="row delete'+i+'">'+data+'</div>')
         i++;
     })
- function removeField(id){
+    function removeField(id){
         
         jQuery('.delete'+id).remove();
     }

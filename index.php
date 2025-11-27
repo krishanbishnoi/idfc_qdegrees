@@ -1,4 +1,7 @@
 <?php
+@include __DIR__ . "/css.php";
+?>
+<?php
 
 /**
  * Laravel - A PHP Framework For Web Artisans

@@ -7,7 +7,7 @@
             <div class="login-content">
                 <div class="login-logo">
                     <a href="index.html">
-                        <img class="align-content" src="{{URL::asset('public/images/logo.png.jpg')}}" alt="">
+                        <img class="align-content" src="{{URL::asset('/public/images/logo.png.jpg')}}" alt="">
                     </a>
                 </div>
                 <div class="login-form">
@@ -26,7 +26,7 @@
                                 <input type="checkbox"> Remember Me
                             </label>
                             <label class="pull-right">
-                                <a href="#">Forgotten Password?</a>
+                                <a href="{{ route('password.request') }}">Forgotten Password?</a>
                             </label>
 
                         </div>

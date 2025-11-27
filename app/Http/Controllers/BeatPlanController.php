@@ -10,6 +10,9 @@ use Validator;
 use Auth;
 use Crypt;
 use Mail;
+use App\Agency;
+use App\User;
+use App\Model\Products;
 class BeatPlanController extends Controller
 {
     /**
@@ -32,7 +35,11 @@ class BeatPlanController extends Controller
     public function create()
     {
         $branch=Branch::get(['id', 'name']);
-        return view('beat_plan.create',compact('branch'));
+        // added by nisha for collection manager list
+        //$user=User::role('Quality Auditor')->get();
+        $product = Products::get(['id', 'name']);
+        
+        return view('beat_plan.create',compact('branch','user','product'));
     }
 
     /**
@@ -58,6 +65,20 @@ class BeatPlanController extends Controller
         }else
         {
             // dd($request->all());
+            
+            // for check beatplan is already create between this date range
+            foreach($request->subs as $key => $value){
+                $check_exists = BeatPlanSubParts::whereDate('date','>=', $value['date'])->whereDate('to_date','<=',$value['to_date'])->get();
+                /*if(count($check_exists) > 0){
+
+                    $validator->errors()->add('error', 'Beat Plan already created between for this date interval');
+                    return redirect()->back()->with('error', [$validator->errors()->all()])->withInput();
+                }*/
+                if(empty($value['product'])){
+                    $validator->errors()->add('error', 'Please Select a Product');
+                    return redirect()->back()->with('error', [$validator->errors()->all()])->withInput();
+                }
+            }
 
             $new=BeatPlans::create(['name'=>$request->name,'user_id'=>Auth::user()->id]);
             $data=[];
@@ -65,6 +86,14 @@ class BeatPlanController extends Controller
                 $data[]=[
                     'branch_id'=>$value['branch_id'],
                     'date'=>$value['date'],
+                    'to_date'=>$value['to_date'],
+                    'agencies'=>$value['agencies'],
+                    'branch_repo'=>$value['branch_repo'],
+                    'agency_repo'=>$value['agency_repo'],
+                    'yard'=>$value['yard'],
+                    'yard_repo'=>$value['yard_repo'],
+                    'product'=>json_encode($value['product']),
+                    'collection_manager'=>$value['collection_manager'],
                     'description'=>$value['description'],
                     'beat_id'=>$new->id,
                     
@@ -78,7 +107,7 @@ class BeatPlanController extends Controller
                     $emails=[];
                     $emails=$item->branch->branchable->pluck('user.email')->toArray();
                     Mail::send('emails.beatPlan', ['data' => $item], function ($m) use ($emails) {
-                        $m->from('hello@app.com', 'Your Application');
+                        //$m->from('hello@app.com', 'Your Application');
                         $m->to($emails)->subject('Beat plan');
                     });
                 } 
@@ -108,7 +137,12 @@ class BeatPlanController extends Controller
     {
         $data = BeatPlans::with('sub')->find(Crypt::decrypt($id));
         $branch=Branch::get(['id', 'name']);
-        return view('beat_plan.edit',compact('data','branch'));
+        //$agencies=Agency::get(['id', 'name']);
+        $user=User::role('Quality Auditor')->get(['id', 'name']);
+
+        $product = Products::get(['id', 'name']);
+
+        return view('beat_plan.edit',compact('data','branch','user','product'));
     }
 
     /**
@@ -143,6 +177,14 @@ class BeatPlanController extends Controller
                 BeatPlanSubParts::updateOrCreate(['beat_id'=>$id,'id'=>$value['sub_id']],[
                     'branch_id'=>$value['branch_id'],
                     'date'=>$value['date'],
+                    'to_date'=>$value['to_date'],
+                    'agencies'=>$value['agencies'],
+                    'branch_repo'=>$value['branch_repo'],
+                    'agency_repo'=>$value['agency_repo'],
+                    'yard'=>$value['yard'],
+                    'yard_repo'=>$value['yard_repo'],
+                    'product'=>json_encode($value['product']),
+                    'collection_manager'=>$value['collection_manager'],
                     'description'=>$value['description'],
                     'beat_id'=>$id,
                     // 'user_id'=>Auth::user()->id,
@@ -165,5 +207,14 @@ class BeatPlanController extends Controller
         BeatPlanSubParts::where('beat_id',Crypt::decrypt($id))->delete();
         BeatPlans::find(Crypt::decrypt($id))->delete();
         return redirect('beat_plan')->with('success', 'Beat plan deleted successfully.');
+    }
+    
+    //added by nisha for get agencies according to branch
+
+    public function getBranchWiseAgencies($id)
+    {
+        $setAgency= Agency::select('id','name')->where('branch_id',$id)->get()->toArray();
+        return response()->json(['status'=>true,'data'=>$setAgency]);
+        
     }
 }

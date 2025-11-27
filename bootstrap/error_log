@@ -1,0 +1,4 @@
+[14-Nov-2025 05:16:56 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/qdegrees/public_html/idfc.qdegrees.com/bootstrap/app.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/qdegrees/public_html/idfc.qdegrees.com/bootstrap/app.php on line 14

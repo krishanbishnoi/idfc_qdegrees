@@ -37,6 +37,7 @@ Edit
               <option value="commercial_vehicle" {{($data->type=='commercial_vehicle')?'selected':''}}>Commercial Vehicle</option>
               <option value="rural" {{($data->type=='rural')?'selected':''}}>Rural</option>
               <option value="alliance" {{($data->type=='alliance')?'selected':''}}>Alliance</option>
+              <option value="credit_card" {{($data->type=='credit_card')?'selected':''}}>Credit Card</option>
             </select>
           </div>
           <div class="col-md-3 form-group">

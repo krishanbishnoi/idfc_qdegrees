@@ -1,0 +1,17 @@
+[14-Nov-2025 05:16:51 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/BranchRepoUser.php on line 7
+[14-Nov-2025 05:16:51 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/BeatPlanSubParts.php on line 7
+[14-Nov-2025 05:16:51 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/Branch.php on line 25
+[14-Nov-2025 05:16:51 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/BranchRepo.php on line 7
+[14-Nov-2025 05:16:51 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/AgencyRepo.php on line 7
+[14-Nov-2025 05:16:51 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/BeatPlans.php on line 7
+[14-Nov-2025 05:16:51 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/Allocation.php on line 7
+[14-Nov-2025 05:16:51 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/AgencyRepoUser.php on line 7
+[14-Nov-2025 05:16:52 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/ProductUser.php on line 7
+[14-Nov-2025 05:16:52 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/State.php on line 7
+[14-Nov-2025 05:16:52 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/Products.php on line 7
+[14-Nov-2025 05:16:52 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/YardRepo.php on line 7
+[14-Nov-2025 05:16:53 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/Branchable.php on line 7
+[14-Nov-2025 05:16:53 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/City.php on line 7
+[14-Nov-2025 05:16:53 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/YardRepoUser.php on line 7
+[14-Nov-2025 05:16:53 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/Region.php on line 7
+[23-Nov-2025 15:35:08 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Model/YardRepoUser.php on line 7
