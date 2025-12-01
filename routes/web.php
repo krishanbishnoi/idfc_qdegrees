@@ -7,12 +7,7 @@
 //echo $exitCode;die;
 
 
-<<<<<<< HEAD
 Route::get('/clear-cache', function () {
-=======
-
-Route::get('/clear-cache', function() {
->>>>>>> 485b9bebf41b0756f061195913dbcb1ba23b26a2
 
 
 
