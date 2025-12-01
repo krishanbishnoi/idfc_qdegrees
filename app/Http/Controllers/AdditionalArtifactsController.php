@@ -28,7 +28,6 @@ class AdditionalArtifactsController extends Controller
         }
         $audit = DB::table('audits')->where('id', $audit_id)->first();
         // dd(Crypt::decrypt($audit_id));
-        // dd($audit_id);
         // $audit_id = Crypt::decrypt($audit_id);
         $artifacts = DB::table('additional_artifacts_points')->where('type', $type)->pluck('artifact')->toArray();
         if ($originalType == 'agency') {
@@ -265,8 +264,6 @@ class AdditionalArtifactsController extends Controller
             ->orderBy('id', 'desc')
             ->limit(6)
             ->get();
-        // dd($audit_cycle);
-
         return view('artifacts_additional.download', compact('audit_cycle'));
     }
     public function getItems(Request $request)
@@ -274,23 +271,23 @@ class AdditionalArtifactsController extends Controller
         $type = $request->type;
         if ($type == 'branch_repo') {
             $column = 'branch_repo_id';
-            $table = 'branch_repo';
+            $table = 'branches';
         } elseif ($type == 'agency_repo') {
             $column = 'agency_repo_id';
-            $table = 'agency_repo';
+            $table = 'agency_repos';
             // $table = 'branch_repo';
         } elseif ($type == 'yard_repo') {
             $column = 'yard_repo_id';
-            $table = 'yard_repo';
+            $table = 'yard_repos';
         } elseif ($type == 'agency') {
             $table = 'agencies';
             $column = 'agency_id';
         } elseif ($type == 'branch') {
             $column = 'branch_id';
-            $table = 'branch';
+            $table = 'branches';
         } elseif ($type == 'yard') {
             $column = 'yard_id';
-            $table = 'yard';
+            $table = 'yards';
         }
 
         // Get distinct IDs from additional_artifacts table
@@ -339,7 +336,6 @@ class AdditionalArtifactsController extends Controller
 
     public function download_artifcats(Request $request)
     {
-        dd($request->all());
         $type = $request->type;
 
         if ($type == 'branch_repo') {

@@ -7,8 +7,7 @@
 //echo $exitCode;die;
 
 
-
-/*Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function () {
 
 
 
@@ -26,8 +25,6 @@
 
 });
 
-
-*/
 
 /*
 
@@ -118,13 +115,6 @@ Route::get('/', function () {
 
 
     return view('auth.login');
-
-
-
-
-
-
-
 });
 
 
@@ -158,13 +148,6 @@ Route::get('/form', function () {
 
 
     return view('form');
-
-
-
-
-
-
-
 });
 
 
@@ -182,13 +165,6 @@ Route::get('/ravrock/1991', function () {
 
 
     return $_ENV;
-
-
-
-
-
-
-
 });
 
 
@@ -214,7 +190,7 @@ Auth::routes(['register' => false]);
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/test', 'HomeController@updateArtifact');
-    
+
     Route::get('/run', 'HomeController@runmigration');
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::post('/dashboard', 'DashboardController@index')->name('dashboard');
@@ -248,7 +224,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('dowmload-qa-changes-excel', 'AuditController@excelDownloadQaChanges')->name('excelDownloadQaChanges');
     Route::resource('user', 'UserController');
     // summet
-    Route::get('user/{id}/disable','UserController@disable');  // for diable user
+    Route::get('user/{id}/disable', 'UserController@disable');  // for diable user
     //sumeet
     // });
     Route::resource('roles', 'RoleController');
@@ -259,7 +235,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('branch', 'BranchController');
     Route::get('location/city_view', 'LocationController@cityView')->name('location.city_view');
     Route::resource('location', 'LocationController');
-    Route::post('location/update','LocationController@update');
+    Route::post('location/update', 'LocationController@update');
     Route::get('create-audit-cycle', 'AuditController@createCycle')->name('createCycle');
     Route::post('create-audit-cycle', 'AuditController@createCycle')->name('createCycle');
     Route::get('list-audit-cycle', 'AuditController@listCycle')->name('listCycle');
@@ -286,99 +262,92 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/getCities/{id}', 'BranchController@getCities');
     Route::get('/getAgency/{id}', 'YardController@getAgency');
     Route::get('/getAgencyManager/{id}', 'YardController@getAgencyManager');
-    Route::resource('audit_alert_box','AuditAlertBoxController');
-    Route::resource('beat_plan','BeatPlanController');
-    Route::resource('allocation','AllocationController');
+    Route::resource('audit_alert_box', 'AuditAlertBoxController');
+    Route::resource('beat_plan', 'BeatPlanController');
+    Route::resource('allocation', 'AllocationController');
     Route::resource('qm_sheet', 'QmSheetController');
-    Route::get('qm_sheet/{sheet_id}/add_parameter','QmSheetController@add_parameter');
-    Route::get('qm_sheet/{sheet_id}/list_parameter','QmSheetController@list_parameter');
-    Route::get('qm_sheet/{sheet_id}/parameter','QmSheetController@list_parameter');
-    Route::post('qm_sheet/store_parameters','QmSheetController@store_parameters')->name('store_parameters');
-    Route::delete('delete_parameter/{id}','QmSheetController@delete_parameter')->name('delete_parameter');
-    Route::get('parameter/{id}/edit','QmSheetController@edit_parameter');
-    Route::post('update_parameter','QmSheetController@update_parameter')->name('update_parameter');
-    Route::get('delete_sub_parameter/{id}','QmSheetController@delete_sub_parameter');
+    Route::get('qm_sheet/{sheet_id}/add_parameter', 'QmSheetController@add_parameter');
+    Route::get('qm_sheet/{sheet_id}/list_parameter', 'QmSheetController@list_parameter');
+    Route::get('qm_sheet/{sheet_id}/parameter', 'QmSheetController@list_parameter');
+    Route::post('qm_sheet/store_parameters', 'QmSheetController@store_parameters')->name('store_parameters');
+    Route::delete('delete_parameter/{id}', 'QmSheetController@delete_parameter')->name('delete_parameter');
+    Route::get('parameter/{id}/edit', 'QmSheetController@edit_parameter');
+    Route::post('update_parameter', 'QmSheetController@update_parameter')->name('update_parameter');
+    Route::get('delete_sub_parameter/{id}', 'QmSheetController@delete_sub_parameter');
 
     // Route::group(['middleware' => ['role:collection']], function () {
-    Route::get('audit_sheet/{qm_sheet_id}','AuditController@render_audit_sheet');
-    Route::get('audit_sheet_new/{qm_sheet_id}','AuditController@render_audit_sheet_new');
-    Route::get('get_branch_detail/{id}/{type}/{product_id}','AuditController@renderBranch');
-    Route::get('get_branch_detail_qc/{id}/{type}/{auditid}/{product_id}','AuditController@renderBranchQc');
-    Route::get('get_product/{id}/{type}','AuditController@getProduct');
-    Route::get('audit_sheet/{qm_sheet_id}/edit','AuditController@render_audit_sheet_edit');
+    Route::get('audit_sheet/{qm_sheet_id}', 'AuditController@render_audit_sheet');
+    Route::get('audit_sheet_new/{qm_sheet_id}', 'AuditController@render_audit_sheet_new');
+    Route::get('get_branch_detail/{id}/{type}/{product_id}', 'AuditController@renderBranch');
+    Route::get('get_branch_detail_qc/{id}/{type}/{auditid}/{product_id}', 'AuditController@renderBranchQc');
+    Route::get('get_product/{id}/{type}', 'AuditController@getProduct');
+    Route::get('audit_sheet/{qm_sheet_id}/edit', 'AuditController@render_audit_sheet_edit');
     // added by nisha 
-    Route::get('get_agencies/{id}','BeatPlanController@getBranchWiseAgencies');
+    Route::get('get_agencies/{id}', 'BeatPlanController@getBranchWiseAgencies');
     //QC
-    Route::get('audit_detail/{qm_sheet_id}/edit','AuditController@detail_audit_sheet_edit');
-    Route::get('audit_detail/{audit_id}/view','AuditController@render_audit_sheet_View')->name('view_submit_audited');
-    Route::get('audit_detail_qc/{audit_id}/view','AuditController@render_audit_sheet_View_QC')->name('view_submit_audited_qc');
-    Route::post('save_qc_status','AuditController@save_qc_status')->name('saveStatus');
+    Route::get('audit_detail/{qm_sheet_id}/edit', 'AuditController@detail_audit_sheet_edit');
+    Route::get('audit_detail/{audit_id}/view', 'AuditController@render_audit_sheet_View')->name('view_submit_audited');
+    Route::get('audit_detail_qc/{audit_id}/view', 'AuditController@render_audit_sheet_View_QC')->name('view_submit_audited_qc');
+    Route::post('save_qc_status', 'AuditController@save_qc_status')->name('saveStatus');
 
     // });
-	Route::get('get_qm_sheet_details_for_audit/{qm_sheet_id}','AuditController@get_qm_sheet_details_for_audit');
-	Route::get('get_raw_data_for_audit/{comm_instance_id}','AuditController@get_raw_data_for_audit');
-    Route::get('audited_list','AuditController@audited_list')->name('audited_list');
-    Route::get('audited_search','AuditController@audited_list_new');
-    Route::post('audited_search','AuditController@audited_list_new')->name('audited_search');
-    Route::get('done_audited_list','AuditController@done_audited_list');
-    Route::post('done_audited_list','AuditController@done_audited_list')->name('done_audited_list');
-	Route::post('audited_list','AuditController@audited_list_Post')->name('audited_list');
-	Route::post('allocation/store_audit','AuditController@store_audit');
-	Route::post('allocation/store_audit_new','AuditController@store_audit_new');
-	Route::post('allocation/update_audit','AuditController@update_audit');
-    Route::get('get_reasons_by_type/{type_id}','AuditController@get_reasons_by_type');
-    Route::resource('red-alert','RedAlertController');
-    Route::get('download-file/{id}','RedAlertController@downloadFile');
-    Route::resource('artifact','ArtifactController');
-    Route::get('download-file-artifact/{id}','ArtifactController@downloadFile');
-    Route::get('action/{sheet_id}/alert','ActionController@create');
-    Route::get('action/{id}/view','ActionController@view');
-    Route::get('action/list','ActionController@list')->name('action-list');
-    Route::resource('action','ActionController');
+    Route::get('get_qm_sheet_details_for_audit/{qm_sheet_id}', 'AuditController@get_qm_sheet_details_for_audit');
+    Route::get('get_raw_data_for_audit/{comm_instance_id}', 'AuditController@get_raw_data_for_audit');
+    Route::get('audited_list', 'AuditController@audited_list')->name('audited_list');
+    Route::get('audited_search', 'AuditController@audited_list_new');
+    Route::post('audited_search', 'AuditController@audited_list_new')->name('audited_search');
+    Route::get('done_audited_list', 'AuditController@done_audited_list');
+    Route::post('done_audited_list', 'AuditController@done_audited_list')->name('done_audited_list');
+    Route::post('audited_list', 'AuditController@audited_list_Post')->name('audited_list');
+    Route::post('allocation/store_audit', 'AuditController@store_audit');
+    Route::post('allocation/store_audit_new', 'AuditController@store_audit_new');
+    Route::post('allocation/update_audit', 'AuditController@update_audit');
+    Route::get('get_reasons_by_type/{type_id}', 'AuditController@get_reasons_by_type');
+    Route::resource('red-alert', 'RedAlertController');
+    Route::get('download-file/{id}', 'RedAlertController@downloadFile');
+    Route::resource('artifact', 'ArtifactController');
+    Route::get('download-file-artifact/{id}', 'ArtifactController@downloadFile');
+    Route::get('action/{sheet_id}/alert', 'ActionController@create');
+    Route::get('action/{id}/view', 'ActionController@view');
+    Route::get('action/list', 'ActionController@list')->name('action-list');
+    Route::resource('action', 'ActionController');
     Route::get('download-branch', 'BluckUploadController@downloadBranchNew')->name('downloadBranch');
-    Route::resource('bulkUpload','BluckUploadController');
-    Route::resource('branchrepo','BranchRepoController');
-    Route::resource('agencyrepo','AgencyRepoController');
-    Route::resource('yardrepo','YardRepoController');
-    Route::get('auditor_list/{status?}','AllocationController@getSheets')->name('auditor_list');
-    Route::get('submit_audited_list','AllocationController@done_audited_list')->name('submit_audited_list');
-    Route::get('save_audited_list','AllocationController@save_audited_list')->name('save_audited_list');
-    Route::get('get_users/{value}/{type}','AuditController@getUsers')->name('getUsers');
-    Route::get('reject-user/{email}/{auditId}/{type}','AuditController@rejectUsers')->name('getUsers');
-    Route::get('save-user/{email}/{auditId}/{type}/{userid}','AuditController@saveUsers')->name('getUsers');
-    Route::get('download-action-artifact/{id}','ActionController@downloadFile');
-    Route::get('test-email','RedAlertController@test');
-    
+    Route::resource('bulkUpload', 'BluckUploadController');
+    Route::resource('branchrepo', 'BranchRepoController');
+    Route::resource('agencyrepo', 'AgencyRepoController');
+    Route::resource('yardrepo', 'YardRepoController');
+    Route::get('auditor_list/{status?}', 'AllocationController@getSheets')->name('auditor_list');
+    Route::get('submit_audited_list', 'AllocationController@done_audited_list')->name('submit_audited_list');
+    Route::get('save_audited_list', 'AllocationController@save_audited_list')->name('save_audited_list');
+    Route::get('get_users/{value}/{type}', 'AuditController@getUsers')->name('getUsers');
+    Route::get('reject-user/{email}/{auditId}/{type}', 'AuditController@rejectUsers')->name('getUsers');
+    Route::get('save-user/{email}/{auditId}/{type}/{userid}', 'AuditController@saveUsers')->name('getUsers');
+    Route::get('download-action-artifact/{id}', 'ActionController@downloadFile');
+    Route::get('test-email', 'RedAlertController@test');
+
     Route::get('duplicate_sheet/{audit_id}', 'AuditController@duplicate_audit');
 
-    Route::resource('pdf','PdfController');
-    Route::get('send','ActionController@sendNextReport');
+    Route::resource('pdf', 'PdfController');
+    Route::get('send', 'ActionController@sendNextReport');
     //Route::get('createAuth', 'ActionController@createAuth');
     //Route::get('/dashboard/getbranchdata', 'DashboardController@getBranchData');
-    Route::resource('auditReport','AuditReportController');
-    Route::get('createReports','AuditReportController@createReports');
+    Route::resource('auditReport', 'AuditReportController');
+    Route::get('createReports', 'AuditReportController@createReports');
     //Reports Reated Routes
     Route::get('reports', 'UploadController@reportindex')->name('reports');
-    Route::post('internalexcel','UploadController@internalRawDump')->name('internalexcel');
+    Route::post('internalexcel', 'UploadController@internalRawDump')->name('internalexcel');
 
 
+
+    Route::get('/artifacts/create/{type}/{audit_id}', 'AdditionalArtifactsController@create')->name('artifacts.create');
+    Route::post('/artifacts/store', 'AdditionalArtifactsController@store')->name('artifacts.store');
+    Route::get('/artifacts/download/{audit_id}', 'AdditionalArtifactsController@downloadArtifacts')->name('artifacts.download');
+    Route::post('/artifacts/{id}', 'AdditionalArtifactsController@destroy')->name('artifacts.delete');
+    Route::get('/download-artifect', 'AdditionalArtifactsController@download')->name('download');
+    Route::get('/get-items', 'AdditionalArtifactsController@getItems')->name('getItems');
+    Route::get('/get-artifacts', 'AdditionalArtifactsController@getArtifacts')->name('getArtifacts');
+    Route::post('/download-artifact', 'AdditionalArtifactsController@download_artifcats')->name('downloadArtifact');
 });
 
 Route::get('/allocation-upload', 'AllocationDumpController@uploadForm')->name('allocation.upload.form');
 Route::post('/allocation-upload', 'AllocationDumpController@uploadFile')->name('allocation.upload.file');
-
-use App\Http\Controllers\AdditionalArtifactsController;
-
-Route::get('/artifacts/create/{type}/{audit_id}', [AdditionalArtifactsController::class, 'create'])->name('artifacts.create');
-Route::post('/artifacts/store', [AdditionalArtifactsController::class, 'store'])->name('artifacts.store');
-Route::get('artifacts/download/{audit_id}', [AdditionalArtifactsController::class, 'downloadArtifacts'])->name('artifacts.download');
-// Route::post('/artifacts/delete/{id}', [AdditionalArtifactsController::class, 'delete'])->name('artifacts.delete');
-// Route::delete('/artifacts/delete/{id}', [AdditionalArtifactsController::class, 'delete'])->name('artifacts.delete');
-// Route::delete('artifacts/delete/{id}', [AdditionalArtifactsController::class, 'delete'])->name('artifacts.delete');
-Route::post('/artifacts/{id}', [AdditionalArtifactsController::class, 'destroy'])->name('artifacts.delete');
-
-Route::get('/download', [AdditionalArtifactsController::class, 'download'])->name('download');
-Route::post('/get-items', [AdditionalArtifactsController::class, 'getItems'])->name('getItems');
-Route::post('/get-artifacts', [AdditionalArtifactsController::class, 'getArtifacts'])->name('getArtifacts');
-
-Route::post('/download-artifact', [AdditionalArtifactsController::class, 'download_artifcats'])->name('downloadArtifact');

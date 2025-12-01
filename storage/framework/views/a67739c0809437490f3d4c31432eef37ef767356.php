@@ -1,6 +1,4 @@
-@extends('layouts.master')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <style>
         .required::after {
             content: '*';
@@ -20,7 +18,7 @@
             </div>
 
             <div class="card-body">
-                <form action="{{ route('downloadArtifact') }}" method="post">@csrf
+                <form action="<?php echo e(route('downloadArtifact')); ?>" method="post"><?php echo csrf_field(); ?>
                     <div class="row mb-3">
                         <!-- First Select -->
                         <div class="col-md-3">
@@ -56,10 +54,10 @@
                             <select id="cycle_select" class="form-select w-100 p-2" name="cycle_name">
                                 <option value="">-- Select Cycle --</option>
 
-                                @foreach ($audit_cycle as $cycle)
-                                    <option value="{{ $cycle->name }}">
-                                        {{ $cycle->name ?? ($cycle->cycle_name ?? 'Cycle ' . $cycle->id) }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $audit_cycle; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cycle): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($cycle->name); ?>">
+                                        <?php echo e($cycle->name ?? ($cycle->cycle_name ?? 'Cycle ' . $cycle->id)); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
 
@@ -70,9 +68,7 @@
                 </form>
             </div>
 
-            {{-- <div class="card-footer text-end">
-            <button id="download_btn" class="btn btn-success">Download</button>
-        </div> --}}
+            
         </div>
     </div>
 
@@ -96,7 +92,7 @@
                 $('#artifact_select').html('<option value="">-- Select Artifact --</option>');
 
                 if (selectedType) {
-                    $.get('{{ route('getItems') }}', {
+                    $.get('<?php echo e(route('getItems')); ?>', {
                         type: selectedType
                     }, function(data) {
                         var options = '<option value="">-- Select Item --</option>';
@@ -118,7 +114,7 @@
                 $('#artifact_select').html('<option value="">Loading...</option>');
 
                 if (item_id) {
-                    $.get('{{ route('getArtifacts') }}', {
+                    $.get('<?php echo e(route('getArtifacts')); ?>', {
                         item_id: item_id,
                         type: selectedType
                     }, function(data) {
@@ -147,7 +143,7 @@
             //     }
 
             //     $.ajax({
-            //         url: '{{ route('downloadArtifact') }}',
+            //         url: '<?php echo e(route('downloadArtifact')); ?>',
             //         type: 'POST',
             //         data: { type: type, item_id: item, artifact_id: artifact },
             //         xhrFields: { responseType: 'blob' },
@@ -188,7 +184,7 @@
                 }
 
                 $.ajax({
-                    url: '{{ route('downloadArtifact') }}',
+                    url: '<?php echo e(route('downloadArtifact')); ?>',
                     type: 'POST',
                     data: {
                         type: type,
@@ -220,4 +216,6 @@
 
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp64\www\idfc_qdegrees\resources\views/artifacts_additional/download.blade.php ENDPATH**/ ?>

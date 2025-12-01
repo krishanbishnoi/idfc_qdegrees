@@ -1,0 +1,1 @@
+<?php echo Html::style('/public/assets/vendors/custom/datatables/datatables.bundle.css'); ?><?php /**PATH C:\wamp64\www\idfc_qdegrees\resources\views/shared/table_css.blade.php ENDPATH**/ ?>
