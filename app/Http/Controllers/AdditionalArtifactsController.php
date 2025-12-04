@@ -67,7 +67,7 @@ class AdditionalArtifactsController extends Controller
         // dd($type);
         // if($request->type == 'branch')
         // dd($audit);
-        $agency_name = DB::table('agencies')->where('id', $audit->agency_id)->first();
+        // $agency = DB::table('agencies')->where('id', $audit->agency_id)->first();
         $cycle = DB::table('audit_cycles')->where('id', $audit->audit_cycle_id)->value('name');
 
         foreach ($request->file('artifacts') as $artifactName => $files) {
@@ -81,10 +81,10 @@ class AdditionalArtifactsController extends Controller
             }
 
             foreach ($files as $file) {
-
                 $extension = $file->getClientOriginalExtension();
                 $newFileName = uniqid() . '.' . $extension;
 
+                
                 if ($type == 'agency') {
                     $field = 'agency_id';
                     $data = $audit->agency_id;
@@ -93,6 +93,8 @@ class AdditionalArtifactsController extends Controller
                     $branch_name = DB::table('branches')->where('id', $detail->branch_id)->value('name');
                     // dd($branch_name, $data->name, $artifactName);
                     $newFileName = $branch_name. '-' . $detail->name . '-' . $detail->agency_id . '-' . $artifactName . '-' .  uniqid() . '.' . $extension;
+                    // dd($newFileName);
+                    
                 } elseif ($type == 'branch') {
                     $field = 'branch_id';
                     $data = $audit->branch_id;

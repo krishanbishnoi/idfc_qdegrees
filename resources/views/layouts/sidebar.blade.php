@@ -1,61 +1,47 @@
 <!-- Left Panel -->
 <style>
-    aside.left-panel {
+    aside.left-panel{
         background: #2f353a;
-        height: 95%
+        height:95%
     }
-
     .navbar .main-menu {
-        padding: 0px !important;
+        padding:0px !important;
     }
-
-    .navbar .navbar-nav li>a {
+    .navbar .navbar-nav li > a {
         color: #FFF;
     }
-
-    .navbar .navbar-nav>li.active {
+    .navbar .navbar-nav > li.active {
         /* background: #fafafa; */
         background: #3a4248;
-    }
-
-    .navbar .navbar-nav li.active .menu-icon,
-    .navbar .navbar-nav li:hover .toggle_nav_button:before,
+       }
+    .navbar .navbar-nav li.active .menu-icon, .navbar .navbar-nav li:hover .toggle_nav_button:before,
     .navbar .navbar-nav li .toggle_nav_button.nav-open:before {
-        color: #fff;
+    color: #fff ; }
+    .navbar .navbar-nav li > a .menu-icon{
+        color: #fff ;
     }
-
-    .navbar .navbar-nav li>a .menu-icon {
-        color: #fff;
+    .navbar .navbar-nav li.menu-item-has-children a:before{
+    
+    border-color: #fff #fff transparent transparent;
     }
-
-    .navbar .navbar-nav li.menu-item-has-children a:before {
-
-        border-color: #fff #fff transparent transparent;
-    }
-
-    .navbar .navbar-nav li>a:hover,
-    .navbar .navbar-nav li>a:hover .menu-icon {
+    .navbar .navbar-nav li > a:hover, .navbar .navbar-nav li > a:hover .menu-icon {
         /* background: #20a8d8; */
-        color: #20a8d8;
+        color:#20a8d8; 
     }
-
-    .navbar .navbar-nav li:hover {
+    .navbar .navbar-nav li:hover{
         /* background: #20a8d8; */
-        color: #20a8d8;
+        color:#20a8d8;
     }
-
     .navbar .navbar-nav li.menu-item-has-children .sub-menu {
         background: #3a4248;
         padding: 0 0 0 25px;
-        color: #fff;
-        margin: 0
+        color:#fff;
+        margin:0
     }
-
-    .right-panel .navbar-brand img {
+    .right-panel .navbar-brand img{
         max-width: 130px;
 
     }
-
     .right-panel header.header {
         height: 60px;
 
@@ -84,7 +70,6 @@
         background-color: #20a8d8 !important;
         border-color: #20a8d8 !important;
     }
-
     .btn-danger {
         color: #fff !important;
         background-color: #f86c6b !important;
@@ -369,6 +354,37 @@
                 <li class="">
                     <a href="{{ route('download') }}">
                         <i class="menu-icon fa fa-tasks"></i> Download Artifacts
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{{ route('allocationdump.index') }}">
+                        <i class="menu-icon fa fa-tasks"></i> Allocation Dump
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{{ route('dacdump.index') }}">
+                        <i class="menu-icon fa fa-tasks"></i> Dac Dump
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{{ route('allocationdac.index') }}">
+                        <i class="menu-icon fa fa-tasks"></i> Allocation Dac Report
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{{ route('allocationsummary') }}">
+                        <i class="menu-icon fa fa-tasks"></i> Allocation Summary
+                    </a>
+                </li>
+
+                <li class="">
+                    <a href="{{ route('holidays.index') }}">
+                        <i class="menu-icon fa fa-tasks"></i> Holidays
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{{ route('select.branch') }}">
+                        <i class="menu-icon fa fa-tasks"></i> Report Automation
                     </a>
                 </li>
             </ul>

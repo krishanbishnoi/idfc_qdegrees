@@ -1,5 +1,5 @@
 
-@extends('layouts.master_new')
+@extends('layouts.master')
 
 @section('sh-title')
 
