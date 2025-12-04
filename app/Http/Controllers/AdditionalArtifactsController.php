@@ -18,13 +18,16 @@ class AdditionalArtifactsController extends Controller
 {
     public function create($type, $audit_id)
     {
-
+// dd($type);
         $originalType = $type;
         if ($type == 'branch_repo') {
             $type = 'branch';
         }
         if ($type == 'agency_repo') {
             $type = 'agency';
+        }
+        if($type == 'repo_yard'){
+            $type = 'yard';
         }
         $audit = DB::table('audits')->where('id', $audit_id)->first();
         // dd(Crypt::decrypt($audit_id));
@@ -34,7 +37,7 @@ class AdditionalArtifactsController extends Controller
             $uploaded = AdditionalArtifact::where('agency_id', $audit->agency_id)->get();
         } elseif ($originalType == 'branch') {
             $uploaded = AdditionalArtifact::where('branch_id', $audit->branch_id)->get();
-        } elseif ($originalType == 'yard') {
+        } elseif ($originalType == 'repo_yard') {
             $uploaded = AdditionalArtifact::where('yard_id', $audit->yard_id)->get();
         } elseif ($originalType == 'agency_repo') {
             $uploaded = AdditionalArtifact::where('agency_repo_id', $audit->agency_repo_id)->get();
@@ -45,6 +48,7 @@ class AdditionalArtifactsController extends Controller
         } else {
             $uploaded = AdditionalArtifact::where('agency_id', $audit->agency_id)->get();
         }
+        // dd($uploaded);
         $uploadedGrouped = $uploaded->groupBy('artifact_name');
         return view('artifacts_additional.create', compact('artifacts', 'audit_id', 'originalType', 'uploadedGrouped'));
     }
@@ -53,16 +57,17 @@ class AdditionalArtifactsController extends Controller
 
 
 
-    public function store(Request $request)
+        public function store(Request $request)
     {
         // dd($request->all());
         $user_id = auth()->user()->id;
         $audit = DB::table('audits')->where('id', $request->audit_id)->first();
         $qm_sheet = DB::table('qm_sheets')->where('id', $audit->qm_sheet_id)->first();
         $type = $qm_sheet->type;
+        // dd($type);
         // if($request->type == 'branch')
         // dd($audit);
-        $agency_name = DB::table('agencies')->where('id', $audit->agency_id)->first();
+        // $agency = DB::table('agencies')->where('id', $audit->agency_id)->first();
         $cycle = DB::table('audit_cycles')->where('id', $audit->audit_cycle_id)->value('name');
 
         foreach ($request->file('artifacts') as $artifactName => $files) {
@@ -76,40 +81,61 @@ class AdditionalArtifactsController extends Controller
             }
 
             foreach ($files as $file) {
-
                 $extension = $file->getClientOriginalExtension();
                 $newFileName = uniqid() . '.' . $extension;
 
-                $filePath = $file->storeAs('uploads/additional-artifacts', $newFileName, 'public');
+                
                 if ($type == 'agency') {
                     $field = 'agency_id';
                     $data = $audit->agency_id;
-                    $name = DB::table('agencies')->where('id', $audit->agency_id)->value('name');
+                    $detail = DB::table('agencies')->where('id', $audit->agency_id)->first();
+                    $name= $detail->name;
+                    $branch_name = DB::table('branches')->where('id', $detail->branch_id)->value('name');
+                    // dd($branch_name, $data->name, $artifactName);
+                    $newFileName = $branch_name. '-' . $detail->name . '-' . $detail->agency_id . '-' . $artifactName . '-' .  uniqid() . '.' . $extension;
+                    // dd($newFileName);
+                    
                 } elseif ($type == 'branch') {
                     $field = 'branch_id';
                     $data = $audit->branch_id;
-                    $name = DB::table('branch')->where('id', $audit->branch_id)->value('name');
-                } elseif ($type == 'yard') {
+                    $cm = $audit->collection_manager_id;
+                    $cmname  = DB::table('users')->where('id', $cm)->value('name');
+                    $name = DB::table('branches')->where('id', $audit->branch_id)->value('name');
+                    $newFileName = $name . '_' . $cmname . '_' . $cm . '_' . $artifactName . '_' . uniqid() . '.' . $extension;
+                } elseif ($type == 'repo_yard') {
                     $field = 'yard_id';
                     $data = $audit->yard_id;
-                    $name = DB::table('yard')->where('id', $audit->yard_id)->value('name');
+                    $detail = DB::table('yards')->where('id', $audit->yard_id)->first();
+                    $name = $detail->name;
+                    $branch_name = DB::table('branches')->where('id', $detail->branch_id)->value('name');
+                    $newFileName = $branch_name. '-' . $detail->name . '-' . $detail->yard_id . '-' . $artifactName . '-' .  uniqid() . '.' . $extension;
                 } elseif ($type == 'agency_repo') {
                     $field = 'agency_repo_id';
                     $data = $audit->agency_repo_id;
-                    $name = DB::table('agency_repo')->where('id', $audit->agency_repo_id)->value('name');
+                    $detail = DB::table('agency_repos')->where('id', $audit->agency_repo_id)->first();
+                    $name = $detail->name;
+                    $branch_name = DB::table('branches')->where('id', $detail->branch_id)->value('name');
+                    $newFileName = $branch_name. '-' . $detail->name . '-' . $detail->agency_repo_id . '-' . $artifactName . '-' . uniqid() . '.' . $extension;
                 } elseif ($type == 'branch_repo') {
                     $field = 'branch_repo_id';
                     $data = $audit->branch_repo_id;
-                    $name = DB::table('branch_repo')->where('id', $audit->branch_repo_id)->value('name');
+                    $cm = $audit->collection_manager_id;
+                    $cmname  = DB::table('users')->where('id', $cm)->value('name');
+                    $name = DB::table('branch_repos')->where('id', $audit->branch_repo_id)->value('name');
+                    $newFileName = $name . '_' . $cmname . '_' . $cm . '_' . $artifactName . '_' . uniqid() . '.' . $extension;
                 } elseif ($type == 'yard_repo') {
                     $field = 'yard_repo_id';
                     $data = $audit->yard_repo_id;
                     $name = DB::table('yard_repo')->where('id', $audit->yard_repo_id)->value('name');
+                    $newFileName = uniqid() . '.' . $extension;
                 } else {
                     $field = 'agency_id';
                     $data = $audit->agency_id;
                     $name = DB::table('agencies')->where('id', $audit->agency_id)->value('name');
+                    $newFileName = uniqid() . '.' . $extension;
                 }
+                $filePath = $file->storeAs('uploads/additional-artifacts', $newFileName, 'public');
+// dd($filePath);
                 // Save record into additional_artifacts table
                 AdditionalArtifact::create([
                     $field               => $data,
@@ -271,7 +297,7 @@ class AdditionalArtifactsController extends Controller
         $type = $request->type;
         if ($type == 'branch_repo') {
             $column = 'branch_repo_id';
-            $table = 'branches';
+            $table = 'branch_repos';
         } elseif ($type == 'agency_repo') {
             $column = 'agency_repo_id';
             $table = 'agency_repos';
@@ -285,7 +311,7 @@ class AdditionalArtifactsController extends Controller
         } elseif ($type == 'branch') {
             $column = 'branch_id';
             $table = 'branches';
-        } elseif ($type == 'yard') {
+        } elseif ($type == 'repo_yard') {
             $column = 'yard_id';
             $table = 'yards';
         }
@@ -322,7 +348,7 @@ class AdditionalArtifactsController extends Controller
             $column = 'agency_id';
         } elseif ($type == 'branch') {
             $column = 'branch_id';
-        } elseif ($type == 'yard') {
+        } elseif ($type == 'repo_yard') {
             $column = 'yard_id';
         }
 
@@ -348,7 +374,7 @@ class AdditionalArtifactsController extends Controller
             $column = 'agency_id';
         } elseif ($type == 'branch') {
             $column = 'branch_id';
-        } elseif ($type == 'yard') {
+        } elseif ($type == 'repo_yard') {
             $column = 'yard_id';
         } else {
             abort(400, 'Invalid type');

@@ -2,58 +2,56 @@
 
 namespace App\Imports;
 
-use App\User;
 use App\Holiday;
-use Hash;
-use Spatie\Permission\Models\Role;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithBatchInserts;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Validators\Failure;
-use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
-use Illuminate\Validation\Rule;
-// class UsersImport implements ToModel,WithChunkReading, WithHeadingRow, WithValidation,WithBatchInserts, ShouldQueue
-class HolidayImport implements ToModel, WithHeadingRow, WithValidation,WithChunkReading
-{
-    
-    use Importable;
-    private $errors = [];
-    // private $data; 
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Illuminate\Validation\ValidationException;
 
-    // public function __construct(array $data = [])
-    // {
-    //     $this->roles = $data; 
-    // }
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+class HolidayImport implements ToModel, WithHeadingRow
+{
     public function model(array $row)
     {
-        $data=Holiday::create(['religon'=>$row['religon'],'date'=>$row['date']]);
-        return $data;
-        
+        // Validate "date"
+        $excelDate = $this->convertExcelDate($row['date'], 'date');
+
+        // Validate "working_date"
+        $excelWorkingDate = $this->convertExcelDate($row['working_date'], 'working_date');
+
+        return Holiday::updateOrCreate(
+            ['date' => $excelDate],
+            [
+                'day_name'     => $row['day'],
+                'holiday_name' => $row['holiday'],
+                'working_date' => $excelWorkingDate,
+            ]
+        );
     }
-    public function batchSize(): int
+
+    private function convertExcelDate($value, $columnName)
     {
-        return 100;
-    }
-    public function chunkSize(): int
-    {
-        return 100;
-    }
-    public function rules(): array
-    {
-        // return [
-        //     'email' => 'required|unique:users,email',
-        //     'employee_id' => 'required|unique:users,employee_id',
-        //     // 'manager_id' => 'required|exists:users,id',
-        // ];
+        // If cell is empty → error
+        if (!$value) {
+            throw ValidationException::withMessages([
+                $columnName => "❌ Missing value in column: $columnName"
+            ]);
+        }
+
+        // Case 1: Excel numeric date (GOOD)
+        if (is_numeric($value)) {
+            return Date::excelToDateTimeObject($value)->format('Y-m-d');
+        }
+
+        // Case 2: Try to parse manually if user typed a date like 01/02/2025
+        $parsed = date_create($value);
+
+        if ($parsed) {
+            return $parsed->format('Y-m-d');
+        }
+
+        // Case 3: FAIL → Throw validation error
+        throw ValidationException::withMessages([
+            $columnName => "❌ Invalid date format '$value'. Use Excel date format or MM-DD-YYYY."
+        ]);
     }
 }

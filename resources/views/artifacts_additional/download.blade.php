@@ -23,13 +23,13 @@
                 <form action="{{ route('downloadArtifact') }}" method="post">@csrf
                     <div class="row mb-3">
                         <!-- First Select -->
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="type_select" class="form-label d-block fw-bold required">Select Type</label>
                             <select id="type_select" class="form-select w-100 p-2 " required name="type">
                                 <option value="">-- Select Type --</option>
                                 <option value="agency">Agency</option>
                                 <option value="branch">Branch</option>
-                                <option value="yard">Yard</option>
+                                <option value="repo_yard">Yard</option>
                                 <option value="agency_repo">Agency Repo</option>
                                 <option value="branch_repo">Branch Repo</option>
                                 <option value="yard_repo">Yard Repo</option>
@@ -37,7 +37,7 @@
                         </div>
 
                         <!-- Second Select -->
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="item_select" class="form-label d-block  fw-bold required">Select Item</label>
                             <select id="item_select" class="form-select w-100 p-2" required name="item_id">
                                 <option value="">-- Select Item --</option>
@@ -45,13 +45,13 @@
                         </div>
 
                         <!-- Third Select -->
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="artifact_select" class="form-label d-block fw-bold">Select Artifact</label>
                             <select id="artifact_select" class="form-select w-100 p-2" name="artifact_name">
                                 <option value="">-- Select Artifact --</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                             <label for="cycle_select" class="form-label d-block fw-bold">Select Cycle</label>
                             <select id="cycle_select" class="form-select w-100 p-2" name="cycle_name">
                                 <option value="">-- Select Cycle --</option>
@@ -61,7 +61,7 @@
                                         {{ $cycle->name ?? ($cycle->cycle_name ?? 'Cycle ' . $cycle->id) }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
 
                     </div>
                     <button type="submit" class="btn btn-success">

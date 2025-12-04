@@ -26,6 +26,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        // $schedule->command('action:send-action-plan')
+        //          ->everyMinute();
+
+         $schedule->command('sync:collection-manager')->everyMinute(); 
         $schedule->command('action:send-action-plan')
                  ->everyMinute();
     }
