@@ -366,7 +366,6 @@
                         </ul>
                     </li>
                 @endrole
-                {{-- <li class="{{ $segment1 === 'download' ? 'active' : '' }}"> --}}
                 <li class="">
                     <a href="{{ route('download') }}">
                         <i class="menu-icon fa fa-tasks"></i> Download Artifacts

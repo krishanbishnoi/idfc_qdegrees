@@ -56,8 +56,7 @@
 
                     <div class="col-md-4 mb-3">
                         <label for="validate_at" class="form-label fw-bold">Validate At Date</label>
-                        <input type="date" name="validate_at" id="validate_at" class="form-control form-control-sm"
-                            required>
+                        <input type="date" name="validate_at" id="validate_at" class="form-control form-control-sm">
                     </div>
 
                     <table class="table table-bordered table-striped align-middle">
@@ -85,19 +84,18 @@
                                             <div class="mt-2 d-flex flex-wrap gap-3">
                                                 @foreach ($uploadedGrouped[$artifact] as $file)
                                                     @php
-                                                        $ext = strtolower(
-                                                            pathinfo($file->artifact, PATHINFO_EXTENSION),
-                                                        );
+                                                       $ext = strtolower(pathinfo($file->artifact, PATHINFO_EXTENSION));
+
                                                         $isImage = in_array($ext, ['jpg', 'jpeg', 'png']);
                                                         $fileUrl = asset('storage/app/public/' . $file->artifact);
                                                     @endphp
 
                                                     <div class="artifact-preview-box">
-                                                        <button type="button"
+                                                        {{-- <button type="button"
                                                             class="artifact-delete-btn delete-artifact-btn"
                                                             value="{{ $file->id }}">
                                                             <i class="fa fa-trash"></i>
-                                                        </button>
+                                                        </button> --}}
 
                                                         @if ($isImage)
                                                             <a href="{{ $fileUrl }}" target="_blank">

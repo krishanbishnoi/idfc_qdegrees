@@ -7,7 +7,8 @@
 //echo $exitCode;die;
 
 
-Route::get('/clear-cache', function () {
+
+/*Route::get('/clear-cache', function() {
 
 
 
@@ -25,6 +26,8 @@ Route::get('/clear-cache', function () {
 
 });
 
+
+*/
 
 /*
 
@@ -339,6 +342,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 
+
     Route::get('/artifacts/create/{type}/{audit_id}', 'AdditionalArtifactsController@create')->name('artifacts.create');
     Route::post('/artifacts/store', 'AdditionalArtifactsController@store')->name('artifacts.store');
     Route::get('/artifacts/download/{audit_id}', 'AdditionalArtifactsController@downloadArtifacts')->name('artifacts.download');
@@ -351,3 +355,14 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::get('/allocation-upload', 'AllocationDumpController@uploadForm')->name('allocation.upload.form');
 Route::post('/allocation-upload', 'AllocationDumpController@uploadFile')->name('allocation.upload.file');
+Route::get('/allocation-dump', 'AllocationDumpController@index')->name('allocationdump.index');
+Route::get('/allocation-dump/{id}/edit', 'AllocationDumpController@edit')->name('allocationdump.edit');
+Route::post('/allocation-dump/{id}/update', 'AllocationDumpController@update')->name('allocationdump.update');
+
+Route::get('/dac-upload', 'DacDumpController@uploadForm')->name('dac.upload.form');
+Route::post('/dac-upload', 'DacDumpController@uploadFile')->name('dac.upload.file');
+Route::get('/dac-dump', 'DacDumpController@index')->name('dacdump.index');
+Route::get('/dac-dump/{id}/edit', 'DacDumpController@edit')->name('dacdump.edit');
+Route::post('/dac-dump/{id}/update', 'DacDumpController@update')->name('dacdump.update');
+
+Route::get('/allocation-dac', 'AllocationDumpController@allocationdac')->name('allocationdac.index');
