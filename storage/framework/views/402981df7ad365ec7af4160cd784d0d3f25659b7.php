@@ -1,25 +1,24 @@
-@extends('layouts.master')
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="container mt-4">
         <h3 class="mb-4">
             Monthly Analysis - Branch:
-            <strong>{{ $branch }}</strong>
+            <strong><?php echo e($branch); ?></strong>
         </h3>
         <div class="card shadow p-4">
             <div class="row">
-                {{-- PRODUCT DROPDOWN --}}
+                
                 <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>Select Product</strong></label>
                         <select id="product" class="form-control" required>
                             <option value="">-- Select Product --</option>
-                            @foreach ($products as $p)
-                                <option value="{{ $p->Product_1 }}">{{ $p->Product_1 }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($p->Product_1); ?>"><?php echo e($p->Product_1); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                 </div>
-                {{-- AGENCY DROPDOWN --}}
+                
                 <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>Select Agency</strong></label>
@@ -28,7 +27,7 @@
                         </select>
                     </div>
                 </div>
-                {{-- PAYMENT MODE DROPDOWN --}}
+                
                 <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>Select Payment Mode</strong></label>
@@ -37,7 +36,7 @@
                         </select>
                     </div>
                 </div>
-                {{-- SEARCH BUTTON --}}
+                
                 <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>&nbsp;</strong></label>
@@ -49,21 +48,21 @@
             </div>
         </div>
 
-        {{-- RESULT SECTION --}}
+        
         <div id="resultSection" class="mt-4"></div>
     </div>
-    {{-- AJAX SCRIPT --}}
+    
     <script>
         document.getElementById('product').addEventListener('change', function() {
             let product = this.value;
-            let branch = "{{ $branch }}";
+            let branch = "<?php echo e($branch); ?>";
             let agencyDropdown = document.getElementById('agency');
             let paymentDropdown = document.getElementById('payment_mode');
             agencyDropdown.innerHTML = '<option>Loading...</option>';
             paymentDropdown.innerHTML = '<option>Loading...</option>';
             agencyDropdown.disabled = true;
             paymentDropdown.disabled = true;
-            let baseUrl = "{{ url('/') }}";
+            let baseUrl = "<?php echo e(url('/')); ?>";
             if (product !== "") {
                 // ---- Load Agencies ----
                 fetch(`${baseUrl}/get-agencies/${branch}/${product}`)
@@ -106,8 +105,8 @@
         });
         // --- SEARCH BUTTON CLICK ---
         document.getElementById('searchBtn').addEventListener('click', function() {
-            let baseUrl = "{{ url('/') }}";
-            let branch = "{{ $branch }}";
+            let baseUrl = "<?php echo e(url('/')); ?>";
+            let branch = "<?php echo e($branch); ?>";
             let product = document.querySelector('#product').value;
             let agency = document.querySelector('#agency').value;
             let payment = document.querySelector('#payment_mode').value;
@@ -124,4 +123,6 @@
                 });
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp64\www\idfc_qdegrees\resources\views/report/monthly_analysis.blade.php ENDPATH**/ ?>

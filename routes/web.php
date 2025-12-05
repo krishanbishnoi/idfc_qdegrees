@@ -341,7 +341,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 
-
+    // New Routes by Raghav & Krishan - Ondrive artifacts upload in portal routes 
     Route::get('/artifacts/create/{type}/{audit_id}', 'AdditionalArtifactsController@create')->name('artifacts.create');
     Route::post('/artifacts/store', 'AdditionalArtifactsController@store')->name('artifacts.store');
     Route::get('/artifacts/download/{audit_id}', 'AdditionalArtifactsController@downloadArtifacts')->name('artifacts.download');
@@ -350,71 +350,58 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/get-items', 'AdditionalArtifactsController@getItems')->name('getItems');
     Route::get('/get-artifacts', 'AdditionalArtifactsController@getArtifacts')->name('getArtifacts');
     Route::post('/download-artifact', 'AdditionalArtifactsController@download_artifcats')->name('downloadArtifact');
+
+    // New Routes by Raghav & Krishan - Allocation and DAC Dump Automated report routes
+    Route::get('/allocation-upload', 'AllocationDumpController@uploadForm')->name('allocation.upload.form');
+    Route::post('/allocation-upload', 'AllocationDumpController@uploadFile')->name('allocation.upload.file');
+    Route::get('/allocation-dump', 'AllocationDumpController@index')->name('allocationdump.index');
+    Route::get('/allocation-dump/{id}/edit', 'AllocationDumpController@edit')->name('allocationdump.edit');
+    Route::post('/allocation-dump/{id}/update', 'AllocationDumpController@update')->name('allocationdump.update');
+
+    Route::get('/dac-upload', 'DacDumpController@uploadForm')->name('dac.upload.form');
+    Route::post('/dac-upload', 'DacDumpController@uploadFile')->name('dac.upload.file');
+    Route::get('/dac-dump', 'DacDumpController@index')->name('dacdump.index');
+    Route::get('/dac-dump/{id}/edit', 'DacDumpController@edit')->name('dacdump.edit');
+    Route::post('/dac-dump/{id}/update', 'DacDumpController@update')->name('dacdump.update');
+
+    Route::get('/allocation-dac', 'AllocationDumpController@allocationdac')->name('allocationdac.index');
+    Route::get('/allocation-dac/{id}/edit', 'AllocationDumpController@allocationdacedit')->name('allocationdac.edit');
+
+
+    Route::get('/count-allocation', 'AllocationDumpController@count_allocation');
+    Route::get('/count-allocation-cm', 'AllocationDumpController@count_allocation_cm');
+    Route::get('/count-allocation-branch', 'AllocationDumpController@count_allocation_branch');
+    Route::get('/count-allocation-product', 'AllocationDumpController@count_allocation_product');
+
+    Route::get('/allocation-summary', 'AllocationDumpController@show_allocation_summary')->name('allocationsummary');
+
+    Route::get('/allocation/agency-details/{agency}', 'AllocationDumpController@agencyDetails');
+
+    Route::get('/allocation/by-agency/{value}', 'AllocationDumpController@filterByAgency');
+    Route::get('/allocation/by-cm/{value}', 'AllocationDumpController@filterByCM');
+    Route::get('/allocation/by-product/{value}', 'AllocationDumpController@filterByProduct');
+    Route::get('/allocation/by-branch/{value}', 'AllocationDumpController@filterByBranch');
+
+
+    // report generation  3/12/25
+    Route::get('/select-branch', 'ReportController@selectBranch')->name('select.branch');
+    Route::post('/select-branch', 'ReportController@showBranchData')->name('show.branch.data');
+    Route::get('/monthly-analysis/{branch}', 'ReportController@monthly')->name('monthly.analysis');
+    Route::get('/get-agencies/{branch}/{product}', 'ReportController@getAgencies');
+    Route::get('/get-payment-modes/{branch}/{product}', 'ReportController@getPaymentModes');
+    Route::get('/monthly-result', 'ReportController@monthlyResult')->name('monthly.result');
+    Route::get('/monthly-search', 'ReportController@monthlySearch');
+
+
+    Route::get('/get-agencies/{branch}/{product}', 'ReportController@getAgencies');
+    Route::get('/get-payment-modes/{branch}/{product}', 'ReportController@getPaymentModes');
+    Route::get('/monthly-search', 'ReportController@monthlySearch');
+
+    // holiday calender
+    Route::get('/holidays', 'HolidayController@index')->name('holidays.index');
+    Route::get('/holidays/upload', 'HolidayController@uploadPage')->name('holidays.upload');
+    Route::post('/holidays/upload', 'HolidayController@upload');
+
+    Route::get('/holidays/{id}/edit', 'HolidayController@edit')->name('holidays.edit');
+    Route::post('/holidays/{id}/update', 'HolidayController@update')->name('holidays.update');
 });
-
-Route::get('/allocation-upload', 'AllocationDumpController@uploadForm')->name('allocation.upload.form');
-Route::post('/allocation-upload', 'AllocationDumpController@uploadFile')->name('allocation.upload.file');
-Route::get('/allocation-dump', 'AllocationDumpController@index')->name('allocationdump.index');
-Route::get('/allocation-dump/{id}/edit', 'AllocationDumpController@edit')->name('allocationdump.edit');
-Route::post('/allocation-dump/{id}/update', 'AllocationDumpController@update')->name('allocationdump.update');
-
-Route::get('/dac-upload', 'DacDumpController@uploadForm')->name('dac.upload.form');
-Route::post('/dac-upload', 'DacDumpController@uploadFile')->name('dac.upload.file');
-Route::get('/dac-dump', 'DacDumpController@index')->name('dacdump.index');
-Route::get('/dac-dump/{id}/edit', 'DacDumpController@edit')->name('dacdump.edit');
-Route::post('/dac-dump/{id}/update', 'DacDumpController@update')->name('dacdump.update');
-
-Route::get('/allocation-dac', 'AllocationDumpController@allocationdac')->name('allocationdac.index');
-Route::get('/allocation-dac/{id}/edit', 'AllocationDumpController@allocationdacedit')->name('allocationdac.edit');
-
-
-Route::get('/count-allocation', 'AllocationDumpController@count_allocation');
-Route::get('/count-allocation-cm', 'AllocationDumpController@count_allocation_cm');
-Route::get('/count-allocation-branch', 'AllocationDumpController@count_allocation_branch');
-Route::get('/count-allocation-product', 'AllocationDumpController@count_allocation_product');
-
-Route::get('/allocation-summary', 'AllocationDumpController@show_allocation_summary')->name('allocationsummary');
-
-Route::get('/allocation/agency-details/{agency}', 'AllocationDumpController@agencyDetails');
-
-Route::get('/allocation/by-agency/{value}', 'AllocationDumpController@filterByAgency');
-Route::get('/allocation/by-cm/{value}', 'AllocationDumpController@filterByCM');
-Route::get('/allocation/by-product/{value}', 'AllocationDumpController@filterByProduct');
-Route::get('/allocation/by-branch/{value}', 'AllocationDumpController@filterByBranch');
-
-
-
-
-
-
-// report generation  3/12/25
-
-Route::get('/select-branch', 'ReportController@selectBranch')->name('select.branch');
-Route::post('/select-branch', 'ReportController@showBranchData')->name('show.branch.data');
-Route::get('/monthly-analysis/{branch}', 'ReportController@monthly')->name('monthly.analysis');
-Route::get('/get-agencies/{branch}/{product}', 'ReportController@getAgencies');
-Route::get('/get-payment-modes/{branch}/{product}', 'ReportController@getPaymentModes');
-Route::get('/monthly-result', 'ReportController@monthlyResult')->name('monthly.result');
-Route::get('/monthly-search', 'ReportController@monthlySearch');
-
-
-Route::get('/get-agencies/{branch}/{product}', 'ReportController@getAgencies');
-Route::get('/get-payment-modes/{branch}/{product}', 'ReportController@getPaymentModes');
-Route::get('/monthly-search', 'ReportController@monthlySearch');
-
-
-
-
-// holiday calender
-Route::get('/holidays', 'HolidayController@index')->name('holidays.index');
-Route::get('/holidays/upload', 'HolidayController@uploadPage')->name('holidays.upload');
-Route::post('/holidays/upload', 'HolidayController@upload');
-
-Route::get('/holidays/{id}/edit', 'HolidayController@edit')->name('holidays.edit');
-Route::post('/holidays/{id}/update', 'HolidayController@update')->name('holidays.update');
-
-
-
-
-
-
