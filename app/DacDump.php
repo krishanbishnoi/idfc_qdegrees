@@ -38,6 +38,8 @@ class DacDump extends Model
         'ENCollect_PayInSlip_ID',
         'CMS_PayInSlip_ID',
         'DepositAmount',
+        'BBPAY_BATCHACKDATE',
+        'product_group',
 
         'date_new',
         'delay_deposit',
