@@ -352,20 +352,20 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/download-artifact', 'AdditionalArtifactsController@download_artifcats')->name('downloadArtifact');
 
     // New Routes by Raghav & Krishan - Allocation and DAC Dump Automated report routes
-    Route::get('/allocation-upload', 'AllocationDumpController@uploadForm')->name('allocation.upload.form');
-    Route::post('/allocation-upload', 'AllocationDumpController@uploadFile')->name('allocation.upload.file');
-    Route::get('/allocation-dump', 'AllocationDumpController@index')->name('allocationdump.index');
-    Route::get('/allocation-dump/{id}/edit', 'AllocationDumpController@edit')->name('allocationdump.edit');
-    Route::post('/allocation-dump/{id}/update', 'AllocationDumpController@update')->name('allocationdump.update');
+    Route::get('/automated-reports/allocation-upload', 'AllocationDumpController@uploadForm')->name('allocation.upload.form');
+    Route::post('/automated-reports/allocation-upload', 'AllocationDumpController@uploadFile')->name('allocation.upload.file');
+    Route::get('/automated-reports/allocation-dump', 'AllocationDumpController@index')->name('allocationdump.index');
+    Route::get('/automated-reports/allocation-dump/{id}/edit', 'AllocationDumpController@edit')->name('allocationdump.edit');
+    Route::post('/automated-reports/allocation-dump/{id}/update', 'AllocationDumpController@update')->name('allocationdump.update');
 
-    Route::get('/dac-upload', 'DacDumpController@uploadForm')->name('dac.upload.form');
-    Route::post('/dac-upload', 'DacDumpController@uploadFile')->name('dac.upload.file');
-    Route::get('/dac-dump', 'DacDumpController@index')->name('dacdump.index');
-    Route::get('/dac-dump/{id}/edit', 'DacDumpController@edit')->name('dacdump.edit');
-    Route::post('/dac-dump/{id}/update', 'DacDumpController@update')->name('dacdump.update');
+    Route::get('/automated-reports/dac-upload', 'DacDumpController@uploadForm')->name('dac.upload.form');
+    Route::post('/automated-reports/dac-upload', 'DacDumpController@uploadFile')->name('dac.upload.file');
+    Route::get('/automated-reports/dac-dump', 'DacDumpController@index')->name('dacdump.index');
+    Route::get('/automated-reports/dac-dump/{id}/edit', 'DacDumpController@edit')->name('dacdump.edit');
+    Route::post('/automated-reports/dac-dump/{id}/update', 'DacDumpController@update')->name('dacdump.update');
 
-    Route::get('/allocation-dac', 'AllocationDumpController@allocationdac')->name('allocationdac.index');
-    Route::get('/allocation-dac/{id}/edit', 'AllocationDumpController@allocationdacedit')->name('allocationdac.edit');
+    Route::get('/automated-reports/allocation-dac', 'AllocationDumpController@allocationdac')->name('allocationdac.index');
+    Route::get('/automated-reports/allocation-dac/{id}/edit', 'AllocationDumpController@allocationdacedit')->name('allocationdac.edit');
 
 
     Route::get('/count-allocation', 'AllocationDumpController@count_allocation');
