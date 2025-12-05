@@ -37,6 +37,14 @@ class DacDump extends Model
         'DepositDate',
         'ENCollect_PayInSlip_ID',
         'CMS_PayInSlip_ID',
-        'DepositAmount'
+        'DepositAmount',
+
+        'date_new',
+        'delay_deposit',
+        'delay_deposit_bucket',
+        'pan_required',
+        'pan_status',
+        'time_bkt',
+        'ReceiptTime',
     ];
 }
