@@ -134,9 +134,8 @@ class AdditionalArtifactsController extends Controller
                     $name = DB::table('agencies')->where('id', $audit->agency_id)->value('name');
                     $newFileName = uniqid() . '.' . $extension;
                 }
-
                 $filePath = $file->storeAs('uploads/additional-artifacts', $newFileName, 'public');
-
+// dd($filePath);
                 // Save record into additional_artifacts table
                 AdditionalArtifact::create([
                     $field               => $data,

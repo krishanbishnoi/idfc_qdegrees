@@ -148,6 +148,8 @@ class DacDumpController extends Controller
                 'ENCollect_PayInSlip_ID' => $row[26],
                 'CMS_PayInSlip_ID'       => $row[27],
                 'DepositAmount'          => $row[28],
+                'BBPAY_BATCHACKDATE'    => $row[29],
+                'product_group'         => $row[30],
             ]);
         }
 

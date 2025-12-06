@@ -3,7 +3,7 @@
 @section('content')
     <div class="container mt-4">
         <h3 class="mb-4">
-            Monthly Analysis - Branch:
+            Agency Wise Delay Deposition - Branch:
             <strong>{{ $branch }}</strong>
         </h3>
         <div class="card shadow p-4">
@@ -30,53 +30,61 @@
                     </div>
                 </div>
                 {{-- PAYMENT MODE DROPDOWN --}}
-                <div class="col-md-4">
+                {{-- <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>Select Payment Mode</strong></label>
                         <select id="payment_mode" class="form-control" disabled>
                             <option value="">-- Select Product First --</option>
                         </select>
                     </div>
-                </div>
+                </div> --}}
                 {{-- DELAY DEPOSIT BUCKET DROPDOWN --}}
-                <div class="col-md-4">
+                {{-- <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>Select Delay Deposit Bucket</strong></label>
                         <select id="delay_bucket" class="form-control" disabled>
                             <option value="">-- Select Product First --</option>
                         </select>
                     </div>
-                </div>
+                </div> --}}
 
                 {{-- location drowdown --}}
-                <div class="col-md-4">
+                {{-- <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>Select Location</strong></label>
                         <select id="location" class="form-control" disabled>
                             <option value="">-- Select Product First --</option>
                         </select>
                     </div>
-                </div>
+                </div> --}}
+
+                {{-- <div class="col-md-4">
+                    <div class="form-group mt-3">
+                        <label><strong>Select Collection Manager</strong></label>
+                        <select id="collection_manager" class="form-control" disabled>
+                            <option value="">-- Select Product First --</option>
+                        </select>
+                    </div>
+                </div> --}}
 
                 <div class="col-md-4">
                     <div class="form-group mt-3">
-                        <label><strong>Select Pan Required</strong></label>
-                        <select id="pan_required" class="form-control" disabled>
+                        <label><strong>Select Time Bkt</strong></label>
+                        <select id="time_bkt" class="form-control" disabled>
                             <option value="">-- Select Product First --</option>
                         </select>
                     </div>
                 </div>
-
             </div>
             {{-- SEARCH BUTTON --}}
-            <div class="col-md-4">
+            {{-- <div class="col-md-4">
                 <div class="form-group mt-3">
                     <label><strong>&nbsp;</strong></label>
                     <button id="searchBtn" class="btn btn-primary w-100" type="button">
                         Search
                     </button>
                 </div>
-            </div>
+            </div> --}}
 
         </div>
 
@@ -168,16 +176,32 @@
                         locationDropdown.disabled = false;
                     });
 
-                fetch(`${baseUrl}/get-pan-required/${branch}/${product}`)
+                fetch(`${baseUrl}/get-collection-manager/${branch}/${product}`)
                     .then(response => response.json())
                     .then(data => {
 
-                        let delayDropdown = document.getElementById('pan_required');
+                        let delayDropdown = document.getElementById('collection_manager');
                         delayDropdown.innerHTML = '<option value="">All</option>';
 
                         data.forEach(function(item) {
                             delayDropdown.innerHTML +=
-                                `<option value="${item.pan_required}">${item.pan_required}</option>`;
+                                `<option value="${item.CollectionManager}">${item.CollectionManager}</option>`;
+                        });
+
+                        delayDropdown.disabled = false;
+                    });
+
+
+                    fetch(`${baseUrl}/get-time-bkt/${branch}/${product}`)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        let delayDropdown = document.getElementById('time_bkt');
+                        delayDropdown.innerHTML = '<option value="">All</option>';
+
+                        data.forEach(function(item) {
+                            delayDropdown.innerHTML +=
+                                `<option value="${item.time_bkt}">${item.time_bkt}</option>`;
                         });
 
                         delayDropdown.disabled = false;
@@ -209,9 +233,13 @@
         document.getElementById('location').addEventListener('change', function() {
             this.setAttribute("data-value", this.value);
         });
-        document.getElementById('pan_required').addEventListener('change', function() {
+        document.getElementById('collection_manager').addEventListener('change', function() {
             this.setAttribute("data-value", this.value);
         });
+        document.getElementById('time_bkt').addEventListener('change', function() {
+            this.setAttribute("data-value", this.value);
+        });
+        
 
 
 
@@ -226,12 +254,14 @@
     let payment     = document.querySelector('#payment_mode').value;
     let delayBucket = document.querySelector('#delay_bucket').value;
     let location    = document.querySelector('#location').value;
-    let panRequired = document.querySelector('#pan_required').value;
+    let collection_manager = document.querySelector('#collection_manager').value;
+    let time_bkt = document.querySelector('#time_bkt').vlaue;
 
+    
     // ❌ VALIDATION REMOVED COMPLETELY
 
     fetch(
-        `${baseUrl}/monthly-search?branch=${branch}&product=${product}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&pan_required=${panRequired}`
+        `${baseUrl}/agent-wise-search?branch=${branch}&product=${product}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&collection_manager=${collection_manager}&time_bkt=${time_bkt}`
     )
     .then(response => response.text())
     .then(html => {

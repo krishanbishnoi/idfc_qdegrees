@@ -14,7 +14,9 @@
                 <tr class="text-center">
                     <th>#</th>
                     <th>Agency Name</th>
+                    <th>Agent Name</th>
                     <th>Agent ID</th>
+                    <th>Receipt Date</th>
                     <th>Count</th>
                     <th>Total Receipt Amount</th>
                 </tr>
@@ -25,7 +27,9 @@
                 <tr class="text-center">
                     <td class="fw-bold">{{ $loop->iteration }}</td>
                     <td>{{ $row->AgencyName }}</td>
+                    <td>test</td>
                     <td>{{ $row->AgentId }}</td>
+                    <td>123</td>
                     <td class="text-primary fw-bold">{{ $row->total_count }}</td>
                     <td class="fw-bold text-success">
                         ₹ {{ number_format($row->total_receipt, 2) }}

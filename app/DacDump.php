@@ -40,7 +40,6 @@ class DacDump extends Model
         'DepositAmount',
         'BBPAY_BATCHACKDATE',
         'product_group',
-
         'date_new',
         'delay_deposit',
         'delay_deposit_bucket',

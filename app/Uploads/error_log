@@ -4,7 +4,3 @@
 [14-Nov-2025 05:16:55 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/Setlement.php on line 7
 [14-Nov-2025 05:16:55 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/Allocation.php on line 7
 [23-Nov-2025 15:35:07 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/Allocation.php on line 7
-[26-Nov-2025 11:46:48 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/Allocation.php on line 7
-[27-Nov-2025 07:36:51 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/Allocation.php on line 7
-[04-Dec-2025 00:18:13 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/Allocation.php on line 7
-[04-Dec-2025 03:11:34 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/qdegrees/public_html/idfc.qdegrees.com/app/Uploads/Allocation.php on line 7

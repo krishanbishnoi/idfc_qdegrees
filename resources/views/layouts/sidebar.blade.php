@@ -351,6 +351,7 @@
                         </ul>
                     </li>
                 @endrole
+                {{-- <li class="{{ $segment1 === 'download' ? 'active' : '' }}"> --}}
                 <li class="">
                     <a href="{{ route('download') }}">
                         <i class="menu-icon fa fa-tasks"></i> Download Artifacts
@@ -366,16 +367,16 @@
                         <i class="menu-icon fa fa-tasks"></i> Dac Dump
                     </a>
                 </li>
-                <li class="">
+                {{-- <li class="">
                     <a href="{{ route('allocationdac.index') }}">
                         <i class="menu-icon fa fa-tasks"></i> Allocation Dac Report
                     </a>
-                </li>
-                <li class="">
+                </li> --}}
+                {{-- <li class="">
                     <a href="{{ route('allocationsummary') }}">
                         <i class="menu-icon fa fa-tasks"></i> Allocation Summary
                     </a>
-                </li>
+                </li> --}}
 
                 <li class="">
                     <a href="{{ route('holidays.index') }}">

@@ -8,7 +8,6 @@ use DB;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AllocationDumpImport;
-
 set_time_limit(0);
 ini_set('max_execution_time', 0);
 
@@ -16,137 +15,37 @@ ini_set('max_execution_time', 0);
 class AllocationDumpController extends Controller
 {
     // Show file upload form
-    public function index(Request $request)
-    {
-        $query = AllocationDump::query();
+     public function index(Request $request)
+{
+    $query = AllocationDump::query();
 
-        if ($request->search) {
-            $search = $request->search;
+    if ($request->search) {
+        $search = $request->search;
 
-            $query->where(function ($q) use ($search) {
-                $q->where('loan_number', 'like', "%$search%")
-                    ->orWhere('branch', 'like', "%$search%")
-                    ->orWhere('state', 'like', "%$search%")
-                    ->orWhere('agency_name', 'like', "%$search%")
-                    ->orWhere('productflag_1', 'like', "%$search%")
-                    ->orWhere('product', 'like', "%$search%");
-            });
-        }
-
-        $records = $query->paginate(20);
-
-        return view('allocation_dump.index', compact('records'));
+        $query->where(function($q) use ($search) {
+            $q->where('loan_number', 'like', "%$search%")
+              ->orWhere('branch', 'like', "%$search%")
+              ->orWhere('state', 'like', "%$search%")
+              ->orWhere('agency_name', 'like', "%$search%")
+              ->orWhere('productflag_1', 'like', "%$search%")
+              ->orWhere('product', 'like', "%$search%");
+        });
     }
 
-    public function count_allocation()
-    {
-        $counts = AllocationDump::select('agency_name', DB::raw('COUNT(*) as total'))
-            ->groupBy('agency_name')
-            ->get()
-            ->toArray();
+    $records = $query->paginate(20);
 
-
-        return $counts;
-    }
-
-    public function count_allocation_cm()
-    {
-        $cm = AllocationDump::select('collection_manager')
-            ->distinct()
-            ->pluck('collection_manager');
-
-
-
-        return $cm;
-    }
-
-    public function count_allocation_product()
-    {
-        $product = AllocationDump::select('product')
-            ->distinct()
-            ->pluck('product');
-
-
-
-        return $product;
-    }
-
-    public function count_allocation_branch()
-    {
-        $branch = AllocationDump::select('branch')
-            ->distinct()
-            ->pluck('branch');
-
-
-        return $branch;
-    }
-
-    public function show_allocation_summary()
-    {
-        // Agency + Total Rows
-        $counts = AllocationDump::select('agency_name', DB::raw('COUNT(*) as total'))
-            ->groupBy('agency_name')
-            ->orderBy('agency_name')
-            ->get();
-
-        // Collection Manager + Count
-        $cm = AllocationDump::select('collection_manager', DB::raw('COUNT(*) as total'))
-            ->groupBy('collection_manager')
-            ->orderBy('collection_manager')
-            ->get();
-
-        // Product + Count
-        $product = AllocationDump::select('product', DB::raw('COUNT(*) as total'))
-            ->groupBy('product')
-            ->orderBy('product')
-            ->get();
-
-        // Branch + Count
-        $branch = AllocationDump::select('branch', DB::raw('COUNT(*) as total'))
-            ->groupBy('branch')
-            ->orderBy('branch')
-            ->get();
-
-        return view('allocation_summary', compact('counts', 'cm', 'product', 'branch'));
-    }
-
-    public function agencyDetails($agency)
-    {
-        $data = AllocationDump::where('agency_name', $agency)->get();
-
-        return response()->json($data);
-    }
-    public function filterByAgency($value)
-    {
-        return AllocationDump::where('agency_name', $value)->get();
-    }
-
-    public function filterByCM($value)
-    {
-        return AllocationDump::where('collection_manager', $value)->get();
-    }
-
-    public function filterByProduct($value)
-    {
-        return AllocationDump::where('product', $value)->get();
-    }
-
-    public function filterByBranch($value)
-    {
-        return AllocationDump::where('branch', $value)->get();
-    }
-
-
+    return view('allocation_dump.index', compact('records'));
+}
 
 
     public function edit($id)
-    {
-        $record = AllocationDump::findOrFail($id);
+{
+    $record = AllocationDump::findOrFail($id);
+    
+    
 
-
-
-        return view('allocation_dump.edit', compact('record'));
-    }
+    return view('allocation_dump.edit', compact('record'));
+}
 
     public function update(Request $request, $id)
     {
@@ -156,8 +55,7 @@ class AllocationDumpController extends Controller
         return redirect()->route('allocationdump.index')->with('success', 'Record updated successfully!');
     }
     public function uploadForm()
-    {
-        set_time_limit(0);
+    {   set_time_limit(0);
         ini_set('max_execution_time', 0);
         return view('allocation_dump.allocation-upload');
     }
@@ -186,32 +84,32 @@ class AllocationDumpController extends Controller
 
     // ✔ ADD THIS FUNCTION
     private function convertXlsxToCsv($file)
-    {
-        set_time_limit(0);
-        ini_set('max_execution_time', 0);
+{
+    set_time_limit(0);
+    ini_set('max_execution_time', 0);
 
-        $csvName = 'converted_' . time() . '.csv';
-        $csvPath = storage_path('app/' . $csvName);
+    $csvName = 'converted_' . time() . '.csv';
+    $csvPath = storage_path('app/' . $csvName);
 
-        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
-        $reader->setReadDataOnly(true);
+    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
+    $reader->setReadDataOnly(true);
 
-        $spreadsheet = $reader->load($file->getRealPath());
-        $sheet = $spreadsheet->getActiveSheet();
+    $spreadsheet = $reader->load($file->getRealPath());
+    $sheet = $spreadsheet->getActiveSheet();
 
-        $fh = fopen($csvPath, 'w');
+    $fh = fopen($csvPath, 'w');
 
-        foreach ($sheet->getRowIterator() as $row) {
-            $data = [];
-            foreach ($row->getCellIterator() as $cell) {
-                $data[] = $cell->getValue();
-            }
-            fputcsv($fh, $data);
+    foreach ($sheet->getRowIterator() as $row) {
+        $data = [];
+        foreach ($row->getCellIterator() as $cell) {
+            $data[] = $cell->getValue();
         }
-
-        fclose($fh);
-        return $csvPath;
+        fputcsv($fh, $data);
     }
+
+    fclose($fh);
+    return $csvPath;
+}
 
 
 
@@ -285,46 +183,148 @@ class AllocationDumpController extends Controller
         return view('allocation_dump.allocationdac', compact('records'));
     }
 
-    public function allocationdacedit($id)
-    {
-        $dac = DacDump::findOrFail($id);
-        $record = AllocationDump::where('loan_number', $dac->ReferenceNo)->first();
+ public function allocationdacedit($id)
+{
+    $dac = DacDump::findOrFail($id);
+    $record = AllocationDump::where('loan_number', $dac->ReferenceNo)->first();
 
-        // If $dac is null, create an empty object or set default values
-        if (!$dac) {
-            $dac = (object) [
-                'sl_no' => '',
-                'PaymentId' => '',
-                'Location' => '',
-                'State' => '',
-                'BranchName' => '',
-                'AgencyId' => '',
-                'AgencyName' => '',
-                'AgentEmail' => '',
-                'AgentName' => '',
-                'AgentId' => '',
-                'ReceiptNo' => '',
-                'ReceiptDate' => '',
-                'ReceiptTime' => '',
-                'Month' => '',
-                'ReferenceNo' => '',
-                'CustomerName' => '',
-                'Product_1' => '',
-                'Current_Bucket_1' => '',
-                'Combo' => '',
-                'CollectionManager' => '',
-                'TotalReceiptAmount' => '',
-                'PaymentMode' => '',
-                'PANCardNo' => '',
-                'BatchID' => '',
-                'BatchIDCreatedDate' => '',
-                'DepositDate' => '',
-                'ENCollect_PayInSlip_ID' => '',
-                'CMS_PayInSlip_ID' => '',
-                'DepositAmount' => ''
-            ];
-        }
-
-        return view('allocation_dump.allocationdacview', compact('record', 'dac'));
+    // If $dac is null, create an empty object or set default values
+    if (!$dac) {
+        $dac = (object) [
+            'sl_no' => '',
+            'PaymentId' => '',
+            'Location' => '',
+            'State' => '',
+            'BranchName' => '',
+            'AgencyId' => '',
+            'AgencyName' => '',
+            'AgentEmail' => '',
+            'AgentName' => '',
+            'AgentId' => '',
+            'ReceiptNo' => '',
+            'ReceiptDate' => '',
+            'ReceiptTime' => '',
+            'Month' => '',
+            'ReferenceNo' => '',
+            'CustomerName' => '',
+            'Product_1' => '',
+            'Current_Bucket_1' => '',
+            'Combo' => '',
+            'CollectionManager' => '',
+            'TotalReceiptAmount' => '',
+            'PaymentMode' => '',
+            'PANCardNo' => '',
+            'BatchID' => '',
+            'BatchIDCreatedDate' => '',
+            'DepositDate' => '',
+            'ENCollect_PayInSlip_ID' => '',
+            'CMS_PayInSlip_ID' => '',
+            'DepositAmount' => ''
+        ];
     }
+
+    return view('allocation_dump.allocationdacview', compact('record', 'dac'));
+}
+
+
+
+
+
+public function count_allocation()
+{
+    $counts = AllocationDump::select('agency_name', DB::raw('COUNT(*) as total'))
+    ->groupBy('agency_name')
+    ->get()
+    ->toArray();
+
+
+    return $counts;
+}
+
+public function count_allocation_cm()
+{
+    $cm = AllocationDump::select('collection_manager')
+    ->distinct()
+    ->pluck('collection_manager');
+
+
+
+    return $cm;
+}
+
+public function count_allocation_product()
+{
+    $product = DacDump::select('product')
+    ->distinct()
+    ->pluck('product');
+
+
+
+    return $product;
+}
+
+public function count_allocation_branch()
+{
+    $branch = AllocationDump::select('branch')
+    ->distinct()
+    ->pluck('branch');
+
+
+    return $branch;
+}
+
+public function show_allocation_summary()
+{
+    // Agency + Total Rows
+    $counts = AllocationDump::select('agency_name', DB::raw('COUNT(*) as total'))
+        ->groupBy('agency_name')
+        ->orderBy('agency_name')
+        ->get();
+
+    // Collection Manager + Count
+    $cm = AllocationDump::select('collection_manager', DB::raw('COUNT(*) as total'))
+        ->groupBy('collection_manager')
+        ->orderBy('collection_manager')
+        ->get();
+
+    // Product + Count
+    $product = AllocationDump::select('product', DB::raw('COUNT(*) as total'))
+        ->groupBy('product')
+        ->orderBy('product')
+        ->get();
+
+    // Branch + Count
+    $branch = AllocationDump::select('branch', DB::raw('COUNT(*) as total'))
+        ->groupBy('branch')
+        ->orderBy('branch')
+        ->get();
+
+    return view('allocation_summary', compact('counts', 'cm', 'product', 'branch'));
+}
+
+public function agencyDetails($agency)
+{
+    $data = AllocationDump::where('agency_name', $agency)->get();
+
+    return response()->json($data);
+}
+public function filterByAgency($value)
+{
+    return AllocationDump::where('agency_name', $value)->get();
+}
+
+public function filterByCM($value)
+{
+    return AllocationDump::where('collection_manager', $value)->get();
+}
+
+public function filterByProduct($value)
+{
+    return AllocationDump::where('product', $value)->get();
+}
+
+public function filterByBranch($value)
+{
+    return AllocationDump::where('branch', $value)->get();
+}
 }
