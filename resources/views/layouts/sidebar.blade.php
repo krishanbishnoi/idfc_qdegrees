@@ -1,47 +1,61 @@
 <!-- Left Panel -->
 <style>
-    aside.left-panel{
+    aside.left-panel {
         background: #2f353a;
-        height:95%
+        height: 95%
     }
+
     .navbar .main-menu {
-        padding:0px !important;
+        padding: 0px !important;
     }
-    .navbar .navbar-nav li > a {
+
+    .navbar .navbar-nav li>a {
         color: #FFF;
     }
-    .navbar .navbar-nav > li.active {
+
+    .navbar .navbar-nav>li.active {
         /* background: #fafafa; */
         background: #3a4248;
-       }
-    .navbar .navbar-nav li.active .menu-icon, .navbar .navbar-nav li:hover .toggle_nav_button:before,
+    }
+
+    .navbar .navbar-nav li.active .menu-icon,
+    .navbar .navbar-nav li:hover .toggle_nav_button:before,
     .navbar .navbar-nav li .toggle_nav_button.nav-open:before {
-    color: #fff ; }
-    .navbar .navbar-nav li > a .menu-icon{
-        color: #fff ;
+        color: #fff;
     }
-    .navbar .navbar-nav li.menu-item-has-children a:before{
-    
-    border-color: #fff #fff transparent transparent;
+
+    .navbar .navbar-nav li>a .menu-icon {
+        color: #fff;
     }
-    .navbar .navbar-nav li > a:hover, .navbar .navbar-nav li > a:hover .menu-icon {
+
+    .navbar .navbar-nav li.menu-item-has-children a:before {
+
+        border-color: #fff #fff transparent transparent;
+    }
+
+    .navbar .navbar-nav li>a:hover,
+    .navbar .navbar-nav li>a:hover .menu-icon {
         /* background: #20a8d8; */
-        color:#20a8d8; 
+        color: #20a8d8;
     }
-    .navbar .navbar-nav li:hover{
+
+    .navbar .navbar-nav li:hover {
         /* background: #20a8d8; */
-        color:#20a8d8;
+        color: #20a8d8;
     }
+
     .navbar .navbar-nav li.menu-item-has-children .sub-menu {
         background: #3a4248;
         padding: 0 0 0 25px;
-        color:#fff;
-        margin:0
+        color: #fff;
+        margin: 0
     }
-    .right-panel .navbar-brand img{
+
+    .right-panel .navbar-brand img {
         max-width: 130px;
 
     }
+
     .right-panel header.header {
         height: 60px;
 
@@ -70,6 +84,7 @@
         background-color: #20a8d8 !important;
         border-color: #20a8d8 !important;
     }
+
     .btn-danger {
         color: #fff !important;
         background-color: #f86c6b !important;
@@ -214,13 +229,13 @@
                         </ul>
                     </li>
                     <!-- <li class="menu-item-has-children dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Yard Repo</a>
-                            <ul class="sub-menu children dropdown-menu">
-                                <li><i class="fa fa-plus"></i><a href="{{ route('yardrepo.create') }}">Create Yard Repo</a></li>
-                                <li><i class="fa fa-users"></i><a href="{{ route('yardrepo.index') }}">Yard Repo List</a></li>
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Yard Repo</a>
+                                        <ul class="sub-menu children dropdown-menu">
+                                            <li><i class="fa fa-plus"></i><a href="{{ route('yardrepo.create') }}">Create Yard Repo</a></li>
+                                            <li><i class="fa fa-users"></i><a href="{{ route('yardrepo.index') }}">Yard Repo List</a></li>
 
-                            </ul>
-                        </li> -->
+                                        </ul>
+                                    </li> -->
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Analytics</a>
@@ -351,8 +366,59 @@
                         </ul>
                     </li>
                 @endrole
-                {{-- <li class="{{ $segment1 === 'download' ? 'active' : '' }}"> --}}
-                <li class="">
+                @role('Admin')
+
+                    @php
+                        // List all route names that belong to this menu group
+                        $automatedReportRoutes = [
+                            'allocation.upload.form',
+                            'allocationdump.index',
+                            'allocationdump.edit',
+                            'dac.upload.form',
+                            'dacdump.index',
+                            'dacdump.edit',
+                            'allocationdac.index',
+                            'allocationdac.edit',
+                            'allocationsummary',
+                            'select.branch',
+                            'monthly.analysis',
+                            'monthly.result',
+                            'monthly.search',
+                            'holidays.index',
+                            'holidays.upload',
+                            'holidays.edit',
+                        ];
+
+                        // Check if current route is inside this menu
+                        $isAutomatedActive = in_array(Route::currentRouteName(), $automatedReportRoutes);
+                    @endphp
+
+                    <li class="menu-item-has-children dropdown {{ $isAutomatedActive ? 'show' : '' }}">
+                        <a href="#" class="dropdown-toggle {{ $isAutomatedActive ? '' : 'collapsed' }}"
+                            data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="{{ $isAutomatedActive ? 'true' : 'false' }}">
+
+                            <i class="menu-icon fa fa-database"></i> Automated Reports
+                        </a>
+
+                        <ul class="sub-menu children dropdown-menu {{ $isAutomatedActive ? 'show' : '' }}">
+
+                            <li class="{{ Route::is('allocation.upload.form') ? 'active' : '' }}">
+                                <i class="fa fa-upload"></i>
+                                <a href="{{ route('allocation.upload.form') }}">Upload Dump Files</a>
+                            </li>
+
+                            <li class="{{ Route::is('select.branch') ? 'active' : '' }}">
+                                <i class="fa fa-table"></i>
+                                <a href="{{ route('select.branch') }}">Reports</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                @endrole
+
+                {{-- <li class="">
                     <a href="{{ route('download') }}">
                         <i class="menu-icon fa fa-tasks"></i> Download Artifacts
                     </a>
@@ -376,7 +442,7 @@
                     <a href="{{ route('allocationsummary') }}">
                         <i class="menu-icon fa fa-tasks"></i> Allocation Summary
                     </a>
-                </li> --}}
+                </li>
 
                 <li class="">
                     <a href="{{ route('holidays.index') }}">
@@ -387,7 +453,7 @@
                     <a href="{{ route('select.branch') }}">
                         <i class="menu-icon fa fa-tasks"></i> Report Automation
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </div><!-- /.navbar-collapse -->
     </nav>

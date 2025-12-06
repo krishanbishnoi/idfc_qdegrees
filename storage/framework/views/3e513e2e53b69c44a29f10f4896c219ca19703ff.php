@@ -1,12 +1,10 @@
-@extends('layouts.master')
+<?php $__env->startSection('title', '| Agency'); ?>
+<?php $__env->startSection('content'); ?>
 
-@section('title', '| Agency')
-@section('content')
+    
 
-    @extends('layouts.master')
-
-@section('title', '| Agency')
-@section('content')
+<?php $__env->startSection('title', '| Agency'); ?>
+<?php $__env->startSection('content'); ?>
 
     <div class="row">
         <div class="col-lg-12" style="margin-top:10x">
@@ -26,15 +24,15 @@
                     <div class="card-body">
 
 
-                        @if (session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
-                        @endif
-                        <form method="GET" action="{{ route('dacdump.index') }}" class="mb-3">
+                        <?php if(session('success')): ?>
+                            <div class="alert alert-success"><?php echo e(session('success')); ?></div>
+                        <?php endif; ?>
+                        <form method="GET" action="<?php echo e(route('dacdump.index')); ?>" class="mb-3">
                             <div class="row">
                                 <div class="col-md-4">
                                     <input type="text" name="search" class="form-control"
                                         placeholder="Search Receipt No / Branch / Location / Agent..."
-                                        value="{{ request('search') }}">
+                                        value="<?php echo e(request('search')); ?>">
                                 </div>
                                 <div class="col-md-2">
                                     <button class="btn btn-primary">Search</button>
@@ -63,32 +61,36 @@
                             </thead>
 
                             <tbody>
-                                @foreach ($records as $r)
+                                <?php $__currentLoopData = $records; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td>{{ $r->ReceiptNo }}</td>
-                                        <td>{{ $r->BranchName }}</td>
+                                        <td><?php echo e($r->ReceiptNo); ?></td>
+                                        <td><?php echo e($r->BranchName); ?></td>
 
-                                        <td>{{ $r->Location }}</td>
-                                        <td>{{ $r->AgencyName }}</td>
-                                        <td>{{ $r->Product_1 }}</td>
+                                        <td><?php echo e($r->Location); ?></td>
+                                        <td><?php echo e($r->AgencyName); ?></td>
+                                        <td><?php echo e($r->Product_1); ?></td>
 
-                                        <td>{{ $r->AgentName }}</td>
-                                        <td>{{ $r->TotalReceiptAmount }}</td>
+                                        <td><?php echo e($r->AgentName); ?></td>
+                                        <td><?php echo e($r->TotalReceiptAmount); ?></td>
 
                                         <td>
-                                            <a href="{{ route('dacdump.edit', $r->id) }}" class="btn btn-sm btn-primary">
+                                            <a href="<?php echo e(route('dacdump.edit', $r->id)); ?>" class="btn btn-sm btn-primary">
                                                 Edit
                                             </a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>
 
-                        {{ $records->links() }}
+                        <?php echo e($records->links()); ?>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp64\www\idfc_qdegrees\resources\views/dac_dump/index.blade.php ENDPATH**/ ?>

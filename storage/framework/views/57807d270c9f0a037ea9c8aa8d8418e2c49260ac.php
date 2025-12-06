@@ -1,6 +1,4 @@
-@extends('layouts.master')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="row">
 
         <div class="col-lg-12" style="margin-top:10x">
@@ -38,18 +36,18 @@
                             </thead>
 
                             <tbody>
-                                @foreach ($holidays as $h)
+                                <?php $__currentLoopData = $holidays; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $h): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td>{{ $h->day_name }}</td>
-                                        <td>{{ $h->date }}</td>
-                                        <td>{{ $h->holiday_name }}</td>
-                                        <td>{{ $h->working_date }}</td>
+                                        <td><?php echo e($h->day_name); ?></td>
+                                        <td><?php echo e($h->date); ?></td>
+                                        <td><?php echo e($h->holiday_name); ?></td>
+                                        <td><?php echo e($h->working_date); ?></td>
                                         <td>
-                                            <a href="{{ route('holidays.edit', $h->id) }}"
+                                            <a href="<?php echo e(route('holidays.edit', $h->id)); ?>"
                                                 class="btn btn-primary btn-sm">Edit</a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>
                     </div>
@@ -57,4 +55,6 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp64\www\idfc_qdegrees\resources\views/holidays/index.blade.php ENDPATH**/ ?>
