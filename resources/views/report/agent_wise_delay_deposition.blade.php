@@ -1,5 +1,6 @@
 @extends('layouts.master')
 
+
 @section('content')
     <div class="container mt-4">
         <h3 class="mb-4">
@@ -91,6 +92,7 @@
         {{-- RESULT SECTION --}}
         <div id="resultSection" class="mt-4"></div>
     </div>
+
 
 
     {{-- AJAX SCRIPT --}}
@@ -256,7 +258,6 @@
     let location    = document.querySelector('#location').value;
     let collection_manager = document.querySelector('#collection_manager').value;
     let time_bkt = document.querySelector('#time_bkt').vlaue;
-
     
     // ❌ VALIDATION REMOVED COMPLETELY
 
@@ -271,4 +272,5 @@
 });
 
     </script>
+    
 @endsection

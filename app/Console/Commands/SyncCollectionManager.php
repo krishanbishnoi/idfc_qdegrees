@@ -163,7 +163,7 @@ class SyncCollectionManager extends Command
                 /* ----------------------------------------------------------
                TRY FINDING MATCHING AllocationDump
             ---------------------------------------------------------- */
-                $alloc = AllocationDump::where('loan_number', $dac->ReferenceNo)->first();
+                $alloc = AllocationDump::where('loan_number', $dac->ReferenceNo)->where('month', $dac->Month)->first();
 
 
                 /* ----------------------------------------------------------

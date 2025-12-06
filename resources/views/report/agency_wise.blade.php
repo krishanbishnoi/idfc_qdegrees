@@ -1,274 +1,228 @@
 @extends('layouts.master')
 
+<style>
+    .month-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+    .month-tab {
+        padding: 8px 18px;
+        border: 1px solid #d0d7e2;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        background: #f8fafc;
+        transition: .2s;
+        user-select: none;
+    }
+
+    .month-tab:hover {
+        background: #eef2ff;
+    }
+
+    .month-tab.active {
+        background: #2563eb;
+        color: white;
+        border-color: #1e40af;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    }
+
+    .error-msg {
+        color: red;
+        font-size: 13px;
+        display: none;
+    }
+</style>
+
 @section('content')
-    <div class="container mt-4">
-        <h3 class="mb-4">
-            Agency Wise Delay Deposition - Branch:
-            <strong>{{ $branch }}</strong>
-        </h3>
-        <div class="card shadow p-4">
-            <div class="row">
-                {{-- PRODUCT DROPDOWN --}}
-                <div class="col-md-4">
-                    <div class="form-group mt-3">
-                        <label><strong>Select Product</strong></label>
-                        <select id="product" class="form-control" required>
-                            <option value="">-- Select Product --</option>
-                            @foreach ($products as $p)
-                                <option value="{{ $p->Product_1 }}">{{ $p->Product_1 }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                {{-- AGENCY DROPDOWN --}}
-                <div class="col-md-4">
-                    <div class="form-group mt-3">
-                        <label><strong>Select Agency</strong></label>
-                        <select id="agency" class="form-control" disabled>
-                            <option value="">-- Select Product First --</option>
-                        </select>
-                    </div>
-                </div>
-                {{-- PAYMENT MODE DROPDOWN --}}
-                {{-- <div class="col-md-4">
-                    <div class="form-group mt-3">
-                        <label><strong>Select Payment Mode</strong></label>
-                        <select id="payment_mode" class="form-control" disabled>
-                            <option value="">-- Select Product First --</option>
-                        </select>
-                    </div>
-                </div> --}}
-                {{-- DELAY DEPOSIT BUCKET DROPDOWN --}}
-                {{-- <div class="col-md-4">
-                    <div class="form-group mt-3">
-                        <label><strong>Select Delay Deposit Bucket</strong></label>
-                        <select id="delay_bucket" class="form-control" disabled>
-                            <option value="">-- Select Product First --</option>
-                        </select>
-                    </div>
-                </div> --}}
+<div class="container mt-4">
 
-                {{-- location drowdown --}}
-                {{-- <div class="col-md-4">
-                    <div class="form-group mt-3">
-                        <label><strong>Select Location</strong></label>
-                        <select id="location" class="form-control" disabled>
-                            <option value="">-- Select Product First --</option>
-                        </select>
-                    </div>
-                </div> --}}
+    <h3 class="mb-4">
+        Agency Wise Delay Deposition - Branch:
+        <strong>{{ $branch }}</strong>
+    </h3>
 
-                {{-- <div class="col-md-4">
-                    <div class="form-group mt-3">
-                        <label><strong>Select Collection Manager</strong></label>
-                        <select id="collection_manager" class="form-control" disabled>
-                            <option value="">-- Select Product First --</option>
-                        </select>
-                    </div>
-                </div> --}}
+    <div class="card shadow p-4">
+        
+        {{-- MONTH TABS --}}
+        <div>
+            <label class="fw-bold">Select Months (Min 1, Max 3)</label>
+            <div class="month-tabs" id="monthTabs">
+                @foreach ($cycle as $c)
+                    @if (!empty($c))
+                        <div class="month-tab" data-value="{{ $c }}">{{ $c }}</div>
+                    @endif
+                @endforeach
+            </div>
+            <div id="monthError" class="error-msg">You can select maximum 3 months.</div>
+        </div>
 
-                <div class="col-md-4">
-                    <div class="form-group mt-3">
-                        <label><strong>Select Time Bkt</strong></label>
-                        <select id="time_bkt" class="form-control" disabled>
-                            <option value="">-- Select Product First --</option>
-                        </select>
-                    </div>
+        {{-- DROPDOWNS --}}
+        <div class="row">
+
+            {{-- PRODUCT --}}
+            <div class="col-md-4">
+                <div class="form-group mt-3">
+                    <label><strong>Select Product</strong></label>
+                    <select id="product" class="form-control" required>
+                        <option value="">-- Select Product --</option>
+                        @foreach ($products as $p)
+                            <option value="{{ $p->Product_1 }}">{{ $p->Product_1 }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
-            {{-- SEARCH BUTTON --}}
-            {{-- <div class="col-md-4">
+
+            {{-- AGENCY --}}
+            <div class="col-md-4">
                 <div class="form-group mt-3">
-                    <label><strong>&nbsp;</strong></label>
-                    <button id="searchBtn" class="btn btn-primary w-100" type="button">
-                        Search
-                    </button>
+                    <label><strong>Select Agency</strong></label>
+                    <select id="agency" class="form-control" disabled>
+                        <option value="">-- Select Product First --</option>
+                    </select>
                 </div>
-            </div> --}}
+            </div>
+
+            {{-- TIME BUCKET --}}
+            <div class="col-md-4">
+                <div class="form-group mt-3">
+                    <label><strong>Select Time Bkt</strong></label>
+                    <select id="time_bkt" class="form-control" disabled>
+                        <option value="">-- Select Product First --</option>
+                    </select>
+                </div>
+            </div>
 
         </div>
 
-        {{-- RESULT SECTION --}}
-        <div id="resultSection" class="mt-4"></div>
+        {{-- SEARCH BUTTON --}}
+        <div class="col-md-4">
+            <div class="form-group mt-3">
+                <label><strong>&nbsp;</strong></label>
+                <button id="searchBtn" class="btn btn-primary w-100" type="button">
+                    Search
+                </button>
+            </div>
+        </div>
+
     </div>
 
+    {{-- RESULT --}}
+    <div id="resultSection" class="mt-4"></div>
 
-    {{-- AJAX SCRIPT --}}
-    <script>
-        document.getElementById('product').addEventListener('change', function() {
+</div>
 
-            let product = this.value;
-            let branch = "{{ $branch }}";
+{{-- ======================= JAVASCRIPT ======================= --}}
 
-            let agencyDropdown = document.getElementById('agency');
-            let paymentDropdown = document.getElementById('payment_mode');
+<script>
+    /* ----------------- MONTH TABS LOGIC ----------------- */
+    const tabs = document.querySelectorAll('.month-tab');
+    const error = document.getElementById('monthError');
 
-            agencyDropdown.innerHTML = '<option>Loading...</option>';
-            paymentDropdown.innerHTML = '<option>Loading...</option>';
+    function getSelectedMonths() {
+        return Array.from(document.querySelectorAll('.month-tab.active'))
+            .map(tab => tab.getAttribute('data-value'));
+    }
 
-            agencyDropdown.disabled = true;
-            paymentDropdown.disabled = true;
+    // select first by default
+    if (tabs.length > 0) {
+        tabs[0].classList.add('active');
+    }
 
-            let baseUrl = "{{ url('/') }}";
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const selected = getSelectedMonths();
 
-            if (product !== "") {
-
-                // ---- Load Agencies ----
-                fetch(`${baseUrl}/get-agencies/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        agencyDropdown.innerHTML = '<option value="">All</option>';
-
-                        data.forEach(function(item) {
-                            agencyDropdown.innerHTML +=
-                                `<option value="${item.AgencyName}">${item.AgencyName}</option>`;
-                        });
-
-                        agencyDropdown.disabled = false;
-                    });
-
-                // ---- Load Payment Modes ----
-                fetch(`${baseUrl}/get-payment-modes/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        paymentDropdown.innerHTML = '<option value="">All</option>';
-
-                        data.forEach(function(item) {
-                            paymentDropdown.innerHTML +=
-                                `<option value="${item.PaymentMode}">${item.PaymentMode}</option>`;
-                        });
-
-                        paymentDropdown.disabled = false;
-                    });
-
-                // ---- Load Delay Deposit Buckets ----
-                fetch(`${baseUrl}/get-delay-buckets/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        let delayDropdown = document.getElementById('delay_bucket');
-                        delayDropdown.innerHTML = '<option value="">All</option>';
-
-                        data.forEach(function(item) {
-                            delayDropdown.innerHTML +=
-                                `<option value="${item.delay_deposit_bucket}">${item.delay_deposit_bucket}</option>`;
-                        });
-
-                        delayDropdown.disabled = false;
-                    });
-
-                // load location
-                // load location
-                fetch(`${baseUrl}/get-location/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        let locationDropdown = document.getElementById('location');
-                        locationDropdown.innerHTML = '<option value="">All</option>';
-
-                        data.forEach(function(item) {
-                            locationDropdown.innerHTML +=
-                                `<option value="${item.Location}">${item.Location}</option>`;
-                        });
-
-                        locationDropdown.disabled = false;
-                    });
-
-                fetch(`${baseUrl}/get-collection-manager/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        let delayDropdown = document.getElementById('collection_manager');
-                        delayDropdown.innerHTML = '<option value="">All</option>';
-
-                        data.forEach(function(item) {
-                            delayDropdown.innerHTML +=
-                                `<option value="${item.CollectionManager}">${item.CollectionManager}</option>`;
-                        });
-
-                        delayDropdown.disabled = false;
-                    });
-
-
-                    fetch(`${baseUrl}/get-time-bkt/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        let delayDropdown = document.getElementById('time_bkt');
-                        delayDropdown.innerHTML = '<option value="">All</option>';
-
-                        data.forEach(function(item) {
-                            delayDropdown.innerHTML +=
-                                `<option value="${item.time_bkt}">${item.time_bkt}</option>`;
-                        });
-
-                        delayDropdown.disabled = false;
-                    });
-
-            } else {
-                agencyDropdown.innerHTML = '<option value="">-- Select Product --</option>';
-                paymentDropdown.innerHTML = '<option value="">-- Select Product --</option>';
-
-                agencyDropdown.disabled = true;
-                paymentDropdown.disabled = true;
+            if (tab.classList.contains('active')) {
+                if (selected.length === 1) return; // must keep min 1
+                tab.classList.remove('active');
+                error.style.display = 'none';
+                return;
             }
+
+            if (selected.length >= 3) {
+                error.style.display = 'block';
+                setTimeout(() => error.style.display = 'none', 1500);
+                return;
+            }
+
+            tab.classList.add('active');
         });
-
-
-        // --- HIDDEN INPUT UPDATES ---
-        document.getElementById('agency').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('payment_mode').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('product').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('delay_bucket').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('location').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('collection_manager').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('time_bkt').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        
-
-
-
-        // --- SEARCH BUTTON CLICK ---
-  document.getElementById('searchBtn').addEventListener('click', function() {
-
-    let baseUrl = "{{ url('/') }}";
-
-    let branch      = "{{ $branch }}";
-    let product     = document.querySelector('#product').value;
-    let agency      = document.querySelector('#agency').value;
-    let payment     = document.querySelector('#payment_mode').value;
-    let delayBucket = document.querySelector('#delay_bucket').value;
-    let location    = document.querySelector('#location').value;
-    let collection_manager = document.querySelector('#collection_manager').value;
-    let time_bkt = document.querySelector('#time_bkt').vlaue;
-
-    
-    // ❌ VALIDATION REMOVED COMPLETELY
-
-    fetch(
-        `${baseUrl}/agent-wise-search?branch=${branch}&product=${product}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&collection_manager=${collection_manager}&time_bkt=${time_bkt}`
-    )
-    .then(response => response.text())
-    .then(html => {
-        document.getElementById('resultSection').innerHTML = html;
     });
 
-});
+    /* ----------------- PRODUCT CHANGE → FETCH AGENCIES + TIME BKT ----------------- */
+    document.getElementById('product').addEventListener('change', function () {
 
-    </script>
+        let product = this.value;
+        let branch = "{{ $branch }}";
+        let baseUrl = "{{ url('/') }}";
+
+        let agencyDropdown = document.getElementById('agency');
+        let timeDropdown = document.getElementById('time_bkt');
+
+        agencyDropdown.innerHTML = '<option>Loading...</option>';
+        timeDropdown.innerHTML = '<option>Loading...</option>';
+
+        agencyDropdown.disabled = true;
+        timeDropdown.disabled = true;
+
+        if (product !== "") {
+
+            // Load Agencies
+            fetch(`${baseUrl}/get-agencies/${branch}/${product}`)
+                .then(res => res.json())
+                .then(data => {
+                    agencyDropdown.innerHTML = '<option value="">All</option>';
+                    data.forEach(item => {
+                        agencyDropdown.innerHTML +=
+                            `<option value="${item.AgencyName}">${item.AgencyName}</option>`;
+                    });
+                    agencyDropdown.disabled = false;
+                });
+
+            // Load Time Bucket
+            fetch(`${baseUrl}/get-time-bkt/${branch}/${product}`)
+                .then(res => res.json())
+                .then(data => {
+                    timeDropdown.innerHTML = '<option value="">All</option>';
+                    data.forEach(item => {
+                        timeDropdown.innerHTML +=
+                            `<option value="${item.time_bkt}">${item.time_bkt}</option>`;
+                    });
+                    timeDropdown.disabled = false;
+                });
+
+        } else {
+            agencyDropdown.innerHTML = '<option value="">-- Select Product --</option>';
+            timeDropdown.innerHTML = '<option value="">-- Select Product --</option>';
+        }
+    });
+
+    /* ----------------- SEARCH BUTTON → AJAX CALL ----------------- */
+    document.getElementById('searchBtn').addEventListener('click', function () {
+
+        let baseUrl  = "{{ url('/') }}";
+
+        let branch   = "{{ $branch }}";
+        let product  = document.querySelector('#product').value;
+        let agency   = document.querySelector('#agency').value;
+        let time_bkt = document.querySelector('#time_bkt').value;
+
+        // Selected months
+        let months = getSelectedMonths().join(',');
+
+        fetch(
+            `${baseUrl}/agency-wise-search?branch=${branch}&product=${product}&agency=${agency}&time_bkt=${time_bkt}&months=${months}`
+        )
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('resultSection').innerHTML = html;
+        });
+
+    });
+</script>
+
 @endsection

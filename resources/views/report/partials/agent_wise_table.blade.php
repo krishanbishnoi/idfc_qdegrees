@@ -27,9 +27,9 @@
                 <tr class="text-center">
                     <td class="fw-bold">{{ $loop->iteration }}</td>
                     <td>{{ $row->AgencyName }}</td>
-                    <td>test</td>
+                    <td>{{ $row->AgentName }}</td>
                     <td>{{ $row->AgentId }}</td>
-                    <td>123</td>
+                    <td>{{ \Carbon\Carbon::parse($row->receipt_date)->format('d/m/Y') }}</td>
                     <td class="text-primary fw-bold">{{ $row->total_count }}</td>
                     <td class="fw-bold text-success">
                         ₹ {{ number_format($row->total_receipt, 2) }}

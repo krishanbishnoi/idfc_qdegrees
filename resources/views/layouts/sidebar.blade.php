@@ -100,7 +100,7 @@
     }
 </style>
 <aside id="left-panel" class="left-panel">
-    <nav class="navbar navbar-expand-sm navbar-default">
+    <nav class="navbar navbar-expand-sm navbar-default mt-5">
         <div id="main-menu" class="main-menu collapse navbar-collapse">
             <ul class="nav navbar-nav" style="background: #2f353a;">
                 @hasanyrole('Collection Manager')

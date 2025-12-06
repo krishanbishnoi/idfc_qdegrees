@@ -18,7 +18,7 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                <a href="{{ route('agency.wise.search', $branch) }}" target="_blank" class="btn btn-success w-100 p-3"
+                <a href="{{ route('agency.wise.delay.deposition', $branch) }}" target="_blank" class="btn btn-success w-100 p-3"
                     style="font-size:18px;">
                     Agency wise Delay Deposition
                 </a>

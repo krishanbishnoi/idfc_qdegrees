@@ -1,41 +1,63 @@
 @if(count($results) == 0)
 
-    <div class="alert alert-danger text-center fw-bold">
-        <i class="bi bi-exclamation-circle"></i> No data found.
-    </div>
+<div class="alert alert-danger text-center fw-bold">
+    <i class="bi bi-exclamation-circle"></i> No data found.
+</div>
 
 @else
 
-<div class="card shadow-lg border-0 mt-3">
-    <div class="card-body p-0">
+<div class="report-table-container mt-3">
+    <table class="table report-table mb-0">
 
-        <table class="table table-hover table-striped mb-0">
-            <thead class="table-dark">
-                <tr class="text-center">
-                    <th>#</th>
-                    <th>Agency Name</th>
-                    <th>Agent ID</th>
-                    <th>Count</th>
-                    <th>Total Receipt Amount</th>
-                </tr>
-            </thead>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Agency Name</th>
+                <th>Agent ID</th>
 
-            <tbody>
-                @foreach($results as $row)
-                <tr class="text-center">
-                    <td class="fw-bold">{{ $loop->iteration }}</td>
-                    <td>{{ $row->AgencyName }}</td>
-                    <td>{{ $row->AgentId }}</td>
-                    <td class="text-primary fw-bold">{{ $row->total_count }}</td>
-                    <td class="fw-bold text-success">
-                        ₹ {{ number_format($row->total_receipt, 2) }}
-                    </td>
-                </tr>
+                @foreach($months as $i => $m)
+                    @php 
+                        $colorClass = 'month-head-' . (($i % 3) + 1); 
+                    @endphp
+                    <th colspan="2" class="{{ $colorClass }}">{{ $m }}</th>
                 @endforeach
-            </tbody>
-        </table>
+            </tr>
 
-    </div>
+            <tr class="sub-head">
+                <th></th>
+                <th></th>
+                <th></th>
+
+                @foreach($months as $m)
+                    <th>Count</th>
+                    <th>Receipt</th>
+                @endforeach
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach($results as $row)
+            <tr>
+                <td class="fw-bold">{{ $loop->iteration }}</td>
+                <td class="text-start">{{ $row->AgencyName }}</td>
+                <td>{{ $row->AgentId }}</td>
+
+                @foreach($months as $m)
+                    @php $safe = preg_replace('/[^A-Za-z0-9_]/', '_', $m); @endphp
+
+                    <td class="text-count">
+                        {{ $row->{'count_'.$safe} ?? 0 }}
+                    </td>
+
+                    <td class="text-money">
+                        ₹ {{ number_format($row->{'receipt_'.$safe} ?? 0, 2) }}
+                    </td>
+                @endforeach
+            </tr>
+            @endforeach
+        </tbody>
+
+    </table>
 </div>
 
 @endif

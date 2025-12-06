@@ -414,5 +414,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/agent-wise-search', 'ReportController@agentWiseSearch');
 
 
-    Route::get('/agency-wise-search/{branch}', 'ReportController@agencyWise')->name('agency.wise.search');
+    Route::get('/agency-wise-delay-deposition/{branch}', 'ReportController@agencyWise')->name('agency.wise.delay.deposition');
+
+    Route::get('/agency-wise-search', 'ReportController@agencyWiseSearch');
+
 });
