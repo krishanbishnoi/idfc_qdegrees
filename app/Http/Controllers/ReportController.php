@@ -354,6 +354,6 @@ class ReportController extends Controller
             $result[$agency][$month][$bucket]['amount'] = $row->bucket_amount;
         }
 
-        return view('report.agecnuy', compact('result', 'months', 'buckets'));
+        return view('report.agency_wise_table', compact('result', 'months', 'buckets'));
     }
 }
