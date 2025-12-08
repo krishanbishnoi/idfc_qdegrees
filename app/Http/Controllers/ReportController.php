@@ -10,23 +10,21 @@ use DB;
 class ReportController extends Controller
 {
 
-    public function selectBranch()
+    public function selectBranch(Request $request)
     {
-        // Fetch distinct branch names
+        // Fetch branches
         $branches = DB::table('dac_dump')
             ->select('BranchName')
             ->distinct()
             ->orderBy('BranchName')
             ->get();
-        return view('report.select_branch', compact('branches'));
+
+        // Branch selected only when POST
+        $branch = $request->branch ?? null;
+
+        return view('report.select_branch', compact('branches', 'branch'));
     }
 
-    public function showBranchData(Request $request)
-    {
-        $branch = $request->branch;
-
-        return view('report.home', compact('branch'));
-    }
 
     public function monthly($branch)
     {
@@ -37,7 +35,7 @@ class ReportController extends Controller
             ->distinct()
             ->orderBy('Product_1')
             ->get();
-        
+
         $cycle = DB::table('dac_dump')->distinct()->pluck('Month');
 
         return view('report.monthly_analysis', compact('branch', 'products', 'cycle'));

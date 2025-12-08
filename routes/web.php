@@ -380,8 +380,9 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     // report generation  3/12/25
-    Route::get('/select-branch', 'ReportController@selectBranch')->name('select.branch');
-    Route::post('/select-branch', 'ReportController@showBranchData')->name('show.branch.data');
+    Route::match(['get', 'post'], 'dac-audit-report/branch/', 'ReportController@selectBranch')
+        ->name('select.branch');
+
     Route::get('/monthly-analysis/{branch}', 'ReportController@monthly')->name('monthly.analysis');
     Route::get('/get-agencies/{branch}/{product}', 'ReportController@getAgencies');
     Route::get('/get-payment-modes/{branch}/{product}', 'ReportController@getPaymentModes');
@@ -417,5 +418,4 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/agency-wise-delay-deposition/{branch}', 'ReportController@agencyWise')->name('agency.wise.delay.deposition');
 
     Route::get('/agency-wise-search', 'ReportController@agencyWiseSearch');
-
 });

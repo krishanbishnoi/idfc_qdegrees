@@ -56,9 +56,20 @@
     }
 
     /* Month header stripes */
-    .month-head-1 { background: #1e3a8a; color: #fff; }
-    .month-head-2 { background: #9a3412; color: #fff; }
-    .month-head-3 { background: #4b5563; color: #fff; }
+    .month-head-1 {
+        background: #1e3a8a;
+        color: #fff;
+    }
+
+    .month-head-2 {
+        background: #9a3412;
+        color: #fff;
+    }
+
+    .month-head-3 {
+        background: #4b5563;
+        color: #fff;
+    }
 
     /* Sub header */
     .sub-head {
@@ -71,9 +82,11 @@
     table.report-table tbody tr {
         transition: .2s;
     }
+
     table.report-table tbody tr:nth-child(even) {
         background: #f9fafb;
     }
+
     table.report-table tbody tr:hover {
         background: #eef6ff;
     }
@@ -88,7 +101,8 @@
         font-weight: 600;
     }
 
-    td, th {
+    td,
+    th {
         vertical-align: middle !important;
         text-align: center !important;
         padding: 10px !important;
@@ -100,24 +114,52 @@
 
 <?php $__env->startSection('content'); ?>
     <div class="container mt-4">
-        <h3 class="mb-4">
-            Monthly Analysis - Branch:
-            <strong><?php echo e($branch); ?></strong>
-        </h3>
-        <div class="card shadow p-4">
-            <div>
-                <label class="fw-bold">Select Months (Min 1, Max 3)</label>
 
-                <div class="month-tabs" id="monthTabs">
-                    <?php $__currentLoopData = $cycle; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <?php if(!empty($c)): ?>
-                            <div class="month-tab" data-value="<?php echo e($c); ?>"><?php echo e($c); ?></div>
-                        <?php endif; ?>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">
+                Monthly Analysis - Branch:
+                <strong><?php echo e($branch); ?></strong>
+            </h3>
+
+            <a href="<?php echo e(route('select.branch')); ?>" class="btn btn-outline-primary">
+                ← Back
+            </a>
+        </div>
+        <div class="card shadow p-4">
+            <div class="row">
+
+                <div class="col-md-6">
+                    <label class="fw-bold">From Month</label>
+                    <select id="fromMonth" class="form-control">
+                        <option value="">-- Select Start Month --</option>
+
+                        <?php $__currentLoopData = $cycle; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php if(!empty($c)): ?>
+                                <option value="<?php echo e($c); ?>"><?php echo e($c); ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </select>
                 </div>
 
-                <div id="monthError" class="error-msg">You can select maximum 3 months.</div>
+                <div class="col-md-6">
+                    <label class="fw-bold">To Month</label>
+                    <select id="toMonth" class="form-control" disabled>
+                        <option value="">-- Select End Month --</option>
+
+                        <?php $__currentLoopData = $cycle; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php if(!empty($c)): ?>
+                                <option value="<?php echo e($c); ?>"><?php echo e($c); ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </select>
+                </div>
+
             </div>
+
+            <div id="monthRangeError" class="text-danger mt-2" style="display:none;">
+                Invalid range: End month cannot be before Start month.
+            </div>
+
             <div class="row">
                 
                 <div class="col-md-4">
@@ -194,6 +236,27 @@
         
         <div id="resultSection" class="mt-4"></div>
     </div>
+    <script>
+        const fromMonth = document.getElementById("fromMonth");
+        const toMonth = document.getElementById("toMonth");
+        const errorMsg = document.getElementById("monthRangeError");
+
+        fromMonth.addEventListener("change", function() {
+            toMonth.disabled = false;
+            errorMsg.style.display = "none";
+        });
+
+        toMonth.addEventListener("change", function() {
+            const fromValue = fromMonth.selectedIndex;
+            const toValue = toMonth.selectedIndex;
+
+            if (toValue < fromValue) {
+                errorMsg.style.display = "block";
+            } else {
+                errorMsg.style.display = "none";
+            }
+        });
+    </script>
 
     <script>
         const tabs = document.querySelectorAll('.month-tab');
@@ -380,7 +443,7 @@
             let delayBucket = document.querySelector('#delay_bucket').value;
             let location = document.querySelector('#location').value;
             let panRequired = document.querySelector('#pan_required').value;
-            let months = getSelectedMonths().join(','); 
+            let months = getSelectedMonths().join(',');
 
 
             // ❌ VALIDATION REMOVED COMPLETELY

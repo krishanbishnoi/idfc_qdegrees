@@ -1,5 +1,3 @@
-@extends('layouts.master')
-
 <style>
     .month-tabs {
         display: flex;
@@ -36,146 +34,40 @@
         display: none;
     }
 </style>
-<style>
-    .report-table-container {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    }
-
-    table.report-table {
-        width: 100%;
-        border-collapse: separate !important;
-        border-spacing: 0;
-        font-size: 14px;
-    }
-
-    table.report-table thead th {
-        padding: 12px 10px;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: .5px;
-    }
-
-    /* Month header stripes */
-    .month-head-1 {
-        background: #1e3a8a;
-        color: #fff;
-    }
-
-    .month-head-2 {
-        background: #9a3412;
-        color: #fff;
-    }
-
-    .month-head-3 {
-        background: #4b5563;
-        color: #fff;
-    }
-
-    /* Sub header */
-    .sub-head {
-        background: #f1f5f9;
-        font-weight: 600;
-        font-size: 13px;
-    }
-
-    /* Body styling */
-    table.report-table tbody tr {
-        transition: .2s;
-    }
-
-    table.report-table tbody tr:nth-child(even) {
-        background: #f9fafb;
-    }
-
-    table.report-table tbody tr:hover {
-        background: #eef6ff;
-    }
-
-    .text-money {
-        color: #059669;
-        font-weight: 600;
-    }
-
-    .text-count {
-        color: #2563eb;
-        font-weight: 600;
-    }
-
-    td,
-    th {
-        vertical-align: middle !important;
-        text-align: center !important;
-        padding: 10px !important;
-    }
-</style>
-
-
-
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="container mt-4">
-
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0">
-                Monthly Analysis - Branch:
-                <strong>{{ $branch }}</strong>
-            </h3>
-
-            <a href="{{ route('select.branch') }}" class="btn btn-outline-primary">
-                ← Back
-            </a>
-        </div>
+        <h3 class="mb-4">
+            Agent Wise Delay Deposition - Branch:
+            <strong><?php echo e($branch); ?></strong>
+        </h3>
         <div class="card shadow p-4">
-            <div class="row">
+            <div>
+                <label class="fw-bold">Select Months (Min 1, Max 3)</label>
 
-                <div class="col-md-6">
-                    <label class="fw-bold">From Month</label>
-                    <select id="fromMonth" class="form-control">
-                        <option value="">-- Select Start Month --</option>
-
-                        @foreach ($cycle as $c)
-                            @if (!empty($c))
-                                <option value="{{ $c }}">{{ $c }}</option>
-                            @endif
-                        @endforeach
-                    </select>
+                <div class="month-tabs" id="monthTabs">
+                    <?php $__currentLoopData = $cycle; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(!empty($c)): ?>
+                            <div class="month-tab" data-value="<?php echo e($c); ?>"><?php echo e($c); ?></div>
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
-                <div class="col-md-6">
-                    <label class="fw-bold">To Month</label>
-                    <select id="toMonth" class="form-control" disabled>
-                        <option value="">-- Select End Month --</option>
-
-                        @foreach ($cycle as $c)
-                            @if (!empty($c))
-                                <option value="{{ $c }}">{{ $c }}</option>
-                            @endif
-                        @endforeach
-                    </select>
-                </div>
-
+                <div id="monthError" class="error-msg">You can select maximum 3 months.</div>
             </div>
-
-            <div id="monthRangeError" class="text-danger mt-2" style="display:none;">
-                Invalid range: End month cannot be before Start month.
-            </div>
-
             <div class="row">
-                {{-- PRODUCT DROPDOWN --}}
+                
                 <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>Select Product</strong></label>
                         <select id="product" class="form-control" required>
                             <option value="">-- Select Product --</option>
-                            @foreach ($products as $p)
-                                <option value="{{ $p->Product_1 }}">{{ $p->Product_1 }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($p->Product_1); ?>"><?php echo e($p->Product_1); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                 </div>
-                {{-- AGENCY DROPDOWN --}}
+                
                 <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>Select Agency</strong></label>
@@ -184,7 +76,7 @@
                         </select>
                     </div>
                 </div>
-                {{-- PAYMENT MODE DROPDOWN --}}
+                
                 <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>Select Payment Mode</strong></label>
@@ -193,7 +85,7 @@
                         </select>
                     </div>
                 </div>
-                {{-- DELAY DEPOSIT BUCKET DROPDOWN --}}
+                
                 <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>Select Delay Deposit Bucket</strong></label>
@@ -203,7 +95,7 @@
                     </div>
                 </div>
 
-                {{-- location drowdown --}}
+                
                 <div class="col-md-4">
                     <div class="form-group mt-3">
                         <label><strong>Select Location</strong></label>
@@ -215,15 +107,23 @@
 
                 <div class="col-md-4">
                     <div class="form-group mt-3">
-                        <label><strong>Select Pan Required</strong></label>
-                        <select id="pan_required" class="form-control" disabled>
+                        <label><strong>Select Collection Manager</strong></label>
+                        <select id="collection_manager" class="form-control" disabled>
                             <option value="">-- Select Product First --</option>
                         </select>
                     </div>
                 </div>
 
+                <div class="col-md-4">
+                    <div class="form-group mt-3">
+                        <label><strong>Select Time Bkt</strong></label>
+                        <select id="time_bkt" class="form-control" disabled>
+                            <option value="">-- Select Product First --</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            {{-- SEARCH BUTTON --}}
+            
             <div class="col-md-4">
                 <div class="form-group mt-3">
                     <label><strong>&nbsp;</strong></label>
@@ -235,30 +135,10 @@
 
         </div>
 
-        {{-- RESULT SECTION --}}
+        
         <div id="resultSection" class="mt-4"></div>
     </div>
-    <script>
-        const fromMonth = document.getElementById("fromMonth");
-        const toMonth = document.getElementById("toMonth");
-        const errorMsg = document.getElementById("monthRangeError");
 
-        fromMonth.addEventListener("change", function() {
-            toMonth.disabled = false;
-            errorMsg.style.display = "none";
-        });
-
-        toMonth.addEventListener("change", function() {
-            const fromValue = fromMonth.selectedIndex;
-            const toValue = toMonth.selectedIndex;
-
-            if (toValue < fromValue) {
-                errorMsg.style.display = "block";
-            } else {
-                errorMsg.style.display = "none";
-            }
-        });
-    </script>
 
     <script>
         const tabs = document.querySelectorAll('.month-tab');
@@ -303,12 +183,12 @@
             });
         });
     </script>
-    {{-- AJAX SCRIPT --}}
+    
     <script>
         document.getElementById('product').addEventListener('change', function() {
 
             let product = this.value;
-            let branch = "{{ $branch }}";
+            let branch = "<?php echo e($branch); ?>";
 
             let agencyDropdown = document.getElementById('agency');
             let paymentDropdown = document.getElementById('payment_mode');
@@ -319,7 +199,7 @@
             agencyDropdown.disabled = true;
             paymentDropdown.disabled = true;
 
-            let baseUrl = "{{ url('/') }}";
+            let baseUrl = "<?php echo e(url('/')); ?>";
 
             if (product !== "") {
 
@@ -386,16 +266,32 @@
                         locationDropdown.disabled = false;
                     });
 
-                fetch(`${baseUrl}/get-pan-required/${branch}/${product}`)
+                fetch(`${baseUrl}/get-collection-manager/${branch}/${product}`)
                     .then(response => response.json())
                     .then(data => {
 
-                        let delayDropdown = document.getElementById('pan_required');
+                        let delayDropdown = document.getElementById('collection_manager');
                         delayDropdown.innerHTML = '<option value="">All</option>';
 
                         data.forEach(function(item) {
                             delayDropdown.innerHTML +=
-                                `<option value="${item.pan_required}">${item.pan_required}</option>`;
+                                `<option value="${item.CollectionManager}">${item.CollectionManager}</option>`;
+                        });
+
+                        delayDropdown.disabled = false;
+                    });
+
+
+                fetch(`${baseUrl}/get-time-bkt/${branch}/${product}`)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        let delayDropdown = document.getElementById('time_bkt');
+                        delayDropdown.innerHTML = '<option value="">All</option>';
+
+                        data.forEach(function(item) {
+                            delayDropdown.innerHTML +=
+                                `<option value="${item.time_bkt}">${item.time_bkt}</option>`;
                         });
 
                         delayDropdown.disabled = false;
@@ -427,31 +323,36 @@
         document.getElementById('location').addEventListener('change', function() {
             this.setAttribute("data-value", this.value);
         });
-        document.getElementById('pan_required').addEventListener('change', function() {
+        document.getElementById('collection_manager').addEventListener('change', function() {
             this.setAttribute("data-value", this.value);
         });
+        document.getElementById('time_bkt').addEventListener('change', function() {
+            this.setAttribute("data-value", this.value);
+        });
+
 
 
 
         // --- SEARCH BUTTON CLICK ---
         document.getElementById('searchBtn').addEventListener('click', function() {
 
-            let baseUrl = "{{ url('/') }}";
+            let baseUrl = "<?php echo e(url('/')); ?>";
 
-            let branch = "{{ $branch }}";
+            let branch = "<?php echo e($branch); ?>";
             let product = document.querySelector('#product').value;
             let agency = document.querySelector('#agency').value;
             let payment = document.querySelector('#payment_mode').value;
             let delayBucket = document.querySelector('#delay_bucket').value;
             let location = document.querySelector('#location').value;
-            let panRequired = document.querySelector('#pan_required').value;
+            let collection_manager = document.querySelector('#collection_manager').value;
+            let time_bkt = document.querySelector('#time_bkt').value;
             let months = getSelectedMonths().join(',');
 
 
             // ❌ VALIDATION REMOVED COMPLETELY
 
             fetch(
-                    `${baseUrl}/monthly-search?branch=${branch}&product=${product}&months=${months}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&pan_required=${panRequired}`
+                    `${baseUrl}/agent-wise-search?branch=${branch}&product=${product}&months=${months}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&collection_manager=${collection_manager}&time_bkt=${time_bkt}`
                 )
                 .then(response => response.text())
                 .then(html => {
@@ -460,4 +361,6 @@
 
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp64\www\idfc_qdegrees\resources\views/report/agent_wise_delay_deposition.blade.php ENDPATH**/ ?>
