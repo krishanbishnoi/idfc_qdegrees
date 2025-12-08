@@ -37,7 +37,7 @@ class ReportController extends Controller
             ->distinct()
             ->orderBy('Product_1')
             ->get();
-        
+
         $cycle = DB::table('dac_dump')->distinct()->pluck('Month');
 
         return view('report.monthly_analysis', compact('branch', 'products', 'cycle'));
@@ -356,6 +356,6 @@ class ReportController extends Controller
             $result[$agency][$month][$bucket]['amount'] = $row->bucket_amount;
         }
 
-        return view('report.agecnuy', compact('result', 'months', 'buckets'));
+        return view('report.agency_wise_table', compact('result', 'months', 'buckets'));
     }
 }

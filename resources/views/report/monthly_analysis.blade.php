@@ -58,9 +58,20 @@
     }
 
     /* Month header stripes */
-    .month-head-1 { background: #1e3a8a; color: #fff; }
-    .month-head-2 { background: #9a3412; color: #fff; }
-    .month-head-3 { background: #4b5563; color: #fff; }
+    .month-head-1 {
+        background: #1e3a8a;
+        color: #fff;
+    }
+
+    .month-head-2 {
+        background: #9a3412;
+        color: #fff;
+    }
+
+    .month-head-3 {
+        background: #4b5563;
+        color: #fff;
+    }
 
     /* Sub header */
     .sub-head {
@@ -73,9 +84,11 @@
     table.report-table tbody tr {
         transition: .2s;
     }
+
     table.report-table tbody tr:nth-child(even) {
         background: #f9fafb;
     }
+
     table.report-table tbody tr:hover {
         background: #eef6ff;
     }
@@ -90,7 +103,8 @@
         font-weight: 600;
     }
 
-    td, th {
+    td,
+    th {
         vertical-align: middle !important;
         text-align: center !important;
         padding: 10px !important;
@@ -102,17 +116,10 @@
 
 @section('content')
     <div class="container mt-4">
-        
-        <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="mb-0">
+        <h3 class="mb-4">
             Monthly Analysis - Branch:
             <strong>{{ $branch }}</strong>
         </h3>
-
-        <a href="{{ route('select.branch') }}" class="btn btn-outline-primary">
-            ← Back
-        </a>
-    </div>
         <div class="card shadow p-4">
             <div>
                 <label class="fw-bold">Select Months (Min 1, Max 3)</label>
@@ -389,7 +396,7 @@
             let delayBucket = document.querySelector('#delay_bucket').value;
             let location = document.querySelector('#location').value;
             let panRequired = document.querySelector('#pan_required').value;
-            let months = getSelectedMonths().join(','); 
+            let months = getSelectedMonths().join(',');
 
 
             // ❌ VALIDATION REMOVED COMPLETELY
