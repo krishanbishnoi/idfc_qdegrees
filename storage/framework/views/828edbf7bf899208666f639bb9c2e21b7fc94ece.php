@@ -16,15 +16,19 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                <a href="#" class="btn btn-success w-100 p-3" style="font-size:18px;">
+                <a href="<?php echo e(route('agency.wise.delay.deposition', $branch)); ?>" target="_blank" class="btn btn-success w-100 p-3"
+                    style="font-size:18px;">
                     Agency wise Delay Deposition
                 </a>
+
             </div>
 
             <div class="col-md-6 mb-3">
-                <a href="#" class="btn btn-warning w-100 p-3" style="font-size:18px;">
-                    Agent wise Delay Deposition
+                <a href="<?php echo e(route('agent.wise.delay.deposition', $branch)); ?>" target="_blank" class="btn btn-warning w-100 p-3"
+                    style="font-size:18px;">
+                    Agent Wise Delay Deposition
                 </a>
+
             </div>
 
             <div class="col-md-6 mb-3">
