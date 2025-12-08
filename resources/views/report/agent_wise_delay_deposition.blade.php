@@ -1,6 +1,41 @@
 @extends('layouts.master')
 
+<style>
+    .month-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
 
+    .month-tab {
+        padding: 8px 18px;
+        border: 1px solid #d0d7e2;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        background: #f8fafc;
+        transition: .2s;
+        user-select: none;
+    }
+
+    .month-tab:hover {
+        background: #eef2ff;
+    }
+
+    .month-tab.active {
+        background: #2563eb;
+        color: white;
+        border-color: #1e40af;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    }
+
+    .error-msg {
+        color: red;
+        font-size: 13px;
+        display: none;
+    }
+</style>
 @section('content')
     <div class="container mt-4">
         <h3 class="mb-4">
@@ -8,6 +43,19 @@
             <strong>{{ $branch }}</strong>
         </h3>
         <div class="card shadow p-4">
+            <div>
+                <label class="fw-bold">Select Months (Min 1, Max 3)</label>
+
+                <div class="month-tabs" id="monthTabs">
+                    @foreach ($cycle as $c)
+                        @if (!empty($c))
+                            <div class="month-tab" data-value="{{ $c }}">{{ $c }}</div>
+                        @endif
+                    @endforeach
+                </div>
+
+                <div id="monthError" class="error-msg">You can select maximum 3 months.</div>
+            </div>
             <div class="row">
                 {{-- PRODUCT DROPDOWN --}}
                 <div class="col-md-4">
@@ -94,7 +142,49 @@
     </div>
 
 
+    <script>
+        const tabs = document.querySelectorAll('.month-tab');
+        const error = document.getElementById('monthError');
 
+        function getSelectedMonths() {
+            return Array.from(document.querySelectorAll('.month-tab.active'))
+                .map(tab => tab.getAttribute('data-value'));
+        }
+
+        // Default: Select the first tab so minimum 1 rule is satisfied
+        if (tabs.length > 0) {
+            tabs[0].classList.add('active');
+        }
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const selected = getSelectedMonths();
+
+                // If clicking an already selected tab → allow removal only if more than 1
+                if (tab.classList.contains('active')) {
+                    if (selected.length === 1) {
+                        // must keep at least one
+                        return;
+                    }
+                    tab.classList.remove('active');
+                    error.style.display = 'none';
+                    return;
+                }
+
+                // If selecting a new one → enforce max 3
+                if (selected.length >= 3) {
+                    error.style.display = 'block';
+                    setTimeout(() => {
+                        error.style.display = 'none';
+                    }, 1500);
+                    return;
+                }
+
+                // Activate this tab
+                tab.classList.add('active');
+            });
+        });
+    </script>
     {{-- AJAX SCRIPT --}}
     <script>
         document.getElementById('product').addEventListener('change', function() {
@@ -194,7 +284,7 @@
                     });
 
 
-                    fetch(`${baseUrl}/get-time-bkt/${branch}/${product}`)
+                fetch(`${baseUrl}/get-time-bkt/${branch}/${product}`)
                     .then(response => response.json())
                     .then(data => {
 
@@ -241,36 +331,36 @@
         document.getElementById('time_bkt').addEventListener('change', function() {
             this.setAttribute("data-value", this.value);
         });
-        
+
 
 
 
         // --- SEARCH BUTTON CLICK ---
-  document.getElementById('searchBtn').addEventListener('click', function() {
+        document.getElementById('searchBtn').addEventListener('click', function() {
 
-    let baseUrl = "{{ url('/') }}";
+            let baseUrl = "{{ url('/') }}";
 
-    let branch      = "{{ $branch }}";
-    let product     = document.querySelector('#product').value;
-    let agency      = document.querySelector('#agency').value;
-    let payment     = document.querySelector('#payment_mode').value;
-    let delayBucket = document.querySelector('#delay_bucket').value;
-    let location    = document.querySelector('#location').value;
-    let collection_manager = document.querySelector('#collection_manager').value;
-    let time_bkt = document.querySelector('#time_bkt').vlaue;
-    
-    // ❌ VALIDATION REMOVED COMPLETELY
+            let branch = "{{ $branch }}";
+            let product = document.querySelector('#product').value;
+            let agency = document.querySelector('#agency').value;
+            let payment = document.querySelector('#payment_mode').value;
+            let delayBucket = document.querySelector('#delay_bucket').value;
+            let location = document.querySelector('#location').value;
+            let collection_manager = document.querySelector('#collection_manager').value;
+            let time_bkt = document.querySelector('#time_bkt').value;
+            let months = getSelectedMonths().join(',');
 
-    fetch(
-        `${baseUrl}/agent-wise-search?branch=${branch}&product=${product}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&collection_manager=${collection_manager}&time_bkt=${time_bkt}`
-    )
-    .then(response => response.text())
-    .then(html => {
-        document.getElementById('resultSection').innerHTML = html;
-    });
 
-});
+            // ❌ VALIDATION REMOVED COMPLETELY
 
+            fetch(
+                    `${baseUrl}/agent-wise-search?branch=${branch}&product=${product}&months=${months}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&collection_manager=${collection_manager}&time_bkt=${time_bkt}`
+                )
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('resultSection').innerHTML = html;
+                });
+
+        });
     </script>
-    
 @endsection
