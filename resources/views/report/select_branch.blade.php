@@ -101,7 +101,7 @@
 
                                 <!-- Monthly Analysis -->
                                 <div class="col-md-4 h-100">
-                                    <a href="{{ route('monthly.analysis', ['branch' => $branch]) }}" target="_blank"
+                                    <a href="{{ route('monthly.analysis', ['branch' => $branch]) }}" 
                                         class="text-decoration-none">
                                         <div class="card report-card border-0 shadow-lg"
                                             style="background: linear-gradient(135deg, #4f80ff, #3554d1); padding: 32px;">
@@ -119,7 +119,7 @@
                                 <!-- Agency Wise Delay -->
                                 <div class="col-md-4 h-100">
                                     <a href="{{ route('agency.wise.delay.deposition', ['branch' => $branch]) }}"
-                                        target="_blank" class="text-decoration-none">
+                                         class="text-decoration-none">
                                         <div class="card report-card border-0 shadow-lg"
                                             style="background: linear-gradient(135deg, #20d6a2, #0f8b5f); padding: 32px;">
 
@@ -136,7 +136,7 @@
                                 <!-- Agent Wise Delay -->
                                 <div class="col-md-4 h-100">
                                     <a href="{{ route('agent.wise.delay.deposition', ['branch' => $branch]) }}"
-                                        target="_blank" class="text-decoration-none">
+                                         class="text-decoration-none">
                                         <div class="card report-card border-0 shadow-lg"
                                             style="background: linear-gradient(135deg, #ffc94d, #c89a00); padding: 32px;">
 

@@ -123,7 +123,7 @@
                 <strong>{{ $branch }}</strong>
             </h3>
 
-            <a href="{{ route('select.branch') }}" class="btn btn-outline-primary">
+            <a href="{{ route('select.branch', ['branch' => $branch]) }}" class="btn btn-outline-primary">
                 ← Back
             </a>
         </div>
@@ -260,7 +260,7 @@
         });
     </script>
 
-    <script>
+    {{-- <script>
         const tabs = document.querySelectorAll('.month-tab');
         const error = document.getElementById('monthError');
 
@@ -302,162 +302,131 @@
                 tab.classList.add('active');
             });
         });
-    </script>
+    </script> --}}
     {{-- AJAX SCRIPT --}}
     <script>
-        document.getElementById('product').addEventListener('change', function() {
+document.getElementById('product').addEventListener('change', function () {
 
-            let product = this.value;
-            let branch = "{{ $branch }}";
+    let product = this.value;
+    let branch = "{{ $branch }}";
+    let baseUrl = "{{ url('/') }}";
 
-            let agencyDropdown = document.getElementById('agency');
-            let paymentDropdown = document.getElementById('payment_mode');
+    let agencyDropdown = document.getElementById('agency');
+    let paymentDropdown = document.getElementById('payment_mode');
+    let delayDropdown = document.getElementById('delay_bucket');
+    let locationDropdown = document.getElementById('location');
+    let panDropdown = document.getElementById('pan_required');
 
-            agencyDropdown.innerHTML = '<option>Loading...</option>';
-            paymentDropdown.innerHTML = '<option>Loading...</option>';
+    // Show loading for all dropdowns
+    agencyDropdown.innerHTML =
+        paymentDropdown.innerHTML =
+        delayDropdown.innerHTML =
+        locationDropdown.innerHTML =
+        panDropdown.innerHTML =
+        "<option>Loading...</option>";
 
-            agencyDropdown.disabled = true;
-            paymentDropdown.disabled = true;
+    agencyDropdown.disabled =
+        paymentDropdown.disabled =
+        delayDropdown.disabled =
+        locationDropdown.disabled =
+        panDropdown.disabled = true;
 
-            let baseUrl = "{{ url('/') }}";
+    if (product === "") return;
 
-            if (product !== "") {
+    // Load all 5 APIs together
+    Promise.all([
+        fetch(`${baseUrl}/get-agencies/${branch}/${product}`).then(r => r.json()),
+        fetch(`${baseUrl}/get-payment-modes/${branch}/${product}`).then(r => r.json()),
+        fetch(`${baseUrl}/get-delay-buckets/${branch}/${product}`).then(r => r.json()),
+        fetch(`${baseUrl}/get-location/${branch}/${product}`).then(r => r.json()),
+        fetch(`${baseUrl}/get-pan-required/${branch}/${product}`).then(r => r.json())
+    ])
+    .then(([agencies, paymentModes, delayBuckets, locations, panRequired]) => {
 
-                // ---- Load Agencies ----
-                fetch(`${baseUrl}/get-agencies/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
+        // Agencies
+        agencyDropdown.innerHTML = '<option value="">All</option>';
+        agencies.forEach(item => {
+            agencyDropdown.innerHTML += `<option value="${item.AgencyName}">${item.AgencyName}</option>`;
+        });
+        agencyDropdown.disabled = false;
 
-                        agencyDropdown.innerHTML = '<option value="">All</option>';
+        // Payment Modes
+        paymentDropdown.innerHTML = '<option value="">All</option>';
+        paymentModes.forEach(item => {
+            paymentDropdown.innerHTML += `<option value="${item.PaymentMode}">${item.PaymentMode}</option>`;
+        });
+        paymentDropdown.disabled = false;
 
-                        data.forEach(function(item) {
-                            agencyDropdown.innerHTML +=
-                                `<option value="${item.AgencyName}">${item.AgencyName}</option>`;
-                        });
+        // Delay Buckets
+        delayDropdown.innerHTML = '<option value="">All</option>';
+        delayBuckets.forEach(item => {
+            delayDropdown.innerHTML += `<option value="${item.delay_deposit_bucket}">${item.delay_deposit_bucket}</option>`;
+        });
+        delayDropdown.disabled = false;
 
-                        agencyDropdown.disabled = false;
-                    });
+        // Locations
+        locationDropdown.innerHTML = '<option value="">All</option>';
+        locations.forEach(item => {
+            locationDropdown.innerHTML += `<option value="${item.Location}">${item.Location}</option>`;
+        });
+        locationDropdown.disabled = false;
 
-                // ---- Load Payment Modes ----
-                fetch(`${baseUrl}/get-payment-modes/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
+        // PAN Required
+        panDropdown.innerHTML = '<option value="">All</option>';
+        panRequired.forEach(item => {
+            panDropdown.innerHTML += `<option value="${item.pan_required}">${item.pan_required}</option>`;
+        });
+        panDropdown.disabled = false;
+    });
 
-                        paymentDropdown.innerHTML = '<option value="">All</option>';
+});
+    
 
-                        data.forEach(function(item) {
-                            paymentDropdown.innerHTML +=
-                                `<option value="${item.PaymentMode}">${item.PaymentMode}</option>`;
-                        });
+// Hidden field binding
+document.getElementById('agency').addEventListener('change', function(){ this.setAttribute("data-value", this.value); });
+document.getElementById('payment_mode').addEventListener('change', function(){ this.setAttribute("data-value", this.value); });
+document.getElementById('product').addEventListener('change', function(){ this.setAttribute("data-value", this.value); });
+document.getElementById('delay_bucket').addEventListener('change', function(){ this.setAttribute("data-value", this.value); });
+document.getElementById('location').addEventListener('change', function(){ this.setAttribute("data-value", this.value); });
+document.getElementById('pan_required').addEventListener('change', function(){ this.setAttribute("data-value", this.value); });
 
-                        paymentDropdown.disabled = false;
-                    });
 
-                // ---- Load Delay Deposit Buckets ----
-                fetch(`${baseUrl}/get-delay-buckets/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
+// SEARCH BUTTON
+document.getElementById('searchBtn').addEventListener('click', function () {
 
-                        let delayDropdown = document.getElementById('delay_bucket');
-                        delayDropdown.innerHTML = '<option value="">All</option>';
+    let baseUrl = "{{ url('/') }}";
 
-                        data.forEach(function(item) {
-                            delayDropdown.innerHTML +=
-                                `<option value="${item.delay_deposit_bucket}">${item.delay_deposit_bucket}</option>`;
-                        });
+    let branch = "{{ $branch }}";
+    let product = document.querySelector('#product').value;
+    let agency = document.querySelector('#agency').value;
+    let payment = document.querySelector('#payment_mode').value;
+    let delayBucket = document.querySelector('#delay_bucket').value;
+    let location = document.querySelector('#location').value;
+    let panRequired = document.querySelector('#pan_required').value;
 
-                        delayDropdown.disabled = false;
-                    });
+    // Month Range
+    let fromValue = document.getElementById("fromMonth").value;
+    let toValue = document.getElementById("toMonth").value;
 
-                // load location
-                // load location
-                fetch(`${baseUrl}/get-location/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
+    let allMonths = @json($cycle);
+    let startIndex = allMonths.indexOf(fromValue);
+    let endIndex = allMonths.indexOf(toValue);
 
-                        let locationDropdown = document.getElementById('location');
-                        locationDropdown.innerHTML = '<option value="">All</option>';
+    let selectedMonths = [];
+    if (startIndex !== -1 && endIndex !== -1 && endIndex >= startIndex) {
+        selectedMonths = allMonths.slice(startIndex, endIndex + 1);
+    }
 
-                        data.forEach(function(item) {
-                            locationDropdown.innerHTML +=
-                                `<option value="${item.Location}">${item.Location}</option>`;
-                        });
+    let months = selectedMonths.join(',');
 
-                        locationDropdown.disabled = false;
-                    });
-
-                fetch(`${baseUrl}/get-pan-required/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        let delayDropdown = document.getElementById('pan_required');
-                        delayDropdown.innerHTML = '<option value="">All</option>';
-
-                        data.forEach(function(item) {
-                            delayDropdown.innerHTML +=
-                                `<option value="${item.pan_required}">${item.pan_required}</option>`;
-                        });
-
-                        delayDropdown.disabled = false;
-                    });
-
-            } else {
-                agencyDropdown.innerHTML = '<option value="">-- Select Product --</option>';
-                paymentDropdown.innerHTML = '<option value="">-- Select Product --</option>';
-
-                agencyDropdown.disabled = true;
-                paymentDropdown.disabled = true;
-            }
+    // Fetch Result HTML
+    fetch(`${baseUrl}/monthly-search?branch=${branch}&product=${product}&months=${months}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&pan_required=${panRequired}`)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('resultSection').innerHTML = html;
         });
 
+});
+</script>
 
-        // --- HIDDEN INPUT UPDATES ---
-        document.getElementById('agency').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('payment_mode').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('product').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('delay_bucket').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('location').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('pan_required').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-
-
-
-        // --- SEARCH BUTTON CLICK ---
-        document.getElementById('searchBtn').addEventListener('click', function() {
-
-            let baseUrl = "{{ url('/') }}";
-
-            let branch = "{{ $branch }}";
-            let product = document.querySelector('#product').value;
-            let agency = document.querySelector('#agency').value;
-            let payment = document.querySelector('#payment_mode').value;
-            let delayBucket = document.querySelector('#delay_bucket').value;
-            let location = document.querySelector('#location').value;
-            let panRequired = document.querySelector('#pan_required').value;
-            let months = getSelectedMonths().join(',');
-
-
-            // ❌ VALIDATION REMOVED COMPLETELY
-
-            fetch(
-                    `${baseUrl}/monthly-search?branch=${branch}&product=${product}&months=${months}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&pan_required=${panRequired}`
-                )
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('resultSection').innerHTML = html;
-                });
-
-        });
-    </script>
 @endsection

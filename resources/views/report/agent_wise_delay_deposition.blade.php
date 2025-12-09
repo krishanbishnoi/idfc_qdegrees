@@ -38,12 +38,21 @@
 </style>
 @section('content')
     <div class="container mt-4">
-        <h3 class="mb-4">
-            Agent Wise Delay Deposition - Branch:
-            <strong>{{ $branch }}</strong>
-        </h3>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">
+                Agent Wise Delay Deposition - Branch:
+                <strong>{{ $branch }}</strong>
+            </h3>
+
+            <a href="{{ route('select.branch', ['branch' => $branch]) }}" class="btn btn-outline-primary">
+                ← Back
+            </a>
+        </div>
         <div class="card shadow p-4">
-            <div>
+
+            {{-- month tab - raghav --}}
+            {{-- <div>
                 <label class="fw-bold">Select Months (Min 1, Max 3)</label>
 
                 <div class="month-tabs" id="monthTabs">
@@ -55,6 +64,39 @@
                 </div>
 
                 <div id="monthError" class="error-msg">You can select maximum 3 months.</div>
+            </div> --}}
+            <div class="row">
+
+                <div class="col-md-6">
+                    <label class="fw-bold">From Month</label>
+                    <select id="fromMonth" class="form-control">
+                        <option value="">-- Select Start Month --</option>
+
+                        @foreach ($cycle as $c)
+                            @if (!empty($c))
+                                <option value="{{ $c }}">{{ $c }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="fw-bold">To Month</label>
+                    <select id="toMonth" class="form-control" disabled>
+                        <option value="">-- Select End Month --</option>
+
+                        @foreach ($cycle as $c)
+                            @if (!empty($c))
+                                <option value="{{ $c }}">{{ $c }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+
+            </div>
+
+            <div id="monthRangeError" class="text-danger mt-2" style="display:none;">
+                Invalid range: End month cannot be before Start month.
             </div>
             <div class="row">
                 {{-- PRODUCT DROPDOWN --}}
@@ -141,8 +183,30 @@
         <div id="resultSection" class="mt-4"></div>
     </div>
 
-
     <script>
+        const fromMonth = document.getElementById("fromMonth");
+        const toMonth = document.getElementById("toMonth");
+        const errorMsg = document.getElementById("monthRangeError");
+
+        fromMonth.addEventListener("change", function() {
+            toMonth.disabled = false;
+            errorMsg.style.display = "none";
+        });
+
+        toMonth.addEventListener("change", function() {
+            const fromValue = fromMonth.selectedIndex;
+            const toValue = toMonth.selectedIndex;
+
+            if (toValue < fromValue) {
+                errorMsg.style.display = "block";
+            } else {
+                errorMsg.style.display = "none";
+            }
+        });
+    </script>
+
+    {{-- month tab script - raghav --}}
+    {{-- <script>
         const tabs = document.querySelectorAll('.month-tab');
         const error = document.getElementById('monthError');
 
@@ -184,183 +248,143 @@
                 tab.classList.add('active');
             });
         });
-    </script>
+    </script> --}}
     {{-- AJAX SCRIPT --}}
     <script>
-        document.getElementById('product').addEventListener('change', function() {
+document.getElementById('product').addEventListener('change', function () {
 
-            let product = this.value;
-            let branch = "{{ $branch }}";
+    let product = this.value;
+    let branch = "{{ $branch }}";
+    let baseUrl = "{{ url('/') }}";
 
-            let agencyDropdown = document.getElementById('agency');
-            let paymentDropdown = document.getElementById('payment_mode');
+    let agencyDropdown = document.getElementById('agency');
+    let paymentDropdown = document.getElementById('payment_mode');
+    let delayDropdown = document.getElementById('delay_bucket');
+    let locationDropdown = document.getElementById('location');
+    let cmDropdown = document.getElementById('collection_manager');
+    let timeBktDropdown = document.getElementById('time_bkt');
 
-            agencyDropdown.innerHTML = '<option>Loading...</option>';
-            paymentDropdown.innerHTML = '<option>Loading...</option>';
+    // Show loading for all dropdowns together
+    agencyDropdown.innerHTML =
+    paymentDropdown.innerHTML =
+    delayDropdown.innerHTML =
+    locationDropdown.innerHTML =
+    cmDropdown.innerHTML =
+    timeBktDropdown.innerHTML =
+        "<option>Loading...</option>";
 
-            agencyDropdown.disabled = true;
-            paymentDropdown.disabled = true;
+    agencyDropdown.disabled =
+    paymentDropdown.disabled =
+    delayDropdown.disabled =
+    locationDropdown.disabled =
+    cmDropdown.disabled =
+    timeBktDropdown.disabled = true;
 
-            let baseUrl = "{{ url('/') }}";
+    if (product === "") return;
 
-            if (product !== "") {
+    // Load ALL dropdown values in parallel
+    Promise.all([
+        fetch(`${baseUrl}/get-agencies/${branch}/${product}`).then(r => r.json()),
+        fetch(`${baseUrl}/get-payment-modes/${branch}/${product}`).then(r => r.json()),
+        fetch(`${baseUrl}/get-delay-buckets/${branch}/${product}`).then(r => r.json()),
+        fetch(`${baseUrl}/get-location/${branch}/${product}`).then(r => r.json()),
+        fetch(`${baseUrl}/get-collection-manager/${branch}/${product}`).then(r => r.json()),
+        fetch(`${baseUrl}/get-time-bkt/${branch}/${product}`).then(r => r.json())
+    ])
+    .then(([agencies, paymentModes, delayBuckets, locations, cms, timebkt]) => {
 
-                // ---- Load Agencies ----
-                fetch(`${baseUrl}/get-agencies/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
+        // AGENCY
+        agencyDropdown.innerHTML = '<option value="">All</option>';
+        agencies.forEach(item => {
+            agencyDropdown.innerHTML += `<option value="${item.AgencyName}">${item.AgencyName}</option>`;
+        });
+        agencyDropdown.disabled = false;
 
-                        agencyDropdown.innerHTML = '<option value="">All</option>';
+        // PAYMENT MODE
+        paymentDropdown.innerHTML = '<option value="">All</option>';
+        paymentModes.forEach(item => {
+            paymentDropdown.innerHTML += `<option value="${item.PaymentMode}">${item.PaymentMode}</option>`;
+        });
+        paymentDropdown.disabled = false;
 
-                        data.forEach(function(item) {
-                            agencyDropdown.innerHTML +=
-                                `<option value="${item.AgencyName}">${item.AgencyName}</option>`;
-                        });
+        // DELAY BUCKET
+        delayDropdown.innerHTML = '<option value="">All</option>';
+        delayBuckets.forEach(item => {
+            delayDropdown.innerHTML += `<option value="${item.delay_deposit_bucket}">${item.delay_deposit_bucket}</option>`;
+        });
+        delayDropdown.disabled = false;
 
-                        agencyDropdown.disabled = false;
-                    });
+        // LOCATION
+        locationDropdown.innerHTML = '<option value="">All</option>';
+        locations.forEach(item => {
+            locationDropdown.innerHTML += `<option value="${item.Location}">${item.Location}</option>`;
+        });
+        locationDropdown.disabled = false;
 
-                // ---- Load Payment Modes ----
-                fetch(`${baseUrl}/get-payment-modes/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
+        // COLLECTION MANAGER
+        cmDropdown.innerHTML = '<option value="">All</option>';
+        cms.forEach(item => {
+            cmDropdown.innerHTML += `<option value="${item.CollectionManager}">${item.CollectionManager}</option>`;
+        });
+        cmDropdown.disabled = false;
 
-                        paymentDropdown.innerHTML = '<option value="">All</option>';
+        // TIME BKT
+        timeBktDropdown.innerHTML = '<option value="">All</option>';
+        timebkt.forEach(item => {
+            timeBktDropdown.innerHTML += `<option value="${item.time_bkt}">${item.time_bkt}</option>`;
+        });
+        timeBktDropdown.disabled = false;
 
-                        data.forEach(function(item) {
-                            paymentDropdown.innerHTML +=
-                                `<option value="${item.PaymentMode}">${item.PaymentMode}</option>`;
-                        });
-
-                        paymentDropdown.disabled = false;
-                    });
-
-                // ---- Load Delay Deposit Buckets ----
-                fetch(`${baseUrl}/get-delay-buckets/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        let delayDropdown = document.getElementById('delay_bucket');
-                        delayDropdown.innerHTML = '<option value="">All</option>';
-
-                        data.forEach(function(item) {
-                            delayDropdown.innerHTML +=
-                                `<option value="${item.delay_deposit_bucket}">${item.delay_deposit_bucket}</option>`;
-                        });
-
-                        delayDropdown.disabled = false;
-                    });
-
-                // load location
-                // load location
-                fetch(`${baseUrl}/get-location/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        let locationDropdown = document.getElementById('location');
-                        locationDropdown.innerHTML = '<option value="">All</option>';
-
-                        data.forEach(function(item) {
-                            locationDropdown.innerHTML +=
-                                `<option value="${item.Location}">${item.Location}</option>`;
-                        });
-
-                        locationDropdown.disabled = false;
-                    });
-
-                fetch(`${baseUrl}/get-collection-manager/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        let delayDropdown = document.getElementById('collection_manager');
-                        delayDropdown.innerHTML = '<option value="">All</option>';
-
-                        data.forEach(function(item) {
-                            delayDropdown.innerHTML +=
-                                `<option value="${item.CollectionManager}">${item.CollectionManager}</option>`;
-                        });
-
-                        delayDropdown.disabled = false;
-                    });
+    });
+});
 
 
-                fetch(`${baseUrl}/get-time-bkt/${branch}/${product}`)
-                    .then(response => response.json())
-                    .then(data => {
+// Hidden input updates
+["agency","payment_mode","product","delay_bucket","location","collection_manager","time_bkt"]
+.forEach(id => {
+    document.getElementById(id).addEventListener("change", function() {
+        this.setAttribute("data-value", this.value);
+    });
+});
 
-                        let delayDropdown = document.getElementById('time_bkt');
-                        delayDropdown.innerHTML = '<option value="">All</option>';
 
-                        data.forEach(function(item) {
-                            delayDropdown.innerHTML +=
-                                `<option value="${item.time_bkt}">${item.time_bkt}</option>`;
-                        });
+// SEARCH BUTTON
+document.getElementById('searchBtn').addEventListener('click', function () {
 
-                        delayDropdown.disabled = false;
-                    });
+    let baseUrl = "{{ url('/') }}";
+    let branch = "{{ $branch }}";
 
-            } else {
-                agencyDropdown.innerHTML = '<option value="">-- Select Product --</option>';
-                paymentDropdown.innerHTML = '<option value="">-- Select Product --</option>';
+    let product = document.querySelector('#product').value;
+    let agency = document.querySelector('#agency').value;
+    let payment = document.querySelector('#payment_mode').value;
+    let delayBucket = document.querySelector('#delay_bucket').value;
+    let location = document.querySelector('#location').value;
+    let collection_manager = document.querySelector('#collection_manager').value;
+    let time_bkt = document.querySelector('#time_bkt').value;
 
-                agencyDropdown.disabled = true;
-                paymentDropdown.disabled = true;
-            }
+    // Month range
+    let fromValue = document.getElementById("fromMonth").value;
+    let toValue = document.getElementById("toMonth").value;
+    let allMonths = @json($cycle);
+
+    let startIndex = allMonths.indexOf(fromValue);
+    let endIndex = allMonths.indexOf(toValue);
+
+    let selectedMonths = [];
+    if (startIndex !== -1 && endIndex !== -1 && endIndex >= startIndex) {
+        selectedMonths = allMonths.slice(startIndex, endIndex + 1);
+    }
+
+    let months = selectedMonths.join(',');
+
+    // Search request
+    fetch(`${baseUrl}/agent-wise-search?branch=${branch}&product=${product}&months=${months}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&collection_manager=${collection_manager}&time_bkt=${time_bkt}`)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('resultSection').innerHTML = html;
         });
 
+});
+</script>
 
-        // --- HIDDEN INPUT UPDATES ---
-        document.getElementById('agency').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('payment_mode').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('product').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('delay_bucket').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('location').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('collection_manager').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-        document.getElementById('time_bkt').addEventListener('change', function() {
-            this.setAttribute("data-value", this.value);
-        });
-
-
-
-
-        // --- SEARCH BUTTON CLICK ---
-        document.getElementById('searchBtn').addEventListener('click', function() {
-
-            let baseUrl = "{{ url('/') }}";
-
-            let branch = "{{ $branch }}";
-            let product = document.querySelector('#product').value;
-            let agency = document.querySelector('#agency').value;
-            let payment = document.querySelector('#payment_mode').value;
-            let delayBucket = document.querySelector('#delay_bucket').value;
-            let location = document.querySelector('#location').value;
-            let collection_manager = document.querySelector('#collection_manager').value;
-            let time_bkt = document.querySelector('#time_bkt').value;
-            let months = getSelectedMonths().join(',');
-
-
-            // ❌ VALIDATION REMOVED COMPLETELY
-
-            fetch(
-                    `${baseUrl}/agent-wise-search?branch=${branch}&product=${product}&months=${months}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&collection_manager=${collection_manager}&time_bkt=${time_bkt}`
-                )
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('resultSection').innerHTML = html;
-                });
-
-        });
-    </script>
 @endsection

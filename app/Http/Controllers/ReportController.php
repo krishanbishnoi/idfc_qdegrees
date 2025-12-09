@@ -217,7 +217,7 @@ class ReportController extends Controller
         }
 
         if ($request->collection_manager) {
-            $results->where('CollectionManager', $request->pan_required);
+            $results->where('CollectionManager', $request->collection_manager);
         }
 
         // FINAL GROUPING
