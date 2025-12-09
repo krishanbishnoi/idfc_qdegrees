@@ -235,7 +235,9 @@
                 </div>
                 <div class="card-body">
                     <div class="table-container">
-                        <table class="summary-table">
+                        {{-- <table class="summary-table"> --}}
+                                                    <table class="summary-table table table-striped- table-bordered table-hover table-checkable" id="kt_table_1">
+
 
                             <tr>
                                 <th>Summary</th>

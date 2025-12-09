@@ -219,6 +219,9 @@ class ReportController extends Controller
         if ($request->collection_manager) {
             $results->where('CollectionManager', $request->collection_manager);
         }
+        if ($request->pan_status) {
+            $results->where('pan_status', $request->pan_status);
+        }
 
         // FINAL GROUPING
         $results = $results

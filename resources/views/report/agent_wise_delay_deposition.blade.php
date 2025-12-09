@@ -166,6 +166,16 @@
                         </select>
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="form-group mt-3">
+                        <label><strong>Pan Status</strong></label>
+                        <select id="pan_status" class="form-control">
+                            <option value="" selected>-- Select Pan Status --</option>
+                            <option value="Not Required">Not Required</option>
+                            <option value="Pan Available">Pan Available</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             {{-- SEARCH BUTTON --}}
             <div class="col-md-4">
@@ -251,140 +261,148 @@
     </script> --}}
     {{-- AJAX SCRIPT --}}
     <script>
-document.getElementById('product').addEventListener('change', function () {
+        document.getElementById('product').addEventListener('change', function() {
 
-    let product = this.value;
-    let branch = "{{ $branch }}";
-    let baseUrl = "{{ url('/') }}";
+            let product = this.value;
+            let branch = "{{ $branch }}";
+            let baseUrl = "{{ url('/') }}";
 
-    let agencyDropdown = document.getElementById('agency');
-    let paymentDropdown = document.getElementById('payment_mode');
-    let delayDropdown = document.getElementById('delay_bucket');
-    let locationDropdown = document.getElementById('location');
-    let cmDropdown = document.getElementById('collection_manager');
-    let timeBktDropdown = document.getElementById('time_bkt');
+            let agencyDropdown = document.getElementById('agency');
+            let paymentDropdown = document.getElementById('payment_mode');
+            let delayDropdown = document.getElementById('delay_bucket');
+            let locationDropdown = document.getElementById('location');
+            let cmDropdown = document.getElementById('collection_manager');
+            let timeBktDropdown = document.getElementById('time_bkt');
 
-    // Show loading for all dropdowns together
-    agencyDropdown.innerHTML =
-    paymentDropdown.innerHTML =
-    delayDropdown.innerHTML =
-    locationDropdown.innerHTML =
-    cmDropdown.innerHTML =
-    timeBktDropdown.innerHTML =
-        "<option>Loading...</option>";
+            // Show loading for all dropdowns together
+            agencyDropdown.innerHTML =
+                paymentDropdown.innerHTML =
+                delayDropdown.innerHTML =
+                locationDropdown.innerHTML =
+                cmDropdown.innerHTML =
+                timeBktDropdown.innerHTML =
+                "<option>Loading...</option>";
 
-    agencyDropdown.disabled =
-    paymentDropdown.disabled =
-    delayDropdown.disabled =
-    locationDropdown.disabled =
-    cmDropdown.disabled =
-    timeBktDropdown.disabled = true;
+            agencyDropdown.disabled =
+                paymentDropdown.disabled =
+                delayDropdown.disabled =
+                locationDropdown.disabled =
+                cmDropdown.disabled =
+                timeBktDropdown.disabled = true;
 
-    if (product === "") return;
+            if (product === "") return;
 
-    // Load ALL dropdown values in parallel
-    Promise.all([
-        fetch(`${baseUrl}/get-agencies/${branch}/${product}`).then(r => r.json()),
-        fetch(`${baseUrl}/get-payment-modes/${branch}/${product}`).then(r => r.json()),
-        fetch(`${baseUrl}/get-delay-buckets/${branch}/${product}`).then(r => r.json()),
-        fetch(`${baseUrl}/get-location/${branch}/${product}`).then(r => r.json()),
-        fetch(`${baseUrl}/get-collection-manager/${branch}/${product}`).then(r => r.json()),
-        fetch(`${baseUrl}/get-time-bkt/${branch}/${product}`).then(r => r.json())
-    ])
-    .then(([agencies, paymentModes, delayBuckets, locations, cms, timebkt]) => {
+            // Load ALL dropdown values in parallel
+            Promise.all([
+                    fetch(`${baseUrl}/get-agencies/${branch}/${product}`).then(r => r.json()),
+                    fetch(`${baseUrl}/get-payment-modes/${branch}/${product}`).then(r => r.json()),
+                    fetch(`${baseUrl}/get-delay-buckets/${branch}/${product}`).then(r => r.json()),
+                    fetch(`${baseUrl}/get-location/${branch}/${product}`).then(r => r.json()),
+                    fetch(`${baseUrl}/get-collection-manager/${branch}/${product}`).then(r => r.json()),
+                    fetch(`${baseUrl}/get-time-bkt/${branch}/${product}`).then(r => r.json())
+                ])
+                .then(([agencies, paymentModes, delayBuckets, locations, cms, timebkt]) => {
 
-        // AGENCY
-        agencyDropdown.innerHTML = '<option value="">All</option>';
-        agencies.forEach(item => {
-            agencyDropdown.innerHTML += `<option value="${item.AgencyName}">${item.AgencyName}</option>`;
-        });
-        agencyDropdown.disabled = false;
+                    // AGENCY
+                    agencyDropdown.innerHTML = '<option value="">All</option>';
+                    agencies.forEach(item => {
+                        agencyDropdown.innerHTML +=
+                            `<option value="${item.AgencyName}">${item.AgencyName}</option>`;
+                    });
+                    agencyDropdown.disabled = false;
 
-        // PAYMENT MODE
-        paymentDropdown.innerHTML = '<option value="">All</option>';
-        paymentModes.forEach(item => {
-            paymentDropdown.innerHTML += `<option value="${item.PaymentMode}">${item.PaymentMode}</option>`;
-        });
-        paymentDropdown.disabled = false;
+                    // PAYMENT MODE
+                    paymentDropdown.innerHTML = '<option value="">All</option>';
+                    paymentModes.forEach(item => {
+                        paymentDropdown.innerHTML +=
+                            `<option value="${item.PaymentMode}">${item.PaymentMode}</option>`;
+                    });
+                    paymentDropdown.disabled = false;
 
-        // DELAY BUCKET
-        delayDropdown.innerHTML = '<option value="">All</option>';
-        delayBuckets.forEach(item => {
-            delayDropdown.innerHTML += `<option value="${item.delay_deposit_bucket}">${item.delay_deposit_bucket}</option>`;
-        });
-        delayDropdown.disabled = false;
+                    // DELAY BUCKET
+                    delayDropdown.innerHTML = '<option value="">All</option>';
+                    delayBuckets.forEach(item => {
+                        delayDropdown.innerHTML +=
+                            `<option value="${item.delay_deposit_bucket}">${item.delay_deposit_bucket}</option>`;
+                    });
+                    delayDropdown.disabled = false;
 
-        // LOCATION
-        locationDropdown.innerHTML = '<option value="">All</option>';
-        locations.forEach(item => {
-            locationDropdown.innerHTML += `<option value="${item.Location}">${item.Location}</option>`;
-        });
-        locationDropdown.disabled = false;
+                    // LOCATION
+                    locationDropdown.innerHTML = '<option value="">All</option>';
+                    locations.forEach(item => {
+                        locationDropdown.innerHTML +=
+                            `<option value="${item.Location}">${item.Location}</option>`;
+                    });
+                    locationDropdown.disabled = false;
 
-        // COLLECTION MANAGER
-        cmDropdown.innerHTML = '<option value="">All</option>';
-        cms.forEach(item => {
-            cmDropdown.innerHTML += `<option value="${item.CollectionManager}">${item.CollectionManager}</option>`;
-        });
-        cmDropdown.disabled = false;
+                    // COLLECTION MANAGER
+                    cmDropdown.innerHTML = '<option value="">All</option>';
+                    cms.forEach(item => {
+                        cmDropdown.innerHTML +=
+                            `<option value="${item.CollectionManager}">${item.CollectionManager}</option>`;
+                    });
+                    cmDropdown.disabled = false;
 
-        // TIME BKT
-        timeBktDropdown.innerHTML = '<option value="">All</option>';
-        timebkt.forEach(item => {
-            timeBktDropdown.innerHTML += `<option value="${item.time_bkt}">${item.time_bkt}</option>`;
-        });
-        timeBktDropdown.disabled = false;
+                    // TIME BKT
+                    timeBktDropdown.innerHTML = '<option value="">All</option>';
+                    timebkt.forEach(item => {
+                        timeBktDropdown.innerHTML +=
+                            `<option value="${item.time_bkt}">${item.time_bkt}</option>`;
+                    });
+                    timeBktDropdown.disabled = false;
 
-    });
-});
-
-
-// Hidden input updates
-["agency","payment_mode","product","delay_bucket","location","collection_manager","time_bkt"]
-.forEach(id => {
-    document.getElementById(id).addEventListener("change", function() {
-        this.setAttribute("data-value", this.value);
-    });
-});
-
-
-// SEARCH BUTTON
-document.getElementById('searchBtn').addEventListener('click', function () {
-
-    let baseUrl = "{{ url('/') }}";
-    let branch = "{{ $branch }}";
-
-    let product = document.querySelector('#product').value;
-    let agency = document.querySelector('#agency').value;
-    let payment = document.querySelector('#payment_mode').value;
-    let delayBucket = document.querySelector('#delay_bucket').value;
-    let location = document.querySelector('#location').value;
-    let collection_manager = document.querySelector('#collection_manager').value;
-    let time_bkt = document.querySelector('#time_bkt').value;
-
-    // Month range
-    let fromValue = document.getElementById("fromMonth").value;
-    let toValue = document.getElementById("toMonth").value;
-    let allMonths = @json($cycle);
-
-    let startIndex = allMonths.indexOf(fromValue);
-    let endIndex = allMonths.indexOf(toValue);
-
-    let selectedMonths = [];
-    if (startIndex !== -1 && endIndex !== -1 && endIndex >= startIndex) {
-        selectedMonths = allMonths.slice(startIndex, endIndex + 1);
-    }
-
-    let months = selectedMonths.join(',');
-
-    // Search request
-    fetch(`${baseUrl}/agent-wise-search?branch=${branch}&product=${product}&months=${months}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&collection_manager=${collection_manager}&time_bkt=${time_bkt}`)
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('resultSection').innerHTML = html;
+                });
         });
 
-});
-</script>
 
+        // Hidden input updates
+        ["agency", "payment_mode", "product", "delay_bucket", "location", "collection_manager", "time_bkt", "pan_status"]
+        .forEach(id => {
+            document.getElementById(id).addEventListener("change", function() {
+                this.setAttribute("data-value", this.value);
+            });
+        });
+
+
+        // SEARCH BUTTON
+        document.getElementById('searchBtn').addEventListener('click', function() {
+
+            let baseUrl = "{{ url('/') }}";
+            let branch = "{{ $branch }}";
+
+            let product = document.querySelector('#product').value;
+            let agency = document.querySelector('#agency').value;
+            let payment = document.querySelector('#payment_mode').value;
+            let delayBucket = document.querySelector('#delay_bucket').value;
+            let location = document.querySelector('#location').value;
+            let collection_manager = document.querySelector('#collection_manager').value;
+            let time_bkt = document.querySelector('#time_bkt').value;
+            let pan_status = document.querySelector('#pan_status').value;
+
+            // Month range
+            let fromValue = document.getElementById("fromMonth").value;
+            let toValue = document.getElementById("toMonth").value;
+            let allMonths = @json($cycle);
+
+            let startIndex = allMonths.indexOf(fromValue);
+            let endIndex = allMonths.indexOf(toValue);
+
+            let selectedMonths = [];
+            if (startIndex !== -1 && endIndex !== -1 && endIndex >= startIndex) {
+                selectedMonths = allMonths.slice(startIndex, endIndex + 1);
+            }
+
+            let months = selectedMonths.join(',');
+
+            // Search request
+            fetch(
+                    `${baseUrl}/agent-wise-search?branch=${branch}&product=${product}&months=${months}&agency=${agency}&payment_mode=${payment}&delay_bucket=${delayBucket}&location=${location}&collection_manager=${collection_manager}&time_bkt=${time_bkt}&pan_status=${pan_status}`
+                    )
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('resultSection').innerHTML = html;
+                });
+
+        });
+    </script>
 @endsection

@@ -13,13 +13,16 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong class="card-title">Agency Wise List</strong>
+                        <strong class="card-title">Agent Wise Delay Deposition List</strong>
                     </div>
                     <div class="card-body">
                         <div class="card shadow-lg border-0 mt-3">
                             <div class="card-body p-0">
 
-                                <table class="table table-hover table-striped mb-0">
+                                {{-- <table class="table table-hover table-striped mb-0"> --}}
+                                <table
+                                    class="summary-table table table-striped- table-bordered table-hover table-checkable"
+                                    id="kt_table_1">
                                     <thead class="table-dark">
                                         <tr class="text-center">
                                             <th>#</th>
@@ -57,6 +60,22 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 
 @endif
+
+@section('css')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+@endsection
+
+@section('js')
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        jQuery(document).on('ready', function() {
+
+            jQuery('#kt_table_1').DataTable();
+
+        })
+    </script>
+@endsection

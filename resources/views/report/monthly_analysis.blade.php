@@ -132,7 +132,7 @@
 
                 <div class="col-md-6">
                     <label class="fw-bold">From Month</label>
-                    <select id="fromMonth" class="form-control">
+                    <select id="fromMonth" class="form-control" required>
                         <option value="">-- Select Start Month --</option>
 
                         @foreach ($cycle as $c)
@@ -145,7 +145,7 @@
 
                 <div class="col-md-6">
                     <label class="fw-bold">To Month</label>
-                    <select id="toMonth" class="form-control" disabled>
+                    <select id="toMonth" class="form-control" disabled required>
                         <option value="">-- Select End Month --</option>
 
                         @foreach ($cycle as $c)

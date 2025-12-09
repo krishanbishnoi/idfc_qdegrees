@@ -100,7 +100,7 @@
     }
 </style>
 <aside id="left-panel" class="left-panel">
-    <nav class="navbar navbar-expand-sm navbar-default mt-5">
+    <nav class="navbar navbar-expand-sm navbar-default mb-5">
         <div id="main-menu" class="main-menu collapse navbar-collapse">
             <ul class="nav navbar-nav" style="background: #2f353a;">
                 @hasanyrole('Collection Manager')
@@ -398,7 +398,7 @@
                             data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="{{ $isAutomatedActive ? 'true' : 'false' }}">
 
-                            <i class="menu-icon fa fa-database"></i> Automated Reports
+                            <i class="menu-icon fa fa-database"></i> Dac Audit Report
                         </a>
 
                         <ul class="sub-menu children dropdown-menu {{ $isAutomatedActive ? 'show' : '' }}">
@@ -410,7 +410,7 @@
 
                             <li class="{{ Route::is('select.branch') ? 'active' : '' }}">
                                 <i class="fa fa-table"></i>
-                                <a href="{{ route('select.branch') }}">Reports</a>
+                                <a href="{{ route('select.branch') }}">Dac Reports</a>
                             </li>
 
                         </ul>

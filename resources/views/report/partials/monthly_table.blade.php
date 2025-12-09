@@ -16,7 +16,11 @@
                         <strong class="card-title">Sheet List</strong>
                     </div>
                     <div class="card-body">
-                        <table class="table report-table mb-0">
+                        {{-- <table class="table report-table mb-0"> --}}
+                        <table
+                            class="summary-table  report-table  table table-striped- table-bordered table-hover table-checkable"
+                            id="kt_table_1">
+
 
                             <thead>
                                 <tr>
@@ -72,6 +76,6 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 
 @endif
